@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  neo4j:
+    image: neo4j:5.17
+    container_name: neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/password
+      - NEO4J_apoc_export_file_enabled=true
+      - NEO4JLABS_PLUGINS=["graph-data-science"]
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+  # opensearch:
+  #   image: opensearchproject/opensearch:2.11.0
+  #   environment:
+  #     - discovery.type=single-node
+  #     - plugins.security.disabled=true
+  #   ports:
+  #     - "9200:9200"

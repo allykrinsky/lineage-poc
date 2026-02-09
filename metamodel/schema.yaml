@@ -1,0 +1,249 @@
+# Metamodel Schema Definition
+# This file defines the structure and relationships of the graph metamodel for
+# data/AI lineage tracking and deprecation impact analysis
+
+version: "1.0"
+description: "Neo4j graph metamodel for AI/ML lineage, data governance, and deprecation impact analysis"
+
+# Node type definitions
+node_types:
+  UseCase:
+    description: "Business use cases that leverage agentic systems, models, and datasets"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: phase
+        type: string
+        required: true
+        allowed_values: ["development", "production"]
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: description
+        type: string
+        required: false
+      - name: owner
+        type: string
+        required: false
+
+  Model:
+    description: "Machine learning or statistical models used in AI systems"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: version
+        type: string
+        required: false
+      - name: owner
+        type: string
+        required: false
+
+  Dataset:
+    description: "Data sources, knowledge bases, and feature stores"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: type
+        type: string
+        required: true
+        allowed_values: ["source", "knowledge_base"]
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  Attribute:
+    description: "Data attributes, features, or columns within datasets"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: data_type
+        type: string
+        required: false
+      - name: is_pii
+        type: boolean
+        required: false
+      - name: description
+        type: string
+        required: false
+
+  MCPTool:
+    description: "MCP (Model Context Protocol) tools providing capabilities to agents"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  AgenticSystem:
+    description: "High-level agentic systems composed of multiple agents"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  Agent:
+    description: "Individual AI agents that perform specific tasks"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  Term:
+    description: "Business terms and definitions for semantic consistency"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: definition
+        type: string
+        required: true
+      - name: domain
+        type: string
+        required: false
+
+  # User:
+  #   description: "Individual identity"
+  #   properties:
+  #     - name: id
+  #       type: int
+  #       required: true
+  #       unique: true
+  #     - name: name
+  #       type: string
+  #       required: true
+
+
+# Allowed Relationships
+relationships:
+  - type: DERIVED_FROM
+    from: Dataset
+    to: Dataset
+
+  - type: DERIVED_FROM
+    from: Model
+    to: Model
+
+  - type: DERIVED_FROM
+    from: Attribute
+    to: Attribute
+
+  # - type: USED_IN
+  #   from: Dataset
+  #   to: UseCase
+
+  - type: USED_IN
+    from: Dataset
+    to: Model
+
+  - type: USED_IN
+    from: Attribute
+    to: Dataset
+
+  - type: USED_IN
+    from: Model
+    to: UseCase
+
+  - type: USED_IN
+    from: Agent
+    to: AgenticSystem
+
+  - type: USED_IN
+    from: AgenticSystem
+    to: UseCase
+
+  - type: USES
+    from: Agent
+    to: Model
+
+  - type: USES
+    from: Agent
+    to: MCPTool
+
+  - type: MEANS
+    from: Attribute
+    to: Term
+
+  - type: PROVIDES_ACCESS
+    from: MCPTool
+    to: Dataset
+
+  # - type: has_access
+  #   from: User
+  #   to: Dataset
+
+  # - type: has_access
+  #   from: User
+  #   to: Use Case
