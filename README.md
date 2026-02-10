@@ -1,4 +1,4 @@
-# Graph Analytics with Neo4j & Lineage Explorer
+# Graph Analytics with Neo4j
 
 A modular graph analytics system for building and querying knowledge graphs with Neo4j
 
