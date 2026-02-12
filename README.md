@@ -5,7 +5,7 @@ A modular graph analytics system for building and querying knowledge graphs with
 ## Project Structure
 
 ```
-graph-analytics/
+lineage-poc/
 ├── backend/                     # FastAPI backend service
 │   ├── api.py                  # RESTful API endpoints
 │   ├── requirements.txt        # Python dependencies
@@ -18,12 +18,10 @@ graph-analytics/
 ├── src/
 │   ├── graph/
 │   │   ├── loader.py           # Neo4j graph loading
-│   │   └── embeddings.py       # Graph embedding management
 │   └── utils.py                # Shared utilities and configuration
 │
 ├── scripts/
 │   ├── setup_graph.py          # Setup Neo4j graph from metamodel
-│   └── search.py               # Perform hybrid searches
 │
 ├── docker-compose.yml          # Complete infrastructure stack
 ├── requirements.txt

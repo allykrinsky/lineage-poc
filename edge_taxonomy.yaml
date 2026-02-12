@@ -1,0 +1,551 @@
+# =============================================================================
+# Generic Lineage POC — Edge Taxonomy Configuration
+# =============================================================================
+# This config is the single source of truth for how the query engine
+# classifies and traverses edges in the graph.
+#
+# Four concepts are encoded per edge:
+#   1. Axis classification (x=lineage, y=hierarchy, z=association)
+#   2. Semantic direction — how to interpret traversal regardless of stored edge direction
+#   3. Node visibility — which node types are passthrough vs user-facing
+#   4. Hop grouping — for X-axis, resource→transformer→resource = 1 logical hop
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Node Type Registry
+# -----------------------------------------------------------------------------
+# Defines every node type, whether it's user-facing, and its role in lineage.
+#
+# role:
+#   resource    — a first-class entity the user cares about (dataset, model, report, etc.)
+#   transformer — a "verb" node connecting resources on the X-axis (etl_job, data_dependency)
+#   structural  — graph plumbing that may be collapsed in output (process_dataset)
+#   container   — grouping/organizational nodes (workspace, glossary)
+#   qualifier   — provides context but isn't a primary lineage participant (use_case, resultset)
+
+node_types:
+  dataset:
+    display_name: Dataset
+    role: resource
+    visible: true
+
+  attribute:
+    display_name: Attribute
+    role: resource
+    visible: true
+    sub_types:
+      - conceptual
+      - logical
+      - term
+      - report
+
+  data_flow:
+    display_name: Data Flow
+    role: resource
+    visible: true
+
+  data_dependency:
+    display_name: Data Dependency
+    role: transformer
+    visible: true          # visible because it captures column-level transformation logic
+    description: "Attribute-level lineage transformer — captures which attributes go in and which come out"
+
+  etl_job:
+    display_name: ETL Job
+    role: transformer
+    visible: true
+    description: "Dataset-level lineage transformer — the process that consumes and produces datasets"
+
+  model:
+    display_name: Model
+    role: resource
+    visible: true
+
+  model_version:
+    display_name: Model Version
+    role: resource
+    visible: true
+
+  agent_version:
+    display_name: Agent Version
+    role: resource
+    visible: true
+
+  agentic_system:
+    display_name: Agentic System
+    role: resource
+    visible: true
+
+  agentic_system_version:
+    display_name: Agentic System Version
+    role: resource
+    visible: true
+
+  application:
+    display_name: Application
+    role: resource
+    visible: true
+
+  report:
+    display_name: Report
+    role: resource
+    visible: true
+
+  process:
+    display_name: Process
+    role: resource
+    visible: true
+
+  mcp_server:
+    display_name: MCP Server
+    role: resource
+    visible: true
+
+  mcp_resource:
+    display_name: MCP Resource
+    role: resource
+    visible: true
+
+  mcp_tool:
+    display_name: MCP Tool
+    role: resource
+    visible: true
+
+  workspace:
+    display_name: Workspace
+    role: container
+    visible: true
+
+  workspace_service:
+    display_name: Workspace Service
+    role: resource
+    visible: true
+
+  use_case:
+    display_name: Use Case
+    role: qualifier
+    visible: true
+
+  glossary:
+    display_name: Glossary
+    role: container
+    visible: true
+
+  data_concept:
+    display_name: Data Concept
+    role: qualifier
+    visible: true
+
+  # --- Passthrough / structural node types ---
+
+  process_dataset:
+    display_name: Process Dataset
+    role: structural
+    visible: false
+    description: "Hidden linkage between process and dataset — collapse in traversal output"
+    collapse_to: [process, dataset]
+
+  resultset:
+    display_name: Result Set
+    role: qualifier
+    visible: true
+    description: "Data quality rules and results, linked to supported resources"
+
+
+# -----------------------------------------------------------------------------
+# X-Axis: Lineage (Derivation / Data Flow)
+# -----------------------------------------------------------------------------
+# Pattern: Resource --[consumed_by]--> Transformer --[produced_by]--> Resource
+#
+# Hop grouping: Two physical edges = one logical lineage step.
+# The query engine should present Resource→Resource with the Transformer as metadata.
+#
+# semantic_direction:
+#   upstream   — following this edge traces back toward data sources
+#   downstream — following this edge traces forward toward consumers/outputs
+
+x_lineage:
+
+  # --- Dataset-level lineage (via ETL Job) ---
+  - edge_name: dataset_produced_by
+    source: dataset
+    destination: etl_job
+    semantic_direction: upstream
+    description: "Which job produced this dataset?"
+    hop_group: dataset_etl
+    hop_role: resource_to_transformer
+
+  - edge_name: dataset_consumed_by
+    source: dataset
+    destination: etl_job
+    semantic_direction: downstream
+    description: "Which job consumes this dataset?"
+    hop_group: dataset_etl
+    hop_role: resource_to_transformer
+
+  # --- Attribute-level lineage (via Data Dependency) ---
+  - edge_name: data_dependency_produced_by
+    source: data_dependency
+    source_sub_type: null
+    destination: attribute
+    destination_sub_type: [conceptual, logical]
+    semantic_direction: upstream
+    description: "Which source attribute feeds into this transformation?"
+    hop_group: attribute_dependency
+    hop_role: transformer_to_resource
+
+  - edge_name: data_dependency_consumed_by
+    source: data_dependency
+    source_sub_type: null
+    destination: attribute
+    destination_sub_type: [conceptual, logical]
+    semantic_direction: downstream
+    description: "Which target attribute is produced by this transformation?"
+    hop_group: attribute_dependency
+    hop_role: transformer_to_resource
+
+  # --- Data Flow lineage (via Application) ---
+  - edge_name: data_flow_produced_by
+    source: data_flow
+    destination: application
+    semantic_direction: upstream
+    description: "Which application produces this data flow?"
+    hop_group: dataflow_app
+    hop_role: resource_to_transformer
+
+  - edge_name: dataflow_consumed_by
+    source: data_flow
+    destination: application
+    semantic_direction: downstream
+    description: "Which application consumes this data flow?"
+    hop_group: dataflow_app
+    hop_role: resource_to_transformer
+
+  # --- Model training lineage ---
+  - edge_name: transforms
+    source: model_version
+    destination: data_dependency
+    semantic_direction: upstream
+    description: "Model version transforms data via this dependency"
+    hop_group: model_transform
+    hop_role: resource_to_transformer
+
+  - edge_name: is_consumed_by
+    source: dataset
+    destination: etl_job
+    semantic_direction: downstream
+    description: "Dataset consumed by job (model training, RAG, etc.)"
+    hop_group: dataset_etl
+    hop_role: resource_to_transformer
+    # Note: context-dependent — description in graph indicates training vs RAG
+
+  - edge_name: is_consumed_by
+    source: model_version
+    destination: etl_job
+    semantic_direction: downstream
+    description: "Model version consumed by job (RAG serving, inference, etc.)"
+    hop_group: model_etl
+    hop_role: resource_to_transformer
+
+
+# -----------------------------------------------------------------------------
+# Hop Group Definitions
+# -----------------------------------------------------------------------------
+# Defines the Resource → Transformer → Resource pattern for each lineage chain.
+# The query builder uses this to collapse two physical hops into one logical step.
+
+hop_groups:
+  dataset_etl:
+    description: "Dataset ↔ ETL Job ↔ Dataset"
+    resource_types: [dataset]
+    transformer_type: etl_job
+    upstream_edge: dataset_produced_by
+    downstream_edge: dataset_consumed_by
+
+  attribute_dependency:
+    description: "Attribute ↔ Data Dependency ↔ Attribute"
+    resource_types: [attribute]
+    transformer_type: data_dependency
+    upstream_edge: data_dependency_produced_by
+    downstream_edge: data_dependency_consumed_by
+
+  dataflow_app:
+    description: "Data Flow ↔ Application ↔ Data Flow"
+    resource_types: [data_flow]
+    transformer_type: application
+    upstream_edge: data_flow_produced_by
+    downstream_edge: dataflow_consumed_by
+
+  model_transform:
+    description: "Model Version ↔ Data Dependency ↔ Attribute"
+    resource_types: [model_version, attribute]
+    transformer_type: data_dependency
+    upstream_edge: transforms
+    downstream_edge: data_dependency_consumed_by
+
+  model_etl:
+    description: "Model Version / Dataset ↔ ETL Job"
+    resource_types: [model_version, dataset]
+    transformer_type: etl_job
+    upstream_edge: is_consumed_by
+    downstream_edge: is_consumed_by
+
+
+# -----------------------------------------------------------------------------
+# Y-Axis: Hierarchy (Parent-Child / Containment / Versioning)
+# -----------------------------------------------------------------------------
+# semantic_up: "forward" means following the stored edge direction goes UP the
+#              hierarchy (toward parent). "reverse" means you must traverse the
+#              edge in reverse to go UP.
+#
+# This abstraction lets the query engine normalize traversal without changing
+# the production graph.
+
+y_hierarchy:
+
+  # --- Versioning ---
+  - edge_name: has_version
+    source: agentic_system
+    destination: agentic_system_version
+    semantic_up: reverse
+    description: "System → its versions (stored as parent→child, reverse to go up)"
+
+  - edge_name: has_member
+    source: agentic_system_version
+    destination: agent_version
+    semantic_up: reverse
+    description: "System version → agent versions"
+
+  - edge_name: has_member
+    source: agentic_system_version
+    destination: agentic_system_version
+    semantic_up: reverse
+    description: "System version → sub-system versions"
+
+  - edge_name: model_to_model_version
+    source: model
+    destination: model_version
+    semantic_up: reverse
+    description: "Model → its versions"
+
+  # --- Containment / Ownership ---
+  - edge_name: is_attribute_for
+    source: attribute
+    source_sub_type: [conceptual, logical]
+    destination: dataset
+    semantic_up: forward
+    description: "Attribute belongs to dataset (forward = up to parent)"
+
+  - edge_name: element_of
+    source: attribute
+    source_sub_type: report
+    destination: report
+    semantic_up: forward
+    description: "Report attribute belongs to report"
+
+  - edge_name: sub_glossary_of
+    source: glossary
+    destination: glossary
+    semantic_up: forward
+    description: "Child glossary → parent glossary"
+
+  - edge_name: business_term_of
+    source: glossary
+    destination: attribute
+    destination_sub_type: term
+    semantic_up: reverse
+    description: "Glossary contains business terms"
+
+  - edge_name: business_element_term_of
+    source: glossary
+    destination: attribute
+    destination_sub_type: term
+    semantic_up: reverse
+    description: "Glossary contains business element terms"
+
+  - edge_name: provides_resource
+    source: mcp_server
+    destination: mcp_resource
+    semantic_up: reverse
+    description: "MCP server provides resources"
+
+  - edge_name: provides_tool
+    source: mcp_server
+    destination: mcp_tool
+    semantic_up: reverse
+    description: "MCP server provides tools"
+
+  - edge_name: produced_by
+    source: application
+    destination: mcp_server
+    semantic_up: reverse
+    description: "Application produces MCP server"
+
+  - edge_name: created_by
+    source: report
+    destination: application
+    semantic_up: forward
+    description: "Report created by application"
+
+  # --- Structural / Organizational ---
+  - edge_name: instance_of
+    source: process
+    destination: process
+    semantic_up: forward
+    description: "Process instance → process definition"
+
+  - edge_name: sub_process_of
+    source: process
+    destination: process
+    semantic_up: forward
+    description: "Sub-process → parent process"
+
+  - edge_name: process_dataset
+    source: process
+    destination: dataset
+    destination_sub_type: process
+    semantic_up: reverse
+    description: "Process → its datasets (PASSTHROUGH — collapse in output)"
+    passthrough: true
+
+  - edge_name: installed
+    source: workspace_service
+    destination: workspace
+    semantic_up: forward
+    description: "Service installed in workspace"
+
+  - edge_name: depends_on
+    source: workspace_service
+    destination: workspace_service
+    semantic_up: forward
+    description: "Service depends on another service"
+
+  # --- Domain grouping ---
+  - edge_name: system_use_case
+    source: agentic_system
+    destination: use_case
+    semantic_up: forward
+    description: "System belongs to use case"
+
+  - edge_name: model_use_case
+    source: model
+    destination: use_case
+    semantic_up: forward
+    description: "Model belongs to use case"
+
+
+# -----------------------------------------------------------------------------
+# Z-Axis: Association (Cross-Cutting Relationships)
+# -----------------------------------------------------------------------------
+# TRAVERSAL CONSTRAINT: Max 1 hop on Z-axis. After a Z-hop, traversal may
+# continue on X or Y axes only. Z-of-Z is explicitly blocked.
+#
+# These edges connect resources across domains — they answer "what else is
+# related?" but don't imply derivation or containment.
+
+z_association:
+
+  - edge_name: uses
+    source: agent_version
+    destination: dataset
+    description: "Agent version uses a dataset"
+
+  - edge_name: uses
+    source: agent_version
+    destination: mcp_tool
+    description: "Agent version uses an MCP tool"
+
+  - edge_name: uses
+    source: agent_version
+    destination: model_version
+    description: "Agent version uses a model version"
+
+  - edge_name: aliased_as
+    source: attribute
+    source_sub_type: term
+    destination: attribute
+    destination_sub_type: term
+    description: "Term-to-term alias (glossary)"
+
+  - edge_name: is_mapped_to
+    source: attribute
+    source_sub_type: logical
+    destination: attribute
+    destination_sub_type: term
+    description: "Logical attribute mapped to business term"
+
+  - edge_name: data_concept_attribute
+    source: data_concept
+    destination: attribute
+    destination_sub_type: [conceptual, term]
+    description: "Data concept linked to attribute (glossary or conceptual)"
+
+  - edge_name: resultsets_dataset
+    source: dataset
+    source_sub_type: resultset
+    destination: dataset
+    description: "Result set linked to dataset (data quality)"
+
+  - edge_name: resultsets_report
+    source: dataset
+    source_sub_type: resultset
+    destination: report
+    description: "Result set linked to report (data quality)"
+
+  - edge_name: resultsets_dataflow
+    source: dataset
+    source_sub_type: resultset
+    destination: data_flow
+    description: "Result set linked to data flow (data quality)"
+
+  - edge_name: resultsets_process
+    source: dataset
+    destination: process
+    description: "Result set linked to process (data quality)"
+
+  - edge_name: use_case_dataset
+    source: use_case
+    destination: dataset
+    description: "Use case associated with dataset"
+
+  - edge_name: workspace_use_case
+    source: workspace
+    destination: use_case
+    reverse: true
+    description: "Workspace associated with use case"
+
+  - edge_name: workspace_dataset
+    source: workspace
+    destination: dataset
+    description: "Workspace associated with dataset"
+
+  - edge_name: implements
+    source: workspace_service
+    destination: model_version
+    description: "Workspace service implements a model version"
+
+
+# -----------------------------------------------------------------------------
+# Traversal Rules (Query Engine Configuration)
+# -----------------------------------------------------------------------------
+traversal_rules:
+  x_axis:
+    max_depth: null           # unlimited — follow the full derivation chain
+    direction_modes: [upstream, downstream, both]
+    hop_collapsing: true      # collapse resource→transformer→resource into 1 logical hop
+    allow_after_z_hop: true   # can continue on X after Z
+
+  y_axis:
+    max_depth: null           # unlimited — walk the full hierarchy
+    direction_modes: [up, down, both]
+    allow_after_z_hop: true   # can continue on Y after Z
+
+  z_axis:
+    max_hops: 1               # ONE hop only — no Z-of-Z
+    allow_after_z_hop: false  # cannot continue on Z after Z
+    description: "After reaching an associated node, traversal may continue on X or Y only"
+
+  passthrough_nodes:
+    collapse_in_output: true
+    include_as_metadata: true
+    types: [process_dataset]
