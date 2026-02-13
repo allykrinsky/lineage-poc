@@ -85,8 +85,8 @@ class EdgeTaxonomy:
             config_path: Path to edge_taxonomy.yaml. If None, uses default location.
         """
         if config_path is None:
-            # Default to edge_taxonomy.yaml in project root
-            config_path = Path(__file__).parent.parent.parent / "edge_taxonomy.yaml"
+            # Default to metamodel/edge_taxonomy.yaml
+            config_path = Path(__file__).parent.parent.parent / "metamodel" / "edge_taxonomy.yaml"
 
         self.config_path = config_path
         self.config = self._load_config()
@@ -141,8 +141,8 @@ class EdgeTaxonomy:
                 edge_def['edge_name'],
                 edge_def['source'],
                 edge_def['destination'],
-                edge_def.get('source_sub_type'),
-                edge_def.get('destination_sub_type')
+                self._normalize_sub_type(edge_def.get('source_sub_type')),
+                self._normalize_sub_type(edge_def.get('destination_sub_type'))
             )
             self.x_edges[key] = EdgeClassification(
                 edge_name=edge_def['edge_name'],
@@ -166,8 +166,8 @@ class EdgeTaxonomy:
                 edge_def['edge_name'],
                 edge_def['source'],
                 edge_def['destination'],
-                edge_def.get('source_sub_type'),
-                edge_def.get('destination_sub_type')
+                self._normalize_sub_type(edge_def.get('source_sub_type')),
+                self._normalize_sub_type(edge_def.get('destination_sub_type'))
             )
             self.y_edges[key] = EdgeClassification(
                 edge_name=edge_def['edge_name'],
@@ -191,8 +191,8 @@ class EdgeTaxonomy:
                 edge_def['edge_name'],
                 edge_def['source'],
                 edge_def['destination'],
-                edge_def.get('source_sub_type'),
-                edge_def.get('destination_sub_type')
+                self._normalize_sub_type(edge_def.get('source_sub_type')),
+                self._normalize_sub_type(edge_def.get('destination_sub_type'))
             )
             self.z_edges[key] = EdgeClassification(
                 edge_name=edge_def['edge_name'],
@@ -284,16 +284,36 @@ class EdgeTaxonomy:
             if key_no_sub in edge_dict:
                 return edge_dict[key_no_sub]
 
-        # Try matching with any sub_type on destination
-        if dest_sub_type:
+        # Try matching with sub_type flexibility
+        # Check if the provided sub_type is within the allowed list of sub_types
+        if source_sub_type or dest_sub_type:
             for edge_dict in [self.x_edges, self.y_edges, self.z_edges]:
                 for stored_key, classification in edge_dict.items():
                     stored_edge, stored_src, stored_dst, stored_src_sub, stored_dst_sub = stored_key
                     if (stored_edge == edge_type.upper() and
                         stored_src == source_node_type and
                         stored_dst == dest_node_type):
-                        # Check if dest_sub_type matches
-                        if stored_dst_sub and dest_sub_type in stored_dst_sub:
+                        # Check if sub_types match
+                        src_match = True
+                        dst_match = True
+
+                        if source_sub_type and stored_src_sub:
+                            src_match = source_sub_type in stored_src_sub
+                        elif source_sub_type and not stored_src_sub:
+                            # Stored edge has no sub_type restriction, so any sub_type matches
+                            src_match = True
+                        elif not source_sub_type and stored_src_sub:
+                            # We have no sub_type but stored edge requires one, no match
+                            src_match = False
+
+                        if dest_sub_type and stored_dst_sub:
+                            dst_match = dest_sub_type in stored_dst_sub
+                        elif dest_sub_type and not stored_dst_sub:
+                            dst_match = True
+                        elif not dest_sub_type and stored_dst_sub:
+                            dst_match = False
+
+                        if src_match and dst_match:
                             return classification
 
         return None

@@ -1,0 +1,680 @@
+# =============================================================================
+# Generic Lineage POC — Seed Entities & Edges
+# =============================================================================
+# Scenario: Fraud detection model lifecycle
+#
+# Dataset-level lineage patterns covered:
+#   1. Standard ETL:            Dataset(s) → Job → Dataset
+#   2. Training from scratch:   Dataset → Job → ModelVersion
+#   3. Finetuning:              ModelVersion + Dataset → Job → ModelVersion
+#   4. RAG / KB creation:       Dataset(s) + ModelVersion → Job → Dataset (KB)
+#   5. Model inference:         Dataset(s) + ModelVersion → Job → Dataset
+#
+# Attribute-level lineage patterns covered:
+#   6. Passthrough:             Attribute → DataDependency → Attribute
+#   7. Calculation:             Attribute(s) → DataDependency → Attribute
+#   8. Model transformation:    Attribute(s) + ModelVersion → DataDep → Attribute
+#
+# Constraint: multiple same-type inputs allowed, max 1 cross-type input.
+#
+# References schema defined in schema.yml
+# =============================================================================
+
+
+assets:
+
+  # ---------------------------------------------------------------------------
+  # Datasets
+  # ---------------------------------------------------------------------------
+  Dataset:
+    - id: "ds-001"
+      name: "raw_transactions"
+      sub_type: null
+      description: "Raw credit card transaction feed from source system"
+
+    - id: "ds-002"
+      name: "curated_transactions"
+      sub_type: null
+      description: "Cleaned and enriched transaction data"
+
+    - id: "ds-003"
+      name: "fraud_feature_set"
+      sub_type: null
+      description: "Engineered features for fraud model training"
+
+    - id: "ds-004"
+      name: "fraud_predictions"
+      sub_type: "knowledge_base"
+      description: "Batch scoring output — fraud scores per transaction"
+
+    - id: "ds-005"
+      name: "txn_quality_results"
+      sub_type: "resultset"
+      description: "Data quality check results for curated_transactions"
+
+    - id: "ds-006"
+      name: "fraud_knowledge_base"
+      sub_type: "knowledge_base"
+      description: "RAG knowledge base built from transaction data and model embeddings"
+
+  # ---------------------------------------------------------------------------
+  # Attributes
+  # ---------------------------------------------------------------------------
+  Attribute:
+    # ── On curated_transactions (ds-002) ──
+    - id: "attr-001"
+      name: "account_id"
+      sub_type: "logical"
+      description: "Customer account identifier"
+
+    - id: "attr-002"
+      name: "transaction_amount"
+      sub_type: "logical"
+      description: "Transaction amount in USD"
+
+    - id: "attr-003"
+      name: "is_fraud"
+      sub_type: "logical"
+      description: "Fraud label (target variable)"
+
+    # ── On fraud_feature_set (ds-003) ──
+    - id: "attr-004"
+      name: "acct_id"
+      sub_type: "logical"
+      description: "Account identifier (passthrough from curated)"
+
+    - id: "attr-005"
+      name: "avg_transaction_30d"
+      sub_type: "conceptual"
+      description: "Average transaction amount over 30 days"
+
+    - id: "attr-006"
+      name: "txn_frequency_7d"
+      sub_type: "conceptual"
+      description: "Transaction frequency in last 7 days"
+
+    # ── On fraud_predictions (ds-004) ──
+    - id: "attr-007"
+      name: "fraud_score"
+      sub_type: "conceptual"
+      description: "Model-derived fraud probability score"
+
+    # ── Business glossary terms ──
+    - id: "attr-008"
+      name: "Account Identifier"
+      sub_type: "term"
+      description: "Business definition of account ID"
+
+    - id: "attr-009"
+      name: "Fraudulent Transaction"
+      sub_type: "term"
+      description: "Business definition of fraud classification"
+
+    # ── Report attribute ──
+    - id: "attr-010"
+      name: "fraud_rate"
+      sub_type: "logical"
+      description: "Calculated fraud rate metric"
+
+  # ---------------------------------------------------------------------------
+  # Jobs
+  # ---------------------------------------------------------------------------
+  Job:
+    # Standard ETL
+    - id: "job-001"
+      name: "ingest_raw_transactions"
+      sub_type: "etl"
+      description: "Ingests raw transaction data and writes to curated layer"
+
+    # Standard ETL
+    - id: "job-002"
+      name: "build_fraud_features"
+      sub_type: "etl"
+      description: "Feature engineering pipeline — curated data to feature set"
+
+    # Training from scratch
+    - id: "job-003"
+      name: "train_fraud_model_v1"
+      sub_type: "training"
+      description: "Initial model training — feature set to model version v1.0"
+
+    # Finetuning
+    - id: "job-004"
+      name: "finetune_fraud_model_v2"
+      sub_type: "finetuning"
+      description: "Finetuning — base model v1.0 + feature set to model version v2.0"
+
+    # RAG / Knowledge base creation
+    - id: "job-005"
+      name: "build_fraud_knowledge_base"
+      sub_type: "rag"
+      description: "RAG pipeline — curated data + model embeddings to knowledge base"
+
+    # Model inference
+    - id: "job-006"
+      name: "score_transactions"
+      sub_type: "inference"
+      description: "Batch inference — curated data + model v2.0 to predictions"
+
+  # ---------------------------------------------------------------------------
+  # Data Dependencies
+  # ---------------------------------------------------------------------------
+  # CONSTRAINT: Data dependencies MUST connect attributes from DIFFERENT datasets.
+  # They cannot connect attributes within the same dataset.
+  #
+  # Rationale: Data dependencies represent transformations in pipelines that
+  # move data between datasets. Within-dataset transformations are implementation
+  # details that should not be modeled as lineage.
+  #
+  # Examples:
+  #   ✅ VALID:   attr-001 (ds-002) → dep-001 → attr-004 (ds-003)
+  #   ❌ INVALID: attr-001 (ds-002) → dep-001 → attr-002 (ds-002)
+  #
+  DataDependency:
+    # Passthrough (single attribute, no model)
+    - id: "dep-001"
+      name: "account_id_passthrough"
+      description: "Passes account_id from curated to feature set unchanged"
+
+    # Calculation (multiple attributes, no model)
+    - id: "dep-002"
+      name: "avg_txn_calculation"
+      description: "Computes avg_transaction_30d from account_id + transaction_amount"
+
+    # Calculation (single attribute, no model)
+    - id: "dep-003"
+      name: "txn_freq_calculation"
+      description: "Computes txn_frequency_7d from account_id"
+
+    # Model-based transformation (attributes + model version)
+    - id: "dep-004"
+      name: "fraud_score_derivation"
+      description: "Derives fraud_score using model v2.0 on feature attributes"
+
+  # ---------------------------------------------------------------------------
+  # Models & Versions
+  # ---------------------------------------------------------------------------
+  Model:
+    - id: "model-001"
+      name: "fraud_detection_model"
+      description: "XGBoost-based fraud detection model"
+
+  ModelVersion:
+    - id: "mv-001"
+      name: "fraud_detection_v1.0"
+      version: "1.0"
+      description: "Initial version — trained from scratch on feature set"
+
+    - id: "mv-002"
+      name: "ada_embedding"
+      version: "2.0"
+      description: "embedding model for rag"
+
+    - id: "mv-003"
+      name: "claude_opus_4"
+      version: "2.0"
+      description: "llm for agents"
+
+
+  # ---------------------------------------------------------------------------
+  # Agentic System
+  # ---------------------------------------------------------------------------
+  AgenticSystem:
+    - id: "asys-001"
+      name: "fraud_review_system"
+      description: "Automated fraud case review system"
+
+  AgenticSystemVersion:
+    - id: "asysv-001"
+      name: "fraud_review_v1"
+      version: "1.0"
+
+  AgentVersion:
+    - id: "agv-001"
+      name: "fraud_reviewer_agent_v1"
+      description: "Agent that reviews flagged transactions"
+
+  # ---------------------------------------------------------------------------
+  # Applications, MCP, Workspace
+  # ---------------------------------------------------------------------------
+  Application:
+    - id: "app-001"
+      name: "fraud_analytics_platform"
+      description: "Main fraud analytics application"
+
+  MCPServer:
+    - id: "mcp-001"
+      name: "fraud_model_server"
+      description: "MCP server hosting fraud model endpoints"
+
+  MCPResource:
+    - id: "mcpr-001"
+      name: "fraud_score_endpoint"
+      description: "/v1/score resource"
+
+  MCPTool:
+    - id: "mcpt-001"
+      name: "fraud_lookup_tool"
+      description: "Tool for looking up fraud scores"
+
+  Workspace:
+    - id: "ws-001"
+      name: "fraud_detection_workspace"
+      description: "Primary workspace for fraud detection team"
+
+  WorkspaceService:
+    - id: "wssvc-001"
+      name: "fraud_model_service"
+      description: "Service deploying fraud model in workspace"
+
+  # ---------------------------------------------------------------------------
+  # Processes
+  # ---------------------------------------------------------------------------
+  Process:
+    - id: "proc-001"
+      name: "fraud_case_review"
+      description: "End-to-end fraud case review process"
+
+    - id: "proc-002"
+      name: "automated_triage"
+      description: "Automated triage sub-process"
+
+  # ---------------------------------------------------------------------------
+  # Reports
+  # ---------------------------------------------------------------------------
+  Report:
+    - id: "rpt-001"
+      name: "weekly_fraud_report"
+      description: "Weekly fraud metrics dashboard"
+
+  # ---------------------------------------------------------------------------
+  # Use Cases
+  # ---------------------------------------------------------------------------
+  UseCase:
+    - id: "uc-001"
+      name: "fraud_detection"
+      description: "Fraud detection and prevention use case"
+
+    - id: "uc-002"
+      name: "regulatory_compliance"
+      description: "Regulatory compliance and reporting"
+
+  # ---------------------------------------------------------------------------
+  # Glossary & Data Concepts
+  # ---------------------------------------------------------------------------
+  Glossary:
+    - id: "gloss-001"
+      name: "enterprise_glossary"
+      description: "Enterprise-wide business glossary"
+
+    - id: "gloss-002"
+      name: "risk_glossary"
+      description: "Risk domain glossary"
+
+  DataConcept:
+    - id: "dc-001"
+      name: "Customer Identity"
+      description: "Conceptual grouping for customer identification attributes"
+
+  DataFlow:
+    - id: "df-001"
+      name: "transaction_data_flow"
+      description: "Data flow for transaction data pipeline"
+
+
+# =============================================================================
+# Relationships
+# =============================================================================
+relationships:
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # X-AXIS: LINEAGE
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  # ── Pattern: Standard ETL (raw → curated) ──────────────────────────────
+  # Dataset → Job → Dataset
+  - type: "IS_CONSUMED_BY"
+    from: "ds-001"
+    to: "job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "ds-002"
+    to: "job-001"
+
+  # ── Pattern: Standard ETL (curated → features) ────────────────────────
+  # Dataset → Job → Dataset
+  - type: "IS_CONSUMED_BY"
+    from: "ds-002"
+    to: "job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "ds-003"
+    to: "job-002"
+
+  # ── Pattern: Model Training from scratch ───────────────────────────────
+  # Dataset → Job → ModelVersion
+  - type: "IS_CONSUMED_BY"
+    from: "ds-003"
+    to: "job-003"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mv-001"
+    to: "job-003"
+
+  # ── Pattern: Model Training / Finetuning ───────────────────────────────
+  # ModelVersion + Dataset → Job → ModelVersion
+  - type: "IS_CONSUMED_BY"
+    from: "mv-001"
+    to: "job-004"
+    properties:
+      context: "base_model"
+
+  - type: "IS_CONSUMED_BY"
+    from: "ds-003"
+    to: "job-004"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mv-002"
+    to: "job-004"
+
+  # ── Pattern: RAG Pipeline / Knowledge Base Creation ────────────────────
+  # Dataset(s) + ModelVersion → Job → Dataset (knowledge_base)
+  - type: "IS_CONSUMED_BY"
+    from: "ds-002"
+    to: "job-005"
+    properties:
+      context: "source_documents"
+
+  - type: "IS_CONSUMED_BY"
+    from: "mv-002"
+    to: "job-005"
+    properties:
+      context: "embedding_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "ds-006"
+    to: "job-005"
+
+  # ── Pattern: Model Inference ───────────────────────────────────────────
+  # Dataset(s) + ModelVersion → Job → Dataset
+  - type: "IS_CONSUMED_BY"
+    from: "ds-002"
+    to: "job-006"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "mv-002"
+    to: "job-006"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "ds-004"
+    to: "job-006"
+
+  # ── Pattern: Attribute Lineage — Passthrough (no model) ────────────────
+  # Attribute → DataDependency → Attribute
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "dep-001"
+    to: "attr-001"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "dep-001"
+    to: "attr-004"
+
+  # ── Pattern: Attribute Lineage — Calculation (no model) ────────────────
+  # Attribute(s) → DataDependency → Attribute
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "dep-002"
+    to: "attr-001"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "dep-002"
+    to: "attr-002"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "dep-002"
+    to: "attr-005"
+
+  # Attribute → DataDependency → Attribute (single source)
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "dep-003"
+    to: "attr-001"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "dep-003"
+    to: "attr-006"
+
+  # ── Pattern: Attribute Lineage — Model Transformation ──────────────────
+  # Attribute(s) + ModelVersion → DataDependency → Attribute
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "dep-004"
+    to: "attr-005"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "dep-004"
+    to: "attr-006"
+
+  - type: "TRANSFORMS"
+    from: "mv-002"
+    to: "dep-004"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "dep-004"
+    to: "attr-007"
+
+  # ── Data flow lineage ──────────────────────────────────────────────────
+
+  - type: "DATA_FLOW_PRODUCED_BY"
+    from: "df-001"
+    to: "app-001"
+
+  - type: "DATAFLOW_CONSUMED_BY"
+    from: "df-001"
+    to: "app-001"
+
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Y-AXIS: HIERARCHY
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  # ── Versioning ─────────────────────────────────────────────────────────
+  - type: "HAS_VERSION"
+    from: "asys-001"
+    to: "asysv-001"
+
+  - type: "HAS_MEMBER"
+    from: "asysv-001"
+    to: "agv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "model-001"
+    to: "mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "model-001"
+    to: "mv-002"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "model-001"
+    to: "mv-003"
+
+  # ── Attribute containment ──────────────────────────────────────────────
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-001"
+    to: "ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-002"
+    to: "ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-003"
+    to: "ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-004"
+    to: "ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-005"
+    to: "ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-006"
+    to: "ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "attr-007"
+    to: "ds-004"
+
+  - type: "ELEMENT_OF"
+    from: "attr-010"
+    to: "rpt-001"
+
+  # ── Glossary hierarchy ─────────────────────────────────────────────────
+  - type: "SUB_GLOSSARY_OF"
+    from: "gloss-002"
+    to: "gloss-001"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-002"
+    to: "attr-009"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-001"
+    to: "attr-008"
+
+  - type: "BUSINESS_ELEMENT_TERM_OF"
+    from: "gloss-001"
+    to: "attr-009"
+
+  # ── MCP hierarchy ──────────────────────────────────────────────────────
+  - type: "PROVIDES_RESOURCE"
+    from: "mcp-001"
+    to: "mcpr-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "mcp-001"
+    to: "mcpt-001"
+
+  - type: "PRODUCED_BY"
+    from: "app-001"
+    to: "mcp-001"
+
+  # ── Process hierarchy ──────────────────────────────────────────────────
+  - type: "SUB_PROCESS_OF"
+    from: "proc-002"
+    to: "proc-001"
+
+  # ── Workspace / service hierarchy ──────────────────────────────────────
+  - type: "INSTALLED"
+    from: "wssvc-001"
+    to: "ws-001"
+
+  - type: "CREATED_BY"
+    from: "rpt-001"
+    to: "app-001"
+
+  # ── Domain grouping ───────────────────────────────────────────────────
+  - type: "SYSTEM_USE_CASE"
+    from: "asys-001"
+    to: "uc-001"
+
+  - type: "MODEL_USE_CASE"
+    from: "model-001"
+    to: "uc-001"
+
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Z-AXIS: ASSOCIATION
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  # ── Agent uses ─────────────────────────────────────────────────────────
+  - type: "USES"
+    from: "agv-001"
+    to: "ds-004"
+
+  - type: "USES"
+    from: "agv-001"
+    to: "ds-006"
+
+  - type: "USES"
+    from: "agv-001"
+    to: "mcpt-001"
+
+  - type: "USES"
+    from: "agv-001"
+    to: "mv-003"
+
+
+  # ── Attribute ↔ term mappings ──────────────────────────────────────────
+  - type: "IS_MAPPED_TO"
+    from: "attr-001"
+    to: "attr-008"
+
+  - type: "IS_MAPPED_TO"
+    from: "attr-003"
+    to: "attr-009"
+
+  - type: "ALIASED_AS"
+    from: "attr-008"
+    to: "attr-009"
+
+  # ── Data concept associations ──────────────────────────────────────────
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-001"
+    to: "attr-005"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-001"
+    to: "attr-008"
+
+  # ── Result set associations ────────────────────────────────────────────
+  - type: "RESULTSETS_DATASET"
+    from: "ds-005"
+    to: "ds-002"
+
+  - type: "RESULTSETS_REPORT"
+    from: "ds-005"
+    to: "rpt-001"
+
+  - type: "RESULTSETS_DATAFLOW"
+    from: "ds-005"
+    to: "df-001"
+
+  # ── Use case ↔ dataset associations ───────────────────────────────────
+  - type: "USE_CASE_DATASET"
+    from: "uc-001"
+    to: "ds-003"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-001"
+    to: "ds-002"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-002"
+    to: "ds-004"
+
+  # ── Workspace associations ────────────────────────────────────────────
+  - type: "WORKSPACE_USE_CASE"
+    from: "ws-001"
+    to: "uc-001"
+
+  - type: "WORKSPACE_DATASET"
+    from: "ws-001"
+    to: "ds-002"
+
+  - type: "WORKSPACE_DATASET"
+    from: "ws-001"
+    to: "ds-003"
+
+  # ── Workspace service → model version ─────────────────────────────────
+  - type: "IMPLEMENTS"
+    from: "wssvc-001"
+    to: "mv-002"

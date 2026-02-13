@@ -1,0 +1,583 @@
+# =============================================================================
+# Generic Lineage POC — Graph Schema
+# =============================================================================
+# Defines what is allowed to exist in the graph: node types and relationships.
+# Organised by the three-axis model:
+#   X-axis (lineage/derivation), Y-axis (hierarchy), Z-axis (association)
+# =============================================================================
+
+version: "2.0"
+description: "Schema for generic lineage framework"
+# ---------------------------------------------------------------------------
+# Node Types
+# ---------------------------------------------------------------------------
+node_types:
+
+  Dataset:
+    description: "Core data resource (tables, result sets, etc.)"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: sub_type
+        type: string
+        required: false
+        allowed_values: [null, "resultset", "knowledge_base"]
+      - name: description
+        type: string
+        required: false
+
+  Attribute:
+    description: "Column-level element belonging to a dataset, report, or glossary"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: sub_type
+        type: string
+        required: true
+        allowed_values: ["logical", "conceptual", "term"]
+      - name: description
+        type: string
+        required: false
+
+  Job:
+    description: "Generic job for data transformation, model training, RAG, or inference (X-axis transformer)"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: sub_type
+        type: string
+        required: true
+        allowed_values: ["etl", "training", "finetuning", "rag", "inference"]
+      - name: description
+        type: string
+        required: false
+
+  DataDependency:
+    description: "Attribute-level transformation link (fine-grained lineage)"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  Model:
+    description: "Logical ML model (parent of model versions)"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  ModelVersion:
+    description: "Specific trained version of a model"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: version
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  AgenticSystem:
+    description: "Top-level agentic system"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  AgenticSystemVersion:
+    description: "Versioned release of an agentic system"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: version
+        type: string
+        required: true
+
+  AgentVersion:
+    description: "Versioned agent within an agentic system"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  Application:
+    description: "Software application"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  MCPServer:
+    description: "MCP server hosting model/tool endpoints"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  MCPResource:
+    description: "Resource exposed by an MCP server"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  MCPTool:
+    description: "Tool exposed by an MCP server"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  Workspace:
+    description: "Collaborative workspace"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  WorkspaceService:
+    description: "Service deployed within a workspace"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  Process:
+    description: "Business process or sub-process"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  Report:
+    description: "Dashboard or report artifact"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  UseCase:
+    description: "Business use case"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  Glossary:
+    description: "Business glossary (container for terms)"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  DataConcept:
+    description: "Logical grouping of related attributes"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+  DataFlow:
+    description: "Named data flow across the pipeline"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: description
+        type: string
+        required: false
+
+
+# ---------------------------------------------------------------------------
+# Allowed Relationships
+# ---------------------------------------------------------------------------
+relationships:
+
+  # ── X-Axis (Lineage / Derivation) ──────────────────────────────────────
+
+  - type: IS_CONSUMED_BY
+    from: Dataset
+    to: Job
+    description: "Dataset is consumed by a job"
+    edge_properties:
+      - name: context
+        type: string
+        required: false
+
+  - type: IS_CONSUMED_BY
+    from: ModelVersion
+    to: Job
+    description: "Model version is consumed by a job (e.g. RAG, inference, finetuning)"
+    edge_properties:
+      - name: context
+        type: string
+        required: false
+
+  - type: DATASET_PRODUCED_BY
+    from: Dataset
+    to: Job
+    description: "Dataset is produced/output by a job"
+
+  - type: DATASET_PRODUCED_BY
+    from: ModelVersion
+    to: Job
+    description: "Model version is produced by a training or finetuning job"
+
+  - type: DATA_DEPENDENCY_PRODUCED_BY
+    from: DataDependency
+    to: Attribute
+    description: "Data dependency sources from this attribute"
+
+  - type: DATA_DEPENDENCY_CONSUMED_BY
+    from: DataDependency
+    to: Attribute
+    description: "Data dependency feeds into this attribute"
+
+  - type: TRANSFORMS
+    from: ModelVersion
+    to: DataDependency
+    description: "Model version transforms via a data dependency"
+
+  - type: DATA_FLOW_PRODUCED_BY
+    from: DataFlow
+    to: Application
+    description: "Data flow is produced by an application"
+
+  - type: DATAFLOW_CONSUMED_BY
+    from: DataFlow
+    to: Application
+    description: "Data flow is consumed by an application"
+
+  # ── Y-Axis (Hierarchy / Containment) ───────────────────────────────────
+
+  - type: HAS_VERSION
+    from: AgenticSystem
+    to: AgenticSystemVersion
+    description: "Agentic system has a versioned release"
+
+  - type: HAS_MEMBER
+    from: AgenticSystemVersion
+    to: AgentVersion
+    description: "Agentic system version contains member agents"
+
+  - type: MODEL_TO_MODEL_VERSION
+    from: Model
+    to: ModelVersion
+    description: "Model contains a model version"
+
+  - type: IS_ATTRIBUTE_FOR
+    from: Attribute
+    to: Dataset
+    description: "Attribute belongs to a dataset"
+
+  - type: ELEMENT_OF
+    from: Attribute
+    to: Report
+    description: "Logical attribute is an element of a report"
+
+  - type: SUB_GLOSSARY_OF
+    from: Glossary
+    to: Glossary
+    description: "Glossary is a child of another glossary"
+
+  - type: BUSINESS_TERM_OF
+    from: Glossary
+    to: Attribute
+    description: "Glossary owns a term attribute"
+
+  - type: BUSINESS_ELEMENT_TERM_OF
+    from: Glossary
+    to: Attribute
+    description: "Glossary has an element-level business term"
+
+  - type: PROVIDES_RESOURCE
+    from: MCPServer
+    to: MCPResource
+    description: "MCP server provides a resource"
+
+  - type: PROVIDES_TOOL
+    from: MCPServer
+    to: MCPTool
+    description: "MCP server provides a tool"
+
+  - type: PRODUCED_BY
+    from: Application
+    to: MCPServer
+    description: "Application is produced/served by an MCP server"
+
+  - type: SUB_PROCESS_OF
+    from: Process
+    to: Process
+    description: "Process is a sub-process of another"
+
+  - type: INSTALLED
+    from: WorkspaceService
+    to: Workspace
+    description: "Service is installed in a workspace"
+
+  - type: CREATED_BY
+    from: Report
+    to: Application
+    description: "Report is created by an application"
+
+  - type: SYSTEM_USE_CASE
+    from: AgenticSystem
+    to: UseCase
+    description: "Agentic system serves a use case"
+
+  - type: MODEL_USE_CASE
+    from: Model
+    to: UseCase
+    description: "Model serves a use case"
+
+  # ── Z-Axis (Association / Cross-cutting) ───────────────────────────────
+
+  - type: USES
+    from: AgentVersion
+    to: Dataset
+    description: "Agent uses a dataset"
+
+  - type: USES
+    from: AgentVersion
+    to: MCPTool
+    description: "Agent uses an MCP tool"
+
+  - type: USES
+    from: AgentVersion
+    to: ModelVersion
+    description: "Agent uses a model version"
+
+  - type: IS_MAPPED_TO
+    from: Attribute
+    to: Attribute
+    description: "Attribute is mapped to a glossary term attribute"
+
+  - type: ALIASED_AS
+    from: Attribute
+    to: Attribute
+    description: "Term is aliased as another term"
+
+  - type: DATA_CONCEPT_ATTRIBUTE
+    from: DataConcept
+    to: Attribute
+    description: "Data concept groups an attribute"
+
+  - type: RESULTSETS_DATASET
+    from: Dataset
+    to: Dataset
+    description: "Result set dataset is associated with a source dataset"
+
+  - type: RESULTSETS_REPORT
+    from: Dataset
+    to: Report
+    description: "Result set dataset is associated with a report"
+
+  - type: RESULTSETS_DATAFLOW
+    from: Dataset
+    to: DataFlow
+    description: "Result set dataset is associated with a data flow"
+
+  - type: RESULTSETS_JOB
+    from: Dataset
+    to: Job
+    description: "Result set dataset is associated with a source dataset"
+
+  - type: USE_CASE_DATASET
+    from: UseCase
+    to: Dataset
+    description: "Use case is associated with a dataset"
+
+  - type: WORKSPACE_USE_CASE
+    from: Workspace
+    to: UseCase
+    description: "Workspace is associated with a use case"
+
+  - type: WORKSPACE_DATASET
+    from: Workspace
+    to: Dataset
+    description: "Workspace is associated with a dataset"
+
+  - type: IMPLEMENTS
+    from: WorkspaceService
+    to: ModelVersion
+    description: "Workspace service implements a model version"
+
+
+# =============================================================================
+# Constraints
+# =============================================================================
+# Additional validation rules that must be enforced beyond basic schema
+
+constraints:
+
+  # Data Dependency Constraint: Cross-Dataset Only
+  - name: data_dependency_cross_dataset
+    description: |
+      Data dependencies MUST connect attributes from different datasets.
+      They cannot connect attributes within the same dataset.
+
+      Rationale: Data dependencies represent transformations in data pipelines
+      that move data between datasets. Within-dataset transformations are
+      implementation details that should not be modeled as lineage.
+
+    applies_to: DataDependency
+    validation_rule:
+      type: cross_dataset_only
+      source_relationship: DATA_DEPENDENCY_PRODUCED_BY
+      target_relationship: DATA_DEPENDENCY_CONSUMED_BY
+      parent_relationship: IS_ATTRIBUTE_FOR
+      error_message: |
+        Data dependency '{dependency_id}' violates cross-dataset constraint:
+        Source attributes and target attributes must belong to different datasets.
+        Found: {source_datasets} → {target_datasets}
+
+    examples:
+      valid:
+        - description: "Passthrough from curated to feature set"
+          source_attribute: "attr-001 (dataset: ds-002)"
+          target_attribute: "attr-004 (dataset: ds-003)"
+
+        - description: "Calculation across datasets"
+          source_attributes: ["attr-001 (ds-002)", "attr-002 (ds-002)"]
+          target_attribute: "attr-005 (dataset: ds-003)"
+
+      invalid:
+        - description: "BLOCKED: Same dataset transformation"
+          source_attribute: "attr-001 (dataset: ds-002)"
+          target_attribute: "attr-002 (dataset: ds-002)"
+          reason: "Both attributes belong to ds-002"

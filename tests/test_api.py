@@ -44,6 +44,82 @@ def test_traversal(
     return response.json()
 
 
+def test_one_hop(start_node_id: str, axes: list = None) -> Dict[str, Any]:
+    """Execute a one-hop query and return results."""
+    if axes is None:
+        axes = ["x", "y", "z"]
+
+    response = requests.post(
+        "http://localhost:8000/api/lineage/one-hop",
+        json={
+            "start_node_id": start_node_id,
+            "axes": axes
+        }
+    )
+
+    if response.status_code != 200:
+        print(f"❌ Error {response.status_code}: {response.text}")
+        return None
+
+    return response.json()
+
+
+def print_one_hop_results(result: Dict[str, Any], test_name: str):
+    """Pretty print one-hop results."""
+    print(f"\n{'='*60}")
+    print(f"TEST: {test_name}")
+    print(f"{'='*60}")
+
+    print(f"\n📍 Start Node: {result['start_node']['id']} ({result['start_node']['type']})")
+    print(f"   {result['start_node']['properties'].get('name', 'N/A')}")
+
+    metadata = result['metadata']
+    print(f"\n📊 One-Hop Statistics:")
+    print(f"   X-axis upstream: {metadata['total_x_upstream']}")
+    print(f"   X-axis downstream: {metadata['total_x_downstream']}")
+    print(f"   Y-axis up: {metadata['total_y_up']}")
+    print(f"   Y-axis down: {metadata['total_y_down']}")
+    print(f"   Z-axis: {metadata['total_z']}")
+
+    # X-axis neighbors
+    if metadata['total_x_upstream'] > 0:
+        print(f"\n🔼 X-Axis Upstream Neighbors:")
+        for neighbor in result['x_axis']['upstream']:
+            node = neighbor['node']
+            name = node['properties'].get('name', 'N/A')
+            print(f"   {node['id']} ({node['type']}): {name} via {neighbor['edge_type']}")
+
+    if metadata['total_x_downstream'] > 0:
+        print(f"\n🔽 X-Axis Downstream Neighbors:")
+        for neighbor in result['x_axis']['downstream']:
+            node = neighbor['node']
+            name = node['properties'].get('name', 'N/A')
+            print(f"   {node['id']} ({node['type']}): {name} via {neighbor['edge_type']}")
+
+    # Y-axis neighbors
+    if metadata['total_y_up'] > 0:
+        print(f"\n⬆️  Y-Axis Up Neighbors:")
+        for neighbor in result['y_axis']['up']:
+            node = neighbor['node']
+            name = node['properties'].get('name', 'N/A')
+            print(f"   {node['id']} ({node['type']}): {name} via {neighbor['edge_type']}")
+
+    if metadata['total_y_down'] > 0:
+        print(f"\n⬇️  Y-Axis Down Neighbors:")
+        for neighbor in result['y_axis']['down']:
+            node = neighbor['node']
+            name = node['properties'].get('name', 'N/A')
+            print(f"   {node['id']} ({node['type']}): {name} via {neighbor['edge_type']}")
+
+    # Z-axis neighbors
+    if metadata['total_z'] > 0:
+        print(f"\n🔗 Z-Axis Neighbors:")
+        for neighbor in result['z_axis']:
+            node = neighbor['node']
+            name = node['properties'].get('name', 'N/A')
+            print(f"   {node['id']} ({node['type']}): {name} via {neighbor['edge_type']}")
+
+
 def print_results(result: Dict[str, Any], test_name: str):
     """Pretty print traversal results."""
     print(f"\n{'='*60}")
@@ -142,10 +218,41 @@ def main():
     if result:
         print_results(result, "Z-axis from curated_transactions")
 
+    # Test 5: One-hop from dataset
+    print("\n\n🧪 Test 5: One-Hop API - Dataset")
+    print("   Get immediate neighbors of curated_transactions")
+    result = test_one_hop(
+        start_node_id="ds-002",  # curated_transactions
+        axes=["x", "y", "z"]
+    )
+    if result:
+        print_one_hop_results(result, "One-Hop: curated_transactions (all axes)")
+
+    # Test 6: One-hop Z-axis only
+    print("\n\n🧪 Test 6: One-Hop API - Z-axis Only")
+    print("   Get only Z-axis associations")
+    result = test_one_hop(
+        start_node_id="ds-002",  # curated_transactions
+        axes=["z"]
+    )
+    if result:
+        print_one_hop_results(result, "One-Hop: curated_transactions (Z-axis only)")
+
+    # Test 7: One-hop from agent_version
+    print("\n\n🧪 Test 7: One-Hop API - Agent Version")
+    print("   Get neighbors of agent including USES relationships")
+    result = test_one_hop(
+        start_node_id="agv-001",  # fraud_reviewer_agent_v1
+        axes=["x", "y", "z"]
+    )
+    if result:
+        print_one_hop_results(result, "One-Hop: fraud_reviewer_agent_v1")
+
     print("\n\n" + "="*60)
     print("✅ ALL TESTS COMPLETE")
     print("="*60)
     print("\nAPI Docs: http://localhost:8000/docs")
+    print("One-Hop API: http://localhost:8000/api/lineage/one-hop")
     print("\n")
 
 

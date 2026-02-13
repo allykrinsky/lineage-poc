@@ -29,7 +29,7 @@ def neo4j_driver():
 @pytest.fixture(scope="session")
 def taxonomy():
     """Load edge taxonomy configuration"""
-    taxonomy_path = Path(__file__).parent.parent / "edge_taxonomy.yaml"
+    taxonomy_path = Path(__file__).parent.parent / "metamodel" / "edge_taxonomy.yaml"
     return EdgeTaxonomy(taxonomy_path)
 
 

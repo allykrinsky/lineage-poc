@@ -37,7 +37,6 @@ node_types:
       - conceptual
       - logical
       - term
-      - report
 
   data_flow:
     display_name: Data Flow
@@ -50,11 +49,17 @@ node_types:
     visible: true          # visible because it captures column-level transformation logic
     description: "Attribute-level lineage transformer — captures which attributes go in and which come out"
 
+  job:
+    display_name: Job
+    role: transformer
+    visible: true
+    description: "Dataset-level lineage transformer — the process that consumes and produces datasets (includes ETL, training, inference, etc.)"
+
   etl_job:
     display_name: ETL Job
     role: transformer
     visible: true
-    description: "Dataset-level lineage transformer — the process that consumes and produces datasets"
+    description: "DEPRECATED: Use 'job' instead. Kept for backwards compatibility."
 
   model:
     display_name: Model
@@ -169,15 +174,15 @@ x_lineage:
   # --- Dataset-level lineage (via ETL Job) ---
   - edge_name: dataset_produced_by
     source: dataset
-    destination: etl_job
+    destination: job
     semantic_direction: upstream
     description: "Which job produced this dataset?"
     hop_group: dataset_etl
     hop_role: resource_to_transformer
 
-  - edge_name: dataset_consumed_by
+  - edge_name: is_consumed_by
     source: dataset
-    destination: etl_job
+    destination: job
     semantic_direction: downstream
     description: "Which job consumes this dataset?"
     hop_group: dataset_etl
@@ -232,7 +237,7 @@ x_lineage:
 
   - edge_name: is_consumed_by
     source: dataset
-    destination: etl_job
+    destination: job
     semantic_direction: downstream
     description: "Dataset consumed by job (model training, RAG, etc.)"
     hop_group: dataset_etl
@@ -241,7 +246,7 @@ x_lineage:
 
   - edge_name: is_consumed_by
     source: model_version
-    destination: etl_job
+    destination: job
     semantic_direction: downstream
     description: "Model version consumed by job (RAG serving, inference, etc.)"
     hop_group: model_etl
@@ -256,11 +261,11 @@ x_lineage:
 
 hop_groups:
   dataset_etl:
-    description: "Dataset ↔ ETL Job ↔ Dataset"
+    description: "Dataset ↔ Job ↔ Dataset"
     resource_types: [dataset]
-    transformer_type: etl_job
+    transformer_type: job
     upstream_edge: dataset_produced_by
-    downstream_edge: dataset_consumed_by
+    downstream_edge: is_consumed_by
 
   attribute_dependency:
     description: "Attribute ↔ Data Dependency ↔ Attribute"
@@ -284,9 +289,9 @@ hop_groups:
     downstream_edge: data_dependency_consumed_by
 
   model_etl:
-    description: "Model Version / Dataset ↔ ETL Job"
+    description: "Model Version / Dataset ↔ Job"
     resource_types: [model_version, dataset]
-    transformer_type: etl_job
+    transformer_type: job
     upstream_edge: is_consumed_by
     downstream_edge: is_consumed_by
 
@@ -338,10 +343,10 @@ y_hierarchy:
 
   - edge_name: element_of
     source: attribute
-    source_sub_type: report
+    source_sub_type: logical
     destination: report
     semantic_up: forward
-    description: "Report attribute belongs to report"
+    description: "Logical attribute belongs to report (forward = up to parent)"
 
   - edge_name: sub_glossary_of
     source: glossary
@@ -511,7 +516,6 @@ z_association:
   - edge_name: workspace_use_case
     source: workspace
     destination: use_case
-    reverse: true
     description: "Workspace associated with use case"
 
   - edge_name: workspace_dataset
