@@ -230,7 +230,7 @@ x_lineage:
   - edge_name: transforms
     source: model_version
     destination: data_dependency
-    semantic_direction: upstream
+    semantic_direction: downstream 
     description: "Model version transforms data via this dependency"
     hop_group: model_transform
     hop_role: resource_to_transformer

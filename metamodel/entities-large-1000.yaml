@@ -1,0 +1,6341 @@
+assets:
+  Dataset:
+  - id: fraud-ds-001
+    name: raw_credit_card_transactions
+    sub_type: null
+    description: Raw credit card transaction feed
+  - id: fraud-ds-002
+    name: curated_transactions
+    sub_type: null
+    description: Cleaned and enriched transaction data
+  - id: fraud-ds-003
+    name: fraud_feature_set
+    sub_type: null
+    description: Engineered features for fraud detection
+  - id: fraud-ds-004
+    name: fraud_predictions
+    sub_type: knowledge_base
+    description: Batch fraud scoring results
+  - id: fraud-ds-005
+    name: fraud_knowledge_base
+    sub_type: knowledge_base
+    description: RAG knowledge base for fraud patterns
+  - id: fraud-ds-006
+    name: transaction_quality_results
+    sub_type: resultset
+    description: Data quality check results
+  - id: fraud-ds-007
+    name: account_risk_scores
+    sub_type: null
+    description: Account-level risk aggregation
+  - id: cust-ds-001
+    name: raw_customer_profiles
+    sub_type: null
+    description: Raw customer profile data from CRM
+  - id: cust-ds-002
+    name: raw_customer_interactions
+    sub_type: null
+    description: Customer touchpoint events
+  - id: cust-ds-003
+    name: curated_customer_profiles
+    sub_type: null
+    description: Cleaned customer master data
+  - id: cust-ds-004
+    name: customer_360_view
+    sub_type: null
+    description: Unified customer view with behavioral features
+  - id: cust-ds-005
+    name: customer_segmentation_results
+    sub_type: knowledge_base
+    description: ML-based customer segments
+  - id: cust-ds-006
+    name: churn_predictions
+    sub_type: knowledge_base
+    description: Customer churn probability scores
+  - id: cust-ds-007
+    name: customer_lifetime_value
+    sub_type: null
+    description: Calculated CLV metrics
+  - id: cust-ds-008
+    name: profile_quality_results
+    sub_type: resultset
+    description: Profile completeness checks
+  - id: mkt-ds-001
+    name: raw_campaign_events
+    sub_type: null
+    description: Marketing campaign interaction data
+  - id: mkt-ds-002
+    name: raw_email_engagement
+    sub_type: null
+    description: Email open/click event stream
+  - id: mkt-ds-003
+    name: curated_campaign_metrics
+    sub_type: null
+    description: Aggregated campaign performance
+  - id: mkt-ds-004
+    name: marketing_attribution_features
+    sub_type: null
+    description: Multi-touch attribution features
+  - id: mkt-ds-005
+    name: campaign_optimization_scores
+    sub_type: knowledge_base
+    description: ML-driven campaign recommendations
+  - id: mkt-ds-006
+    name: next_best_offer_predictions
+    sub_type: knowledge_base
+    description: Personalized offer recommendations
+  - id: mkt-ds-007
+    name: campaign_quality_results
+    sub_type: resultset
+    description: Campaign data validation results
+  - id: risk-ds-001
+    name: raw_credit_applications
+    sub_type: null
+    description: Credit application submissions
+  - id: risk-ds-002
+    name: raw_credit_bureau_data
+    sub_type: null
+    description: External credit bureau reports
+  - id: risk-ds-003
+    name: curated_credit_data
+    sub_type: null
+    description: Merged credit assessment data
+  - id: risk-ds-004
+    name: risk_feature_set
+    sub_type: null
+    description: Credit risk modeling features
+  - id: risk-ds-005
+    name: credit_scores
+    sub_type: knowledge_base
+    description: Credit risk scores
+  - id: risk-ds-006
+    name: default_predictions
+    sub_type: knowledge_base
+    description: Loan default probability
+  - id: risk-ds-007
+    name: credit_quality_results
+    sub_type: resultset
+    description: Credit data validation
+  - id: reg-ds-001
+    name: raw_transaction_logs
+    sub_type: null
+    description: All transaction event logs
+  - id: reg-ds-002
+    name: raw_account_balances
+    sub_type: null
+    description: Daily account balance snapshots
+  - id: reg-ds-003
+    name: curated_regulatory_data
+    sub_type: null
+    description: Compliance-ready transaction data
+  - id: reg-ds-004
+    name: aml_suspicious_activity
+    sub_type: null
+    description: Anti-money laundering flagged transactions
+  - id: reg-ds-005
+    name: regulatory_reports
+    sub_type: null
+    description: Generated compliance reports
+  - id: reg-ds-006
+    name: reg_quality_results
+    sub_type: resultset
+    description: Regulatory data validation
+  - id: rec-ds-001
+    name: raw_product_catalog
+    sub_type: null
+    description: Product inventory and metadata
+  - id: rec-ds-002
+    name: raw_purchase_history
+    sub_type: null
+    description: Historical purchase transactions
+  - id: rec-ds-003
+    name: raw_browse_events
+    sub_type: null
+    description: Web browsing behavior
+  - id: rec-ds-004
+    name: curated_user_behavior
+    sub_type: null
+    description: Unified user interaction data
+  - id: rec-ds-005
+    name: product_embeddings
+    sub_type: null
+    description: Product feature vectors
+  - id: rec-ds-006
+    name: user_product_affinity
+    sub_type: null
+    description: User-product affinity scores
+  - id: rec-ds-007
+    name: product_recommendations
+    sub_type: knowledge_base
+    description: Personalized product recommendations
+  - id: rec-ds-008
+    name: rec_knowledge_base
+    sub_type: knowledge_base
+    description: RAG-based recommendation explanations
+  - id: rec-ds-009
+    name: rec_quality_results
+    sub_type: resultset
+    description: Recommendation quality metrics
+  - id: payment-ds-001
+    name: raw_payment_data_1
+    sub_type: null
+    description: Raw Payment Processing data source 1
+  - id: payment-ds-002
+    name: curated_payment_data_1
+    sub_type: null
+    description: Curated Payment Processing data 1
+  - id: payment-ds-003
+    name: payment_quality_results
+    sub_type: resultset
+    description: Payment Processing data quality results
+  - id: payment-ds-004
+    name: raw_payment_data_2
+    sub_type: null
+    description: Raw Payment Processing data source 2
+  - id: payment-ds-005
+    name: curated_payment_data_2
+    sub_type: null
+    description: Curated Payment Processing data 2
+  - id: payment-ds-006
+    name: payment_feature_set
+    sub_type: null
+    description: Payment Processing feature engineering
+  - id: payment-ds-007
+    name: payment_predictions
+    sub_type: knowledge_base
+    description: Payment Processing model predictions
+  - id: payment-ds-008
+    name: raw_payment_data_3
+    sub_type: null
+    description: Raw Payment Processing data source 3
+  - id: payment-ds-009
+    name: curated_payment_data_3
+    sub_type: null
+    description: Curated Payment Processing data 3
+  - id: inventory-ds-001
+    name: raw_inventory_data_1
+    sub_type: null
+    description: Raw Inventory Management data source 1
+  - id: inventory-ds-002
+    name: curated_inventory_data_1
+    sub_type: null
+    description: Curated Inventory Management data 1
+  - id: inventory-ds-003
+    name: inventory_quality_results
+    sub_type: resultset
+    description: Inventory Management data quality results
+  - id: inventory-ds-004
+    name: raw_inventory_data_2
+    sub_type: null
+    description: Raw Inventory Management data source 2
+  - id: inventory-ds-005
+    name: curated_inventory_data_2
+    sub_type: null
+    description: Curated Inventory Management data 2
+  - id: inventory-ds-006
+    name: inventory_feature_set
+    sub_type: null
+    description: Inventory Management feature engineering
+  - id: inventory-ds-007
+    name: inventory_predictions
+    sub_type: knowledge_base
+    description: Inventory Management model predictions
+  - id: inventory-ds-008
+    name: raw_inventory_data_3
+    sub_type: null
+    description: Raw Inventory Management data source 3
+  - id: inventory-ds-009
+    name: curated_inventory_data_3
+    sub_type: null
+    description: Curated Inventory Management data 3
+  - id: shipping-ds-001
+    name: raw_shipping_data_1
+    sub_type: null
+    description: Raw Shipping & Logistics data source 1
+  - id: shipping-ds-002
+    name: curated_shipping_data_1
+    sub_type: null
+    description: Curated Shipping & Logistics data 1
+  - id: shipping-ds-003
+    name: shipping_quality_results
+    sub_type: resultset
+    description: Shipping & Logistics data quality results
+  - id: shipping-ds-004
+    name: raw_shipping_data_2
+    sub_type: null
+    description: Raw Shipping & Logistics data source 2
+  - id: shipping-ds-005
+    name: curated_shipping_data_2
+    sub_type: null
+    description: Curated Shipping & Logistics data 2
+  - id: shipping-ds-006
+    name: shipping_feature_set
+    sub_type: null
+    description: Shipping & Logistics feature engineering
+  - id: shipping-ds-007
+    name: shipping_predictions
+    sub_type: knowledge_base
+    description: Shipping & Logistics model predictions
+  - id: shipping-ds-008
+    name: raw_shipping_data_3
+    sub_type: null
+    description: Raw Shipping & Logistics data source 3
+  - id: shipping-ds-009
+    name: curated_shipping_data_3
+    sub_type: null
+    description: Curated Shipping & Logistics data 3
+  - id: support-ds-001
+    name: raw_support_data_1
+    sub_type: null
+    description: Raw Customer Support data source 1
+  - id: support-ds-002
+    name: curated_support_data_1
+    sub_type: null
+    description: Curated Customer Support data 1
+  - id: support-ds-003
+    name: support_quality_results
+    sub_type: resultset
+    description: Customer Support data quality results
+  - id: support-ds-004
+    name: raw_support_data_2
+    sub_type: null
+    description: Raw Customer Support data source 2
+  - id: support-ds-005
+    name: curated_support_data_2
+    sub_type: null
+    description: Curated Customer Support data 2
+  - id: support-ds-006
+    name: support_feature_set
+    sub_type: null
+    description: Customer Support feature engineering
+  - id: support-ds-007
+    name: support_predictions
+    sub_type: knowledge_base
+    description: Customer Support model predictions
+  - id: support-ds-008
+    name: raw_support_data_3
+    sub_type: null
+    description: Raw Customer Support data source 3
+  - id: support-ds-009
+    name: curated_support_data_3
+    sub_type: null
+    description: Curated Customer Support data 3
+  - id: sales-ds-001
+    name: raw_sales_data_1
+    sub_type: null
+    description: Raw Sales Analytics data source 1
+  - id: sales-ds-002
+    name: curated_sales_data_1
+    sub_type: null
+    description: Curated Sales Analytics data 1
+  - id: sales-ds-003
+    name: sales_quality_results
+    sub_type: resultset
+    description: Sales Analytics data quality results
+  - id: sales-ds-004
+    name: raw_sales_data_2
+    sub_type: null
+    description: Raw Sales Analytics data source 2
+  - id: sales-ds-005
+    name: curated_sales_data_2
+    sub_type: null
+    description: Curated Sales Analytics data 2
+  - id: sales-ds-006
+    name: sales_feature_set
+    sub_type: null
+    description: Sales Analytics feature engineering
+  - id: sales-ds-007
+    name: sales_predictions
+    sub_type: knowledge_base
+    description: Sales Analytics model predictions
+  - id: sales-ds-008
+    name: raw_sales_data_3
+    sub_type: null
+    description: Raw Sales Analytics data source 3
+  - id: sales-ds-009
+    name: curated_sales_data_3
+    sub_type: null
+    description: Curated Sales Analytics data 3
+  - id: operations-ds-001
+    name: raw_operations_data_1
+    sub_type: null
+    description: Raw Operations data source 1
+  - id: operations-ds-002
+    name: curated_operations_data_1
+    sub_type: null
+    description: Curated Operations data 1
+  - id: operations-ds-003
+    name: operations_quality_results
+    sub_type: resultset
+    description: Operations data quality results
+  - id: operations-ds-004
+    name: raw_operations_data_2
+    sub_type: null
+    description: Raw Operations data source 2
+  - id: operations-ds-005
+    name: curated_operations_data_2
+    sub_type: null
+    description: Curated Operations data 2
+  - id: operations-ds-006
+    name: operations_feature_set
+    sub_type: null
+    description: Operations feature engineering
+  - id: operations-ds-007
+    name: operations_predictions
+    sub_type: knowledge_base
+    description: Operations model predictions
+  - id: operations-ds-008
+    name: raw_operations_data_3
+    sub_type: null
+    description: Raw Operations data source 3
+  - id: operations-ds-009
+    name: curated_operations_data_3
+    sub_type: null
+    description: Curated Operations data 3
+  - id: finance-ds-001
+    name: raw_finance_data_1
+    sub_type: null
+    description: Raw Finance data source 1
+  - id: finance-ds-002
+    name: curated_finance_data_1
+    sub_type: null
+    description: Curated Finance data 1
+  - id: finance-ds-003
+    name: finance_quality_results
+    sub_type: resultset
+    description: Finance data quality results
+  - id: finance-ds-004
+    name: raw_finance_data_2
+    sub_type: null
+    description: Raw Finance data source 2
+  - id: finance-ds-005
+    name: curated_finance_data_2
+    sub_type: null
+    description: Curated Finance data 2
+  - id: finance-ds-006
+    name: finance_feature_set
+    sub_type: null
+    description: Finance feature engineering
+  - id: finance-ds-007
+    name: finance_predictions
+    sub_type: knowledge_base
+    description: Finance model predictions
+  - id: finance-ds-008
+    name: raw_finance_data_3
+    sub_type: null
+    description: Raw Finance data source 3
+  - id: finance-ds-009
+    name: curated_finance_data_3
+    sub_type: null
+    description: Curated Finance data 3
+  - id: hr-ds-001
+    name: raw_hr_data_1
+    sub_type: null
+    description: Raw Human Resources data source 1
+  - id: hr-ds-002
+    name: curated_hr_data_1
+    sub_type: null
+    description: Curated Human Resources data 1
+  - id: hr-ds-003
+    name: hr_quality_results
+    sub_type: resultset
+    description: Human Resources data quality results
+  - id: hr-ds-004
+    name: raw_hr_data_2
+    sub_type: null
+    description: Raw Human Resources data source 2
+  - id: hr-ds-005
+    name: curated_hr_data_2
+    sub_type: null
+    description: Curated Human Resources data 2
+  - id: hr-ds-006
+    name: hr_feature_set
+    sub_type: null
+    description: Human Resources feature engineering
+  - id: hr-ds-007
+    name: hr_predictions
+    sub_type: knowledge_base
+    description: Human Resources model predictions
+  - id: hr-ds-008
+    name: raw_hr_data_3
+    sub_type: null
+    description: Raw Human Resources data source 3
+  - id: hr-ds-009
+    name: curated_hr_data_3
+    sub_type: null
+    description: Curated Human Resources data 3
+  Attribute:
+  - id: fraud-attr-001
+    name: transaction_id
+    sub_type: logical
+    description: Unique transaction identifier
+  - id: fraud-attr-002
+    name: account_id
+    sub_type: logical
+    description: Customer account ID
+  - id: fraud-attr-003
+    name: merchant_id
+    sub_type: logical
+    description: Merchant identifier
+  - id: fraud-attr-004
+    name: transaction_amount
+    sub_type: logical
+    description: Transaction amount in USD
+  - id: fraud-attr-005
+    name: transaction_timestamp
+    sub_type: logical
+    description: Transaction date/time
+  - id: fraud-attr-006
+    name: txn_id
+    sub_type: logical
+    description: Cleaned transaction ID
+  - id: fraud-attr-007
+    name: acct_id
+    sub_type: logical
+    description: Cleaned account ID
+  - id: fraud-attr-008
+    name: amount_usd
+    sub_type: logical
+    description: Normalized amount
+  - id: fraud-attr-009
+    name: merchant_category
+    sub_type: logical
+    description: MCC category code
+  - id: fraud-attr-010
+    name: is_international
+    sub_type: logical
+    description: Cross-border flag
+  - id: fraud-attr-011
+    name: avg_txn_amount_7d
+    sub_type: conceptual
+    description: 7-day rolling average
+  - id: fraud-attr-012
+    name: txn_frequency_24h
+    sub_type: conceptual
+    description: Transactions in last 24h
+  - id: fraud-attr-013
+    name: merchant_risk_score
+    sub_type: conceptual
+    description: Merchant risk indicator
+  - id: fraud-attr-014
+    name: velocity_score
+    sub_type: conceptual
+    description: Transaction velocity metric
+  - id: fraud-attr-015
+    name: account_risk_level
+    sub_type: logical
+    description: Overall account risk rating
+  - id: fraud-attr-016
+    name: fraud_score
+    sub_type: logical
+    description: ML fraud probability
+  - id: cust-attr-001
+    name: customer_id
+    sub_type: logical
+    description: Primary customer identifier
+  - id: cust-attr-002
+    name: first_name
+    sub_type: logical
+    description: Customer first name
+  - id: cust-attr-003
+    name: last_name
+    sub_type: logical
+    description: Customer last name
+  - id: cust-attr-004
+    name: email
+    sub_type: logical
+    description: Email address
+  - id: cust-attr-005
+    name: phone
+    sub_type: logical
+    description: Phone number
+  - id: cust-attr-006
+    name: registration_date
+    sub_type: logical
+    description: Account creation date
+  - id: cust-attr-007
+    name: interaction_id
+    sub_type: logical
+    description: Event identifier
+  - id: cust-attr-008
+    name: customer_id_fk
+    sub_type: logical
+    description: Customer foreign key
+  - id: cust-attr-009
+    name: channel
+    sub_type: logical
+    description: Interaction channel
+  - id: cust-attr-010
+    name: event_type
+    sub_type: logical
+    description: Type of interaction
+  - id: cust-attr-011
+    name: cust_id
+    sub_type: logical
+    description: Cleaned customer ID
+  - id: cust-attr-012
+    name: full_name
+    sub_type: logical
+    description: Concatenated full name
+  - id: cust-attr-013
+    name: email_normalized
+    sub_type: logical
+    description: Standardized email
+  - id: cust-attr-014
+    name: account_status
+    sub_type: logical
+    description: Active/inactive status
+  - id: cust-attr-015
+    name: total_interactions
+    sub_type: conceptual
+    description: Lifetime interaction count
+  - id: cust-attr-016
+    name: engagement_score
+    sub_type: conceptual
+    description: Customer engagement metric
+  - id: cust-attr-017
+    name: tenure_days
+    sub_type: conceptual
+    description: Days since registration
+  - id: cust-attr-018
+    name: preferred_channel
+    sub_type: conceptual
+    description: Most used channel
+  - id: cust-attr-019
+    name: clv_amount
+    sub_type: logical
+    description: Predicted lifetime value
+  - id: cust-attr-020
+    name: clv_segment
+    sub_type: logical
+    description: High/medium/low value
+  - id: mkt-attr-001
+    name: campaign_id
+    sub_type: logical
+    description: Campaign identifier
+  - id: mkt-attr-002
+    name: customer_id_ref
+    sub_type: logical
+    description: Customer reference
+  - id: mkt-attr-003
+    name: event_timestamp
+    sub_type: logical
+    description: Event time
+  - id: mkt-attr-004
+    name: event_action
+    sub_type: logical
+    description: Click/open/convert
+  - id: mkt-attr-005
+    name: email_id
+    sub_type: logical
+    description: Email message ID
+  - id: mkt-attr-006
+    name: recipient_id
+    sub_type: logical
+    description: Recipient customer ID
+  - id: mkt-attr-007
+    name: opened
+    sub_type: logical
+    description: Email open flag
+  - id: mkt-attr-008
+    name: clicked
+    sub_type: logical
+    description: Link click flag
+  - id: mkt-attr-009
+    name: campaign_name
+    sub_type: logical
+    description: Campaign display name
+  - id: mkt-attr-010
+    name: send_count
+    sub_type: logical
+    description: Emails sent
+  - id: mkt-attr-011
+    name: open_rate
+    sub_type: logical
+    description: Open rate percentage
+  - id: mkt-attr-012
+    name: conversion_rate
+    sub_type: logical
+    description: Conversion percentage
+  - id: mkt-attr-013
+    name: first_touch_campaign
+    sub_type: conceptual
+    description: First campaign interaction
+  - id: mkt-attr-014
+    name: last_touch_campaign
+    sub_type: conceptual
+    description: Most recent campaign
+  - id: mkt-attr-015
+    name: attribution_weight
+    sub_type: conceptual
+    description: Multi-touch attribution score
+  - id: risk-attr-001
+    name: application_id
+    sub_type: logical
+    description: Credit application ID
+  - id: risk-attr-002
+    name: applicant_id
+    sub_type: logical
+    description: Applicant customer ID
+  - id: risk-attr-003
+    name: requested_amount
+    sub_type: logical
+    description: Loan amount requested
+  - id: risk-attr-004
+    name: employment_status
+    sub_type: logical
+    description: Employment type
+  - id: risk-attr-005
+    name: bureau_score
+    sub_type: logical
+    description: Credit bureau score
+  - id: risk-attr-006
+    name: debt_to_income
+    sub_type: logical
+    description: DTI ratio
+  - id: risk-attr-007
+    name: payment_history_months
+    sub_type: logical
+    description: Months of payment history
+  - id: risk-attr-008
+    name: app_id
+    sub_type: logical
+    description: Cleaned application ID
+  - id: risk-attr-009
+    name: combined_score
+    sub_type: logical
+    description: Merged credit score
+  - id: risk-attr-010
+    name: risk_tier
+    sub_type: logical
+    description: Risk category
+  - id: risk-attr-011
+    name: credit_utilization
+    sub_type: conceptual
+    description: Credit utilization ratio
+  - id: risk-attr-012
+    name: delinquency_rate
+    sub_type: conceptual
+    description: Historical delinquency
+  - id: risk-attr-013
+    name: income_stability_score
+    sub_type: conceptual
+    description: Income volatility metric
+  - id: reg-attr-001
+    name: log_id
+    sub_type: logical
+    description: Transaction log entry ID
+  - id: reg-attr-002
+    name: txn_timestamp
+    sub_type: logical
+    description: Transaction timestamp
+  - id: reg-attr-003
+    name: account_number
+    sub_type: logical
+    description: Account number
+  - id: reg-attr-004
+    name: txn_type
+    sub_type: logical
+    description: Transaction type code
+  - id: reg-attr-005
+    name: balance_date
+    sub_type: logical
+    description: Balance snapshot date
+  - id: reg-attr-006
+    name: account_num
+    sub_type: logical
+    description: Account number
+  - id: reg-attr-007
+    name: balance_amount
+    sub_type: logical
+    description: Account balance
+  - id: reg-attr-008
+    name: reporting_txn_id
+    sub_type: logical
+    description: Regulatory transaction ID
+  - id: reg-attr-009
+    name: kyc_status
+    sub_type: logical
+    description: KYC verification status
+  - id: reg-attr-010
+    name: aml_flag
+    sub_type: logical
+    description: AML screening result
+  - id: reg-attr-011
+    name: sar_id
+    sub_type: logical
+    description: Suspicious activity report ID
+  - id: reg-attr-012
+    name: risk_rating
+    sub_type: logical
+    description: AML risk level
+  - id: reg-attr-013
+    name: report_id
+    sub_type: logical
+    description: Report identifier
+  - id: reg-attr-014
+    name: report_period
+    sub_type: logical
+    description: Reporting period
+  - id: reg-attr-015
+    name: filing_status
+    sub_type: logical
+    description: Filed/pending/draft
+  - id: rec-attr-001
+    name: product_id
+    sub_type: logical
+    description: Product SKU
+  - id: rec-attr-002
+    name: product_name
+    sub_type: logical
+    description: Product name
+  - id: rec-attr-003
+    name: category
+    sub_type: logical
+    description: Product category
+  - id: rec-attr-004
+    name: price
+    sub_type: logical
+    description: List price
+  - id: rec-attr-005
+    name: order_id
+    sub_type: logical
+    description: Purchase order ID
+  - id: rec-attr-006
+    name: user_id
+    sub_type: logical
+    description: Purchasing user ID
+  - id: rec-attr-007
+    name: product_sku
+    sub_type: logical
+    description: Purchased product SKU
+  - id: rec-attr-008
+    name: purchase_date
+    sub_type: logical
+    description: Purchase timestamp
+  - id: rec-attr-009
+    name: browse_event_id
+    sub_type: logical
+    description: Browse event identifier
+  - id: rec-attr-010
+    name: session_id
+    sub_type: logical
+    description: Web session ID
+  - id: rec-attr-011
+    name: viewed_product_id
+    sub_type: logical
+    description: Viewed product
+  - id: rec-attr-012
+    name: user_profile_id
+    sub_type: logical
+    description: User identifier
+  - id: rec-attr-013
+    name: total_views
+    sub_type: logical
+    description: Product views count
+  - id: rec-attr-014
+    name: total_purchases
+    sub_type: logical
+    description: Purchase count
+  - id: rec-attr-015
+    name: embedding_vector
+    sub_type: conceptual
+    description: Product feature embedding
+  - id: rec-attr-016
+    name: similarity_cluster
+    sub_type: conceptual
+    description: Product cluster ID
+  - id: rec-attr-017
+    name: affinity_score
+    sub_type: conceptual
+    description: User-product affinity
+  - id: rec-attr-018
+    name: recommendation_rank
+    sub_type: conceptual
+    description: Ranked recommendation position
+  - id: term-001
+    name: Account Identifier
+    sub_type: term
+    description: Business definition of account ID
+  - id: term-002
+    name: Customer Identifier
+    sub_type: term
+    description: Business definition of customer ID
+  - id: term-003
+    name: Transaction Amount
+    sub_type: term
+    description: Monetary value of transaction
+  - id: term-004
+    name: Fraudulent Activity
+    sub_type: term
+    description: Definition of fraud
+  - id: term-005
+    name: Customer Lifetime Value
+    sub_type: term
+    description: CLV business definition
+  - id: term-006
+    name: Marketing Campaign
+    sub_type: term
+    description: Campaign definition
+  - id: term-007
+    name: Credit Score
+    sub_type: term
+    description: Credit scoring definition
+  - id: term-008
+    name: Risk Rating
+    sub_type: term
+    description: Risk classification
+  - id: term-009
+    name: Regulatory Compliance
+    sub_type: term
+    description: Compliance definition
+  - id: term-010
+    name: Product Recommendation
+    sub_type: term
+    description: Recommendation engine output
+  - id: rpt-attr-001
+    name: fraud_detection_rate
+    sub_type: logical
+    description: Fraud detection KPI
+  - id: rpt-attr-002
+    name: false_positive_rate
+    sub_type: logical
+    description: False positive percentage
+  - id: rpt-attr-003
+    name: churn_rate
+    sub_type: logical
+    description: Customer churn percentage
+  - id: rpt-attr-004
+    name: avg_clv
+    sub_type: logical
+    description: Average customer lifetime value
+  - id: rpt-attr-005
+    name: campaign_roi
+    sub_type: logical
+    description: Marketing campaign ROI
+  - id: rpt-attr-006
+    name: default_rate
+    sub_type: logical
+    description: Loan default rate
+  - id: rpt-attr-007
+    name: compliance_score
+    sub_type: logical
+    description: Regulatory compliance metric
+  - id: rpt-attr-008
+    name: recommendation_ctr
+    sub_type: logical
+    description: Recommendation click-through rate
+  - id: payment-term-001
+    name: Payment Processing Term 1
+    sub_type: term
+    description: Business term 1 for Payment Processing
+  - id: payment-term-002
+    name: Payment Processing Term 2
+    sub_type: term
+    description: Business term 2 for Payment Processing
+  - id: payment-term-003
+    name: Payment Processing Term 3
+    sub_type: term
+    description: Business term 3 for Payment Processing
+  - id: payment-attr-001
+    name: payment_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Payment Processing data
+  - id: payment-attr-002
+    name: payment_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Payment Processing data
+  - id: payment-attr-003
+    name: payment_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Payment Processing data
+  - id: payment-attr-004
+    name: payment_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Payment Processing data
+  - id: payment-attr-005
+    name: payment_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Payment Processing data
+  - id: payment-attr-006
+    name: payment_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: payment-attr-007
+    name: payment_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: payment-attr-008
+    name: payment_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: payment-attr-009
+    name: payment_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: payment-attr-010
+    name: payment_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Payment Processing data
+  - id: payment-attr-011
+    name: payment_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Payment Processing data
+  - id: payment-attr-012
+    name: payment_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Payment Processing data
+  - id: payment-attr-013
+    name: payment_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Payment Processing data
+  - id: payment-attr-014
+    name: payment_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Payment Processing data
+  - id: payment-attr-015
+    name: payment_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: payment-attr-016
+    name: payment_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: payment-attr-017
+    name: payment_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: payment-attr-018
+    name: payment_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: payment-attr-019
+    name: payment_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: payment-attr-020
+    name: payment_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: payment-attr-021
+    name: payment_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: payment-attr-022
+    name: payment_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Payment Processing data
+  - id: payment-attr-023
+    name: payment_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Payment Processing data
+  - id: payment-attr-024
+    name: payment_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Payment Processing data
+  - id: payment-attr-025
+    name: payment_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Payment Processing data
+  - id: payment-attr-026
+    name: payment_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Payment Processing data
+  - id: payment-attr-027
+    name: payment_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: payment-attr-028
+    name: payment_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: payment-attr-029
+    name: payment_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: payment-attr-030
+    name: payment_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: payment-rpt-attr-001
+    name: payment_kpi_1
+    sub_type: logical
+    description: Payment Processing KPI 1
+  - id: payment-rpt-attr-002
+    name: payment_kpi_2
+    sub_type: logical
+    description: Payment Processing KPI 2
+  - id: payment-rpt-attr-003
+    name: payment_kpi_3
+    sub_type: logical
+    description: Payment Processing KPI 3
+  - id: inventory-term-001
+    name: Inventory Management Term 1
+    sub_type: term
+    description: Business term 1 for Inventory Management
+  - id: inventory-term-002
+    name: Inventory Management Term 2
+    sub_type: term
+    description: Business term 2 for Inventory Management
+  - id: inventory-term-003
+    name: Inventory Management Term 3
+    sub_type: term
+    description: Business term 3 for Inventory Management
+  - id: inventory-attr-001
+    name: inventory_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Inventory Management data
+  - id: inventory-attr-002
+    name: inventory_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Inventory Management data
+  - id: inventory-attr-003
+    name: inventory_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Inventory Management data
+  - id: inventory-attr-004
+    name: inventory_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Inventory Management data
+  - id: inventory-attr-005
+    name: inventory_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Inventory Management data
+  - id: inventory-attr-006
+    name: inventory_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: inventory-attr-007
+    name: inventory_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: inventory-attr-008
+    name: inventory_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: inventory-attr-009
+    name: inventory_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: inventory-attr-010
+    name: inventory_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Inventory Management data
+  - id: inventory-attr-011
+    name: inventory_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Inventory Management data
+  - id: inventory-attr-012
+    name: inventory_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Inventory Management data
+  - id: inventory-attr-013
+    name: inventory_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Inventory Management data
+  - id: inventory-attr-014
+    name: inventory_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Inventory Management data
+  - id: inventory-attr-015
+    name: inventory_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: inventory-attr-016
+    name: inventory_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: inventory-attr-017
+    name: inventory_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: inventory-attr-018
+    name: inventory_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: inventory-attr-019
+    name: inventory_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: inventory-attr-020
+    name: inventory_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: inventory-attr-021
+    name: inventory_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: inventory-attr-022
+    name: inventory_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Inventory Management data
+  - id: inventory-attr-023
+    name: inventory_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Inventory Management data
+  - id: inventory-attr-024
+    name: inventory_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Inventory Management data
+  - id: inventory-attr-025
+    name: inventory_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Inventory Management data
+  - id: inventory-attr-026
+    name: inventory_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Inventory Management data
+  - id: inventory-attr-027
+    name: inventory_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: inventory-attr-028
+    name: inventory_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: inventory-attr-029
+    name: inventory_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: inventory-attr-030
+    name: inventory_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: inventory-rpt-attr-001
+    name: inventory_kpi_1
+    sub_type: logical
+    description: Inventory Management KPI 1
+  - id: inventory-rpt-attr-002
+    name: inventory_kpi_2
+    sub_type: logical
+    description: Inventory Management KPI 2
+  - id: inventory-rpt-attr-003
+    name: inventory_kpi_3
+    sub_type: logical
+    description: Inventory Management KPI 3
+  - id: shipping-term-001
+    name: Shipping & Logistics Term 1
+    sub_type: term
+    description: Business term 1 for Shipping & Logistics
+  - id: shipping-term-002
+    name: Shipping & Logistics Term 2
+    sub_type: term
+    description: Business term 2 for Shipping & Logistics
+  - id: shipping-term-003
+    name: Shipping & Logistics Term 3
+    sub_type: term
+    description: Business term 3 for Shipping & Logistics
+  - id: shipping-attr-001
+    name: shipping_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Shipping & Logistics data
+  - id: shipping-attr-002
+    name: shipping_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Shipping & Logistics data
+  - id: shipping-attr-003
+    name: shipping_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Shipping & Logistics data
+  - id: shipping-attr-004
+    name: shipping_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Shipping & Logistics data
+  - id: shipping-attr-005
+    name: shipping_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Shipping & Logistics data
+  - id: shipping-attr-006
+    name: shipping_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: shipping-attr-007
+    name: shipping_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: shipping-attr-008
+    name: shipping_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: shipping-attr-009
+    name: shipping_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: shipping-attr-010
+    name: shipping_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Shipping & Logistics data
+  - id: shipping-attr-011
+    name: shipping_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Shipping & Logistics data
+  - id: shipping-attr-012
+    name: shipping_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Shipping & Logistics data
+  - id: shipping-attr-013
+    name: shipping_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Shipping & Logistics data
+  - id: shipping-attr-014
+    name: shipping_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Shipping & Logistics data
+  - id: shipping-attr-015
+    name: shipping_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: shipping-attr-016
+    name: shipping_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: shipping-attr-017
+    name: shipping_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: shipping-attr-018
+    name: shipping_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: shipping-attr-019
+    name: shipping_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: shipping-attr-020
+    name: shipping_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: shipping-attr-021
+    name: shipping_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: shipping-attr-022
+    name: shipping_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Shipping & Logistics data
+  - id: shipping-attr-023
+    name: shipping_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Shipping & Logistics data
+  - id: shipping-attr-024
+    name: shipping_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Shipping & Logistics data
+  - id: shipping-attr-025
+    name: shipping_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Shipping & Logistics data
+  - id: shipping-attr-026
+    name: shipping_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Shipping & Logistics data
+  - id: shipping-attr-027
+    name: shipping_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: shipping-attr-028
+    name: shipping_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: shipping-attr-029
+    name: shipping_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: shipping-attr-030
+    name: shipping_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: shipping-rpt-attr-001
+    name: shipping_kpi_1
+    sub_type: logical
+    description: Shipping & Logistics KPI 1
+  - id: shipping-rpt-attr-002
+    name: shipping_kpi_2
+    sub_type: logical
+    description: Shipping & Logistics KPI 2
+  - id: shipping-rpt-attr-003
+    name: shipping_kpi_3
+    sub_type: logical
+    description: Shipping & Logistics KPI 3
+  - id: support-term-001
+    name: Customer Support Term 1
+    sub_type: term
+    description: Business term 1 for Customer Support
+  - id: support-term-002
+    name: Customer Support Term 2
+    sub_type: term
+    description: Business term 2 for Customer Support
+  - id: support-term-003
+    name: Customer Support Term 3
+    sub_type: term
+    description: Business term 3 for Customer Support
+  - id: support-attr-001
+    name: support_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Customer Support data
+  - id: support-attr-002
+    name: support_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Customer Support data
+  - id: support-attr-003
+    name: support_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Customer Support data
+  - id: support-attr-004
+    name: support_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Customer Support data
+  - id: support-attr-005
+    name: support_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Customer Support data
+  - id: support-attr-006
+    name: support_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: support-attr-007
+    name: support_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: support-attr-008
+    name: support_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: support-attr-009
+    name: support_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: support-attr-010
+    name: support_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Customer Support data
+  - id: support-attr-011
+    name: support_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Customer Support data
+  - id: support-attr-012
+    name: support_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Customer Support data
+  - id: support-attr-013
+    name: support_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Customer Support data
+  - id: support-attr-014
+    name: support_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Customer Support data
+  - id: support-attr-015
+    name: support_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: support-attr-016
+    name: support_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: support-attr-017
+    name: support_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: support-attr-018
+    name: support_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: support-attr-019
+    name: support_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: support-attr-020
+    name: support_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: support-attr-021
+    name: support_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: support-attr-022
+    name: support_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Customer Support data
+  - id: support-attr-023
+    name: support_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Customer Support data
+  - id: support-attr-024
+    name: support_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Customer Support data
+  - id: support-attr-025
+    name: support_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Customer Support data
+  - id: support-attr-026
+    name: support_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Customer Support data
+  - id: support-attr-027
+    name: support_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: support-attr-028
+    name: support_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: support-attr-029
+    name: support_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: support-attr-030
+    name: support_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: support-rpt-attr-001
+    name: support_kpi_1
+    sub_type: logical
+    description: Customer Support KPI 1
+  - id: support-rpt-attr-002
+    name: support_kpi_2
+    sub_type: logical
+    description: Customer Support KPI 2
+  - id: support-rpt-attr-003
+    name: support_kpi_3
+    sub_type: logical
+    description: Customer Support KPI 3
+  - id: sales-term-001
+    name: Sales Analytics Term 1
+    sub_type: term
+    description: Business term 1 for Sales Analytics
+  - id: sales-term-002
+    name: Sales Analytics Term 2
+    sub_type: term
+    description: Business term 2 for Sales Analytics
+  - id: sales-term-003
+    name: Sales Analytics Term 3
+    sub_type: term
+    description: Business term 3 for Sales Analytics
+  - id: sales-attr-001
+    name: sales_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Sales Analytics data
+  - id: sales-attr-002
+    name: sales_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Sales Analytics data
+  - id: sales-attr-003
+    name: sales_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Sales Analytics data
+  - id: sales-attr-004
+    name: sales_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Sales Analytics data
+  - id: sales-attr-005
+    name: sales_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Sales Analytics data
+  - id: sales-attr-006
+    name: sales_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: sales-attr-007
+    name: sales_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: sales-attr-008
+    name: sales_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: sales-attr-009
+    name: sales_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: sales-attr-010
+    name: sales_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Sales Analytics data
+  - id: sales-attr-011
+    name: sales_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Sales Analytics data
+  - id: sales-attr-012
+    name: sales_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Sales Analytics data
+  - id: sales-attr-013
+    name: sales_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Sales Analytics data
+  - id: sales-attr-014
+    name: sales_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Sales Analytics data
+  - id: sales-attr-015
+    name: sales_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: sales-attr-016
+    name: sales_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: sales-attr-017
+    name: sales_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: sales-attr-018
+    name: sales_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: sales-attr-019
+    name: sales_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: sales-attr-020
+    name: sales_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: sales-attr-021
+    name: sales_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: sales-attr-022
+    name: sales_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Sales Analytics data
+  - id: sales-attr-023
+    name: sales_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Sales Analytics data
+  - id: sales-attr-024
+    name: sales_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Sales Analytics data
+  - id: sales-attr-025
+    name: sales_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Sales Analytics data
+  - id: sales-attr-026
+    name: sales_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Sales Analytics data
+  - id: sales-attr-027
+    name: sales_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: sales-attr-028
+    name: sales_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: sales-attr-029
+    name: sales_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: sales-attr-030
+    name: sales_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: sales-rpt-attr-001
+    name: sales_kpi_1
+    sub_type: logical
+    description: Sales Analytics KPI 1
+  - id: sales-rpt-attr-002
+    name: sales_kpi_2
+    sub_type: logical
+    description: Sales Analytics KPI 2
+  - id: sales-rpt-attr-003
+    name: sales_kpi_3
+    sub_type: logical
+    description: Sales Analytics KPI 3
+  - id: operations-term-001
+    name: Operations Term 1
+    sub_type: term
+    description: Business term 1 for Operations
+  - id: operations-term-002
+    name: Operations Term 2
+    sub_type: term
+    description: Business term 2 for Operations
+  - id: operations-term-003
+    name: Operations Term 3
+    sub_type: term
+    description: Business term 3 for Operations
+  - id: operations-attr-001
+    name: operations_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Operations data
+  - id: operations-attr-002
+    name: operations_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Operations data
+  - id: operations-attr-003
+    name: operations_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Operations data
+  - id: operations-attr-004
+    name: operations_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Operations data
+  - id: operations-attr-005
+    name: operations_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Operations data
+  - id: operations-attr-006
+    name: operations_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: operations-attr-007
+    name: operations_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: operations-attr-008
+    name: operations_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: operations-attr-009
+    name: operations_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: operations-attr-010
+    name: operations_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Operations data
+  - id: operations-attr-011
+    name: operations_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Operations data
+  - id: operations-attr-012
+    name: operations_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Operations data
+  - id: operations-attr-013
+    name: operations_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Operations data
+  - id: operations-attr-014
+    name: operations_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Operations data
+  - id: operations-attr-015
+    name: operations_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: operations-attr-016
+    name: operations_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: operations-attr-017
+    name: operations_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: operations-attr-018
+    name: operations_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: operations-attr-019
+    name: operations_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: operations-attr-020
+    name: operations_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: operations-attr-021
+    name: operations_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: operations-attr-022
+    name: operations_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Operations data
+  - id: operations-attr-023
+    name: operations_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Operations data
+  - id: operations-attr-024
+    name: operations_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Operations data
+  - id: operations-attr-025
+    name: operations_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Operations data
+  - id: operations-attr-026
+    name: operations_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Operations data
+  - id: operations-attr-027
+    name: operations_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: operations-attr-028
+    name: operations_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: operations-attr-029
+    name: operations_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: operations-attr-030
+    name: operations_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: operations-rpt-attr-001
+    name: operations_kpi_1
+    sub_type: logical
+    description: Operations KPI 1
+  - id: operations-rpt-attr-002
+    name: operations_kpi_2
+    sub_type: logical
+    description: Operations KPI 2
+  - id: operations-rpt-attr-003
+    name: operations_kpi_3
+    sub_type: logical
+    description: Operations KPI 3
+  - id: finance-term-001
+    name: Finance Term 1
+    sub_type: term
+    description: Business term 1 for Finance
+  - id: finance-term-002
+    name: Finance Term 2
+    sub_type: term
+    description: Business term 2 for Finance
+  - id: finance-term-003
+    name: Finance Term 3
+    sub_type: term
+    description: Business term 3 for Finance
+  - id: finance-attr-001
+    name: finance_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Finance data
+  - id: finance-attr-002
+    name: finance_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Finance data
+  - id: finance-attr-003
+    name: finance_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Finance data
+  - id: finance-attr-004
+    name: finance_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Finance data
+  - id: finance-attr-005
+    name: finance_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Finance data
+  - id: finance-attr-006
+    name: finance_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: finance-attr-007
+    name: finance_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: finance-attr-008
+    name: finance_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: finance-attr-009
+    name: finance_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: finance-attr-010
+    name: finance_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Finance data
+  - id: finance-attr-011
+    name: finance_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Finance data
+  - id: finance-attr-012
+    name: finance_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Finance data
+  - id: finance-attr-013
+    name: finance_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Finance data
+  - id: finance-attr-014
+    name: finance_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Finance data
+  - id: finance-attr-015
+    name: finance_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: finance-attr-016
+    name: finance_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: finance-attr-017
+    name: finance_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: finance-attr-018
+    name: finance_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: finance-attr-019
+    name: finance_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: finance-attr-020
+    name: finance_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: finance-attr-021
+    name: finance_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: finance-attr-022
+    name: finance_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Finance data
+  - id: finance-attr-023
+    name: finance_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Finance data
+  - id: finance-attr-024
+    name: finance_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Finance data
+  - id: finance-attr-025
+    name: finance_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Finance data
+  - id: finance-attr-026
+    name: finance_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Finance data
+  - id: finance-attr-027
+    name: finance_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: finance-attr-028
+    name: finance_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: finance-attr-029
+    name: finance_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: finance-attr-030
+    name: finance_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: finance-rpt-attr-001
+    name: finance_kpi_1
+    sub_type: logical
+    description: Finance KPI 1
+  - id: finance-rpt-attr-002
+    name: finance_kpi_2
+    sub_type: logical
+    description: Finance KPI 2
+  - id: finance-rpt-attr-003
+    name: finance_kpi_3
+    sub_type: logical
+    description: Finance KPI 3
+  - id: hr-term-001
+    name: Human Resources Term 1
+    sub_type: term
+    description: Business term 1 for Human Resources
+  - id: hr-term-002
+    name: Human Resources Term 2
+    sub_type: term
+    description: Business term 2 for Human Resources
+  - id: hr-term-003
+    name: Human Resources Term 3
+    sub_type: term
+    description: Business term 3 for Human Resources
+  - id: hr-attr-001
+    name: hr_field_1_1
+    sub_type: logical
+    description: Field 1 from raw Human Resources data
+  - id: hr-attr-002
+    name: hr_field_1_2
+    sub_type: logical
+    description: Field 2 from raw Human Resources data
+  - id: hr-attr-003
+    name: hr_field_1_3
+    sub_type: logical
+    description: Field 3 from raw Human Resources data
+  - id: hr-attr-004
+    name: hr_field_1_4
+    sub_type: logical
+    description: Field 4 from raw Human Resources data
+  - id: hr-attr-005
+    name: hr_field_1_5
+    sub_type: logical
+    description: Field 5 from raw Human Resources data
+  - id: hr-attr-006
+    name: hr_clean_field_1_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: hr-attr-007
+    name: hr_clean_field_1_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: hr-attr-008
+    name: hr_clean_field_1_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: hr-attr-009
+    name: hr_clean_field_1_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: hr-attr-010
+    name: hr_field_2_1
+    sub_type: logical
+    description: Field 1 from raw Human Resources data
+  - id: hr-attr-011
+    name: hr_field_2_2
+    sub_type: logical
+    description: Field 2 from raw Human Resources data
+  - id: hr-attr-012
+    name: hr_field_2_3
+    sub_type: logical
+    description: Field 3 from raw Human Resources data
+  - id: hr-attr-013
+    name: hr_field_2_4
+    sub_type: logical
+    description: Field 4 from raw Human Resources data
+  - id: hr-attr-014
+    name: hr_field_2_5
+    sub_type: logical
+    description: Field 5 from raw Human Resources data
+  - id: hr-attr-015
+    name: hr_clean_field_2_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: hr-attr-016
+    name: hr_clean_field_2_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: hr-attr-017
+    name: hr_clean_field_2_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: hr-attr-018
+    name: hr_clean_field_2_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: hr-attr-019
+    name: hr_feature_1
+    sub_type: conceptual
+    description: Engineered feature 1
+  - id: hr-attr-020
+    name: hr_feature_2
+    sub_type: conceptual
+    description: Engineered feature 2
+  - id: hr-attr-021
+    name: hr_feature_3
+    sub_type: conceptual
+    description: Engineered feature 3
+  - id: hr-attr-022
+    name: hr_field_3_1
+    sub_type: logical
+    description: Field 1 from raw Human Resources data
+  - id: hr-attr-023
+    name: hr_field_3_2
+    sub_type: logical
+    description: Field 2 from raw Human Resources data
+  - id: hr-attr-024
+    name: hr_field_3_3
+    sub_type: logical
+    description: Field 3 from raw Human Resources data
+  - id: hr-attr-025
+    name: hr_field_3_4
+    sub_type: logical
+    description: Field 4 from raw Human Resources data
+  - id: hr-attr-026
+    name: hr_field_3_5
+    sub_type: logical
+    description: Field 5 from raw Human Resources data
+  - id: hr-attr-027
+    name: hr_clean_field_3_1
+    sub_type: logical
+    description: Cleaned field 1
+  - id: hr-attr-028
+    name: hr_clean_field_3_2
+    sub_type: logical
+    description: Cleaned field 2
+  - id: hr-attr-029
+    name: hr_clean_field_3_3
+    sub_type: logical
+    description: Cleaned field 3
+  - id: hr-attr-030
+    name: hr_clean_field_3_4
+    sub_type: logical
+    description: Cleaned field 4
+  - id: hr-rpt-attr-001
+    name: hr_kpi_1
+    sub_type: logical
+    description: Human Resources KPI 1
+  - id: hr-rpt-attr-002
+    name: hr_kpi_2
+    sub_type: logical
+    description: Human Resources KPI 2
+  - id: hr-rpt-attr-003
+    name: hr_kpi_3
+    sub_type: logical
+    description: Human Resources KPI 3
+  Job:
+  - id: fraud-job-001
+    name: ingest_raw_transactions
+    sub_type: etl
+    description: Ingest and clean raw transaction data
+  - id: fraud-job-002
+    name: build_fraud_features
+    sub_type: etl
+    description: Feature engineering for fraud detection
+  - id: fraud-job-003
+    name: train_fraud_model_v1
+    sub_type: training
+    description: Initial fraud model training
+  - id: fraud-job-004
+    name: finetune_fraud_model_v2
+    sub_type: finetuning
+    description: Fine-tune fraud model
+  - id: fraud-job-005
+    name: score_fraud_transactions
+    sub_type: inference
+    description: Batch fraud scoring
+  - id: fraud-job-006
+    name: build_fraud_kb
+    sub_type: rag
+    description: Build fraud pattern knowledge base
+  - id: fraud-job-007
+    name: aggregate_account_risk
+    sub_type: etl
+    description: Account-level risk aggregation
+  - id: cust-job-001
+    name: ingest_customer_profiles
+    sub_type: etl
+    description: Ingest CRM customer data
+  - id: cust-job-002
+    name: build_customer_360
+    sub_type: etl
+    description: Create unified customer view
+  - id: cust-job-003
+    name: train_segmentation_model
+    sub_type: training
+    description: Customer segmentation ML model
+  - id: cust-job-004
+    name: score_customer_segments
+    sub_type: inference
+    description: Apply segmentation model
+  - id: cust-job-005
+    name: train_churn_model
+    sub_type: training
+    description: Customer churn prediction model
+  - id: cust-job-006
+    name: predict_churn
+    sub_type: inference
+    description: Batch churn scoring
+  - id: cust-job-007
+    name: calculate_clv
+    sub_type: etl
+    description: Calculate customer lifetime value
+  - id: mkt-job-001
+    name: aggregate_campaign_metrics
+    sub_type: etl
+    description: Campaign performance aggregation
+  - id: mkt-job-002
+    name: build_attribution_features
+    sub_type: etl
+    description: Multi-touch attribution feature engineering
+  - id: mkt-job-003
+    name: train_campaign_optimization
+    sub_type: training
+    description: Campaign optimization ML model
+  - id: mkt-job-004
+    name: score_campaign_optimization
+    sub_type: inference
+    description: Campaign recommendation scoring
+  - id: mkt-job-005
+    name: train_next_best_offer
+    sub_type: training
+    description: Next best offer model
+  - id: mkt-job-006
+    name: predict_next_best_offer
+    sub_type: inference
+    description: Personalized offer predictions
+  - id: risk-job-001
+    name: merge_credit_data
+    sub_type: etl
+    description: Merge application and bureau data
+  - id: risk-job-002
+    name: build_risk_features
+    sub_type: etl
+    description: Credit risk feature engineering
+  - id: risk-job-003
+    name: train_credit_score_model
+    sub_type: training
+    description: Credit scoring model training
+  - id: risk-job-004
+    name: score_credit_applications
+    sub_type: inference
+    description: Credit application scoring
+  - id: risk-job-005
+    name: train_default_model
+    sub_type: training
+    description: Default prediction model
+  - id: risk-job-006
+    name: predict_default_risk
+    sub_type: inference
+    description: Default probability scoring
+  - id: reg-job-001
+    name: curate_regulatory_data
+    sub_type: etl
+    description: Prepare compliance-ready data
+  - id: reg-job-002
+    name: flag_suspicious_activity
+    sub_type: etl
+    description: AML suspicious activity detection
+  - id: reg-job-003
+    name: generate_regulatory_reports
+    sub_type: etl
+    description: Generate compliance reports
+  - id: rec-job-001
+    name: curate_user_behavior
+    sub_type: etl
+    description: Unify user interaction data
+  - id: rec-job-002
+    name: build_product_embeddings
+    sub_type: etl
+    description: Generate product feature vectors
+  - id: rec-job-003
+    name: calculate_user_affinity
+    sub_type: etl
+    description: User-product affinity scoring
+  - id: rec-job-004
+    name: train_recommendation_model
+    sub_type: training
+    description: Product recommendation model
+  - id: rec-job-005
+    name: generate_recommendations
+    sub_type: inference
+    description: Personalized product recommendations
+  - id: rec-job-006
+    name: build_rec_kb
+    sub_type: rag
+    description: Build recommendation explanation KB
+  - id: payment-job-001
+    name: ingest_payment_1
+    sub_type: etl
+    description: Ingest and clean Payment Processing data 1
+  - id: payment-job-002
+    name: ingest_payment_2
+    sub_type: etl
+    description: Ingest and clean Payment Processing data 2
+  - id: payment-job-003
+    name: build_payment_features
+    sub_type: etl
+    description: Build Payment Processing features
+  - id: payment-job-004
+    name: train_payment_model
+    sub_type: training
+    description: Train Payment Processing model
+  - id: payment-job-005
+    name: score_payment_data
+    sub_type: inference
+    description: Score Payment Processing data
+  - id: payment-job-006
+    name: ingest_payment_3
+    sub_type: etl
+    description: Ingest and clean Payment Processing data 3
+  - id: inventory-job-001
+    name: ingest_inventory_1
+    sub_type: etl
+    description: Ingest and clean Inventory Management data 1
+  - id: inventory-job-002
+    name: ingest_inventory_2
+    sub_type: etl
+    description: Ingest and clean Inventory Management data 2
+  - id: inventory-job-003
+    name: build_inventory_features
+    sub_type: etl
+    description: Build Inventory Management features
+  - id: inventory-job-004
+    name: train_inventory_model
+    sub_type: training
+    description: Train Inventory Management model
+  - id: inventory-job-005
+    name: score_inventory_data
+    sub_type: inference
+    description: Score Inventory Management data
+  - id: inventory-job-006
+    name: ingest_inventory_3
+    sub_type: etl
+    description: Ingest and clean Inventory Management data 3
+  - id: shipping-job-001
+    name: ingest_shipping_1
+    sub_type: etl
+    description: Ingest and clean Shipping & Logistics data 1
+  - id: shipping-job-002
+    name: ingest_shipping_2
+    sub_type: etl
+    description: Ingest and clean Shipping & Logistics data 2
+  - id: shipping-job-003
+    name: build_shipping_features
+    sub_type: etl
+    description: Build Shipping & Logistics features
+  - id: shipping-job-004
+    name: train_shipping_model
+    sub_type: training
+    description: Train Shipping & Logistics model
+  - id: shipping-job-005
+    name: score_shipping_data
+    sub_type: inference
+    description: Score Shipping & Logistics data
+  - id: shipping-job-006
+    name: ingest_shipping_3
+    sub_type: etl
+    description: Ingest and clean Shipping & Logistics data 3
+  - id: support-job-001
+    name: ingest_support_1
+    sub_type: etl
+    description: Ingest and clean Customer Support data 1
+  - id: support-job-002
+    name: ingest_support_2
+    sub_type: etl
+    description: Ingest and clean Customer Support data 2
+  - id: support-job-003
+    name: build_support_features
+    sub_type: etl
+    description: Build Customer Support features
+  - id: support-job-004
+    name: train_support_model
+    sub_type: training
+    description: Train Customer Support model
+  - id: support-job-005
+    name: score_support_data
+    sub_type: inference
+    description: Score Customer Support data
+  - id: support-job-006
+    name: ingest_support_3
+    sub_type: etl
+    description: Ingest and clean Customer Support data 3
+  - id: sales-job-001
+    name: ingest_sales_1
+    sub_type: etl
+    description: Ingest and clean Sales Analytics data 1
+  - id: sales-job-002
+    name: ingest_sales_2
+    sub_type: etl
+    description: Ingest and clean Sales Analytics data 2
+  - id: sales-job-003
+    name: build_sales_features
+    sub_type: etl
+    description: Build Sales Analytics features
+  - id: sales-job-004
+    name: train_sales_model
+    sub_type: training
+    description: Train Sales Analytics model
+  - id: sales-job-005
+    name: score_sales_data
+    sub_type: inference
+    description: Score Sales Analytics data
+  - id: sales-job-006
+    name: ingest_sales_3
+    sub_type: etl
+    description: Ingest and clean Sales Analytics data 3
+  - id: operations-job-001
+    name: ingest_operations_1
+    sub_type: etl
+    description: Ingest and clean Operations data 1
+  - id: operations-job-002
+    name: ingest_operations_2
+    sub_type: etl
+    description: Ingest and clean Operations data 2
+  - id: operations-job-003
+    name: build_operations_features
+    sub_type: etl
+    description: Build Operations features
+  - id: operations-job-004
+    name: train_operations_model
+    sub_type: training
+    description: Train Operations model
+  - id: operations-job-005
+    name: score_operations_data
+    sub_type: inference
+    description: Score Operations data
+  - id: operations-job-006
+    name: ingest_operations_3
+    sub_type: etl
+    description: Ingest and clean Operations data 3
+  - id: finance-job-001
+    name: ingest_finance_1
+    sub_type: etl
+    description: Ingest and clean Finance data 1
+  - id: finance-job-002
+    name: ingest_finance_2
+    sub_type: etl
+    description: Ingest and clean Finance data 2
+  - id: finance-job-003
+    name: build_finance_features
+    sub_type: etl
+    description: Build Finance features
+  - id: finance-job-004
+    name: train_finance_model
+    sub_type: training
+    description: Train Finance model
+  - id: finance-job-005
+    name: score_finance_data
+    sub_type: inference
+    description: Score Finance data
+  - id: finance-job-006
+    name: ingest_finance_3
+    sub_type: etl
+    description: Ingest and clean Finance data 3
+  - id: hr-job-001
+    name: ingest_hr_1
+    sub_type: etl
+    description: Ingest and clean Human Resources data 1
+  - id: hr-job-002
+    name: ingest_hr_2
+    sub_type: etl
+    description: Ingest and clean Human Resources data 2
+  - id: hr-job-003
+    name: build_hr_features
+    sub_type: etl
+    description: Build Human Resources features
+  - id: hr-job-004
+    name: train_hr_model
+    sub_type: training
+    description: Train Human Resources model
+  - id: hr-job-005
+    name: score_hr_data
+    sub_type: inference
+    description: Score Human Resources data
+  - id: hr-job-006
+    name: ingest_hr_3
+    sub_type: etl
+    description: Ingest and clean Human Resources data 3
+  DataDependency:
+  - id: fraud-dep-001
+    name: txn_id_passthrough
+    description: Transaction ID passthrough
+  - id: fraud-dep-002
+    name: account_id_passthrough
+    description: Account ID passthrough
+  - id: fraud-dep-003
+    name: amount_normalization
+    description: Amount cleaning and normalization
+  - id: fraud-dep-004
+    name: avg_txn_calculation
+    description: Calculate 7-day average
+  - id: fraud-dep-005
+    name: velocity_calculation
+    description: Transaction velocity scoring
+  - id: fraud-dep-006
+    name: fraud_score_derivation
+    description: ML-based fraud score
+  - id: cust-dep-001
+    name: customer_id_passthrough
+    description: Customer ID passthrough
+  - id: cust-dep-002
+    name: name_concatenation
+    description: Full name construction
+  - id: cust-dep-003
+    name: engagement_calculation
+    description: Customer engagement scoring
+  - id: cust-dep-004
+    name: clv_calculation
+    description: Lifetime value calculation
+  - id: mkt-dep-001
+    name: campaign_aggregation
+    description: Campaign metric rollup
+  - id: mkt-dep-002
+    name: attribution_weighting
+    description: Multi-touch attribution
+  - id: risk-dep-001
+    name: credit_score_merge
+    description: Combine credit scores
+  - id: risk-dep-002
+    name: utilization_calculation
+    description: Credit utilization ratio
+  - id: reg-dep-001
+    name: aml_flagging
+    description: AML flag derivation
+  - id: rec-dep-001
+    name: embedding_generation
+    description: Product embedding creation
+  - id: rec-dep-002
+    name: affinity_scoring
+    description: User-product affinity
+  - id: payment-dep-001
+    name: payment_transformation_1_1
+    description: Data transformation 1
+  - id: payment-dep-002
+    name: payment_transformation_1_2
+    description: Data transformation 2
+  - id: payment-dep-003
+    name: payment_transformation_2_1
+    description: Data transformation 1
+  - id: payment-dep-004
+    name: payment_transformation_2_2
+    description: Data transformation 2
+  - id: payment-dep-005
+    name: payment_transformation_3_1
+    description: Data transformation 1
+  - id: payment-dep-006
+    name: payment_transformation_3_2
+    description: Data transformation 2
+  - id: inventory-dep-001
+    name: inventory_transformation_1_1
+    description: Data transformation 1
+  - id: inventory-dep-002
+    name: inventory_transformation_1_2
+    description: Data transformation 2
+  - id: inventory-dep-003
+    name: inventory_transformation_2_1
+    description: Data transformation 1
+  - id: inventory-dep-004
+    name: inventory_transformation_2_2
+    description: Data transformation 2
+  - id: inventory-dep-005
+    name: inventory_transformation_3_1
+    description: Data transformation 1
+  - id: inventory-dep-006
+    name: inventory_transformation_3_2
+    description: Data transformation 2
+  - id: shipping-dep-001
+    name: shipping_transformation_1_1
+    description: Data transformation 1
+  - id: shipping-dep-002
+    name: shipping_transformation_1_2
+    description: Data transformation 2
+  - id: shipping-dep-003
+    name: shipping_transformation_2_1
+    description: Data transformation 1
+  - id: shipping-dep-004
+    name: shipping_transformation_2_2
+    description: Data transformation 2
+  - id: shipping-dep-005
+    name: shipping_transformation_3_1
+    description: Data transformation 1
+  - id: shipping-dep-006
+    name: shipping_transformation_3_2
+    description: Data transformation 2
+  - id: support-dep-001
+    name: support_transformation_1_1
+    description: Data transformation 1
+  - id: support-dep-002
+    name: support_transformation_1_2
+    description: Data transformation 2
+  - id: support-dep-003
+    name: support_transformation_2_1
+    description: Data transformation 1
+  - id: support-dep-004
+    name: support_transformation_2_2
+    description: Data transformation 2
+  - id: support-dep-005
+    name: support_transformation_3_1
+    description: Data transformation 1
+  - id: support-dep-006
+    name: support_transformation_3_2
+    description: Data transformation 2
+  - id: sales-dep-001
+    name: sales_transformation_1_1
+    description: Data transformation 1
+  - id: sales-dep-002
+    name: sales_transformation_1_2
+    description: Data transformation 2
+  - id: sales-dep-003
+    name: sales_transformation_2_1
+    description: Data transformation 1
+  - id: sales-dep-004
+    name: sales_transformation_2_2
+    description: Data transformation 2
+  - id: sales-dep-005
+    name: sales_transformation_3_1
+    description: Data transformation 1
+  - id: sales-dep-006
+    name: sales_transformation_3_2
+    description: Data transformation 2
+  - id: operations-dep-001
+    name: operations_transformation_1_1
+    description: Data transformation 1
+  - id: operations-dep-002
+    name: operations_transformation_1_2
+    description: Data transformation 2
+  - id: operations-dep-003
+    name: operations_transformation_2_1
+    description: Data transformation 1
+  - id: operations-dep-004
+    name: operations_transformation_2_2
+    description: Data transformation 2
+  - id: operations-dep-005
+    name: operations_transformation_3_1
+    description: Data transformation 1
+  - id: operations-dep-006
+    name: operations_transformation_3_2
+    description: Data transformation 2
+  - id: finance-dep-001
+    name: finance_transformation_1_1
+    description: Data transformation 1
+  - id: finance-dep-002
+    name: finance_transformation_1_2
+    description: Data transformation 2
+  - id: finance-dep-003
+    name: finance_transformation_2_1
+    description: Data transformation 1
+  - id: finance-dep-004
+    name: finance_transformation_2_2
+    description: Data transformation 2
+  - id: finance-dep-005
+    name: finance_transformation_3_1
+    description: Data transformation 1
+  - id: finance-dep-006
+    name: finance_transformation_3_2
+    description: Data transformation 2
+  - id: hr-dep-001
+    name: hr_transformation_1_1
+    description: Data transformation 1
+  - id: hr-dep-002
+    name: hr_transformation_1_2
+    description: Data transformation 2
+  - id: hr-dep-003
+    name: hr_transformation_2_1
+    description: Data transformation 1
+  - id: hr-dep-004
+    name: hr_transformation_2_2
+    description: Data transformation 2
+  - id: hr-dep-005
+    name: hr_transformation_3_1
+    description: Data transformation 1
+  - id: hr-dep-006
+    name: hr_transformation_3_2
+    description: Data transformation 2
+  Model:
+  - id: fraud-model-001
+    name: fraud_detection_model
+    description: XGBoost fraud detection
+  - id: cust-model-001
+    name: customer_segmentation_model
+    description: K-means customer clustering
+  - id: cust-model-002
+    name: churn_prediction_model
+    description: Logistic regression churn model
+  - id: mkt-model-001
+    name: campaign_optimization_model
+    description: Campaign performance prediction
+  - id: mkt-model-002
+    name: next_best_offer_model
+    description: Personalized offer recommender
+  - id: risk-model-001
+    name: credit_scoring_model
+    description: Credit risk assessment
+  - id: risk-model-002
+    name: default_prediction_model
+    description: Loan default probability
+  - id: rec-model-001
+    name: product_recommendation_model
+    description: Collaborative filtering recommender
+  - id: embed-model-001
+    name: embedding_model
+    description: General-purpose embedding model
+  - id: payment-model-001
+    name: payment_prediction_model
+    description: Payment Processing ML model
+  - id: inventory-model-001
+    name: inventory_prediction_model
+    description: Inventory Management ML model
+  - id: shipping-model-001
+    name: shipping_prediction_model
+    description: Shipping & Logistics ML model
+  - id: support-model-001
+    name: support_prediction_model
+    description: Customer Support ML model
+  - id: sales-model-001
+    name: sales_prediction_model
+    description: Sales Analytics ML model
+  - id: operations-model-001
+    name: operations_prediction_model
+    description: Operations ML model
+  - id: finance-model-001
+    name: finance_prediction_model
+    description: Finance ML model
+  - id: hr-model-001
+    name: hr_prediction_model
+    description: Human Resources ML model
+  ModelVersion:
+  - id: fraud-mv-001
+    name: fraud_detection_v1.0
+    version: '1.0'
+    description: Initial fraud model
+  - id: fraud-mv-002
+    name: fraud_detection_v2.0
+    version: '2.0'
+    description: Fine-tuned fraud model
+  - id: cust-mv-001
+    name: segmentation_v1.0
+    version: '1.0'
+    description: Customer segmentation v1
+  - id: cust-mv-002
+    name: churn_v1.0
+    version: '1.0'
+    description: Churn prediction v1
+  - id: mkt-mv-001
+    name: campaign_opt_v1.0
+    version: '1.0'
+    description: Campaign optimization v1
+  - id: mkt-mv-002
+    name: next_offer_v1.0
+    version: '1.0'
+    description: Next best offer v1
+  - id: risk-mv-001
+    name: credit_score_v1.0
+    version: '1.0'
+    description: Credit scoring v1
+  - id: risk-mv-002
+    name: default_v1.0
+    version: '1.0'
+    description: Default prediction v1
+  - id: rec-mv-001
+    name: product_rec_v1.0
+    version: '1.0'
+    description: Product recommender v1
+  - id: embed-mv-001
+    name: ada_embedding_v2
+    version: '2.0'
+    description: Ada embedding model
+  - id: embed-mv-002
+    name: claude_opus_4
+    version: '4.0'
+    description: Claude Opus 4 LLM
+  - id: payment-mv-001
+    name: payment_model_v1.0
+    version: '1.0'
+    description: Payment Processing model v1
+  - id: inventory-mv-001
+    name: inventory_model_v1.0
+    version: '1.0'
+    description: Inventory Management model v1
+  - id: shipping-mv-001
+    name: shipping_model_v1.0
+    version: '1.0'
+    description: Shipping & Logistics model v1
+  - id: support-mv-001
+    name: support_model_v1.0
+    version: '1.0'
+    description: Customer Support model v1
+  - id: sales-mv-001
+    name: sales_model_v1.0
+    version: '1.0'
+    description: Sales Analytics model v1
+  - id: operations-mv-001
+    name: operations_model_v1.0
+    version: '1.0'
+    description: Operations model v1
+  - id: finance-mv-001
+    name: finance_model_v1.0
+    version: '1.0'
+    description: Finance model v1
+  - id: hr-mv-001
+    name: hr_model_v1.0
+    version: '1.0'
+    description: Human Resources model v1
+  AgenticSystem:
+  - id: fraud-asys-001
+    name: fraud_review_system
+    description: Automated fraud case review
+  - id: cust-asys-001
+    name: customer_support_system
+    description: AI customer support agents
+  - id: mkt-asys-001
+    name: marketing_automation_system
+    description: Campaign management agents
+  - id: risk-asys-001
+    name: credit_underwriting_system
+    description: Automated credit underwriting
+  - id: payment-asys-001
+    name: payment_automation_system
+    description: Payment Processing automation agents
+  - id: inventory-asys-001
+    name: inventory_automation_system
+    description: Inventory Management automation agents
+  - id: shipping-asys-001
+    name: shipping_automation_system
+    description: Shipping & Logistics automation agents
+  - id: support-asys-001
+    name: support_automation_system
+    description: Customer Support automation agents
+  - id: sales-asys-001
+    name: sales_automation_system
+    description: Sales Analytics automation agents
+  - id: operations-asys-001
+    name: operations_automation_system
+    description: Operations automation agents
+  - id: finance-asys-001
+    name: finance_automation_system
+    description: Finance automation agents
+  - id: hr-asys-001
+    name: hr_automation_system
+    description: Human Resources automation agents
+  AgenticSystemVersion:
+  - id: fraud-asysv-001
+    name: fraud_review_v1
+    version: '1.0'
+  - id: cust-asysv-001
+    name: customer_support_v1
+    version: '1.0'
+  - id: mkt-asysv-001
+    name: marketing_auto_v1
+    version: '1.0'
+  - id: risk-asysv-001
+    name: underwriting_v1
+    version: '1.0'
+  - id: payment-asysv-001
+    name: payment_automation_v1
+    version: '1.0'
+  - id: inventory-asysv-001
+    name: inventory_automation_v1
+    version: '1.0'
+  - id: shipping-asysv-001
+    name: shipping_automation_v1
+    version: '1.0'
+  - id: support-asysv-001
+    name: support_automation_v1
+    version: '1.0'
+  - id: sales-asysv-001
+    name: sales_automation_v1
+    version: '1.0'
+  - id: operations-asysv-001
+    name: operations_automation_v1
+    version: '1.0'
+  - id: finance-asysv-001
+    name: finance_automation_v1
+    version: '1.0'
+  - id: hr-asysv-001
+    name: hr_automation_v1
+    version: '1.0'
+  AgentVersion:
+  - id: fraud-agv-001
+    name: fraud_reviewer_agent
+    description: Reviews flagged transactions
+  - id: fraud-agv-002
+    name: fraud_investigator_agent
+    description: Deep fraud investigation
+  - id: cust-agv-001
+    name: support_chat_agent
+    description: Customer chat support
+  - id: cust-agv-002
+    name: retention_agent
+    description: Churn prevention outreach
+  - id: mkt-agv-001
+    name: campaign_optimizer_agent
+    description: Campaign performance optimization
+  - id: mkt-agv-002
+    name: content_generator_agent
+    description: Marketing content generation
+  - id: risk-agv-001
+    name: credit_analyst_agent
+    description: Credit application analysis
+  - id: risk-agv-002
+    name: risk_monitor_agent
+    description: Portfolio risk monitoring
+  - id: payment-agv-001
+    name: payment_agent_1
+    description: Payment Processing agent 1
+  - id: payment-agv-002
+    name: payment_agent_2
+    description: Payment Processing agent 2
+  - id: inventory-agv-001
+    name: inventory_agent_1
+    description: Inventory Management agent 1
+  - id: inventory-agv-002
+    name: inventory_agent_2
+    description: Inventory Management agent 2
+  - id: shipping-agv-001
+    name: shipping_agent_1
+    description: Shipping & Logistics agent 1
+  - id: shipping-agv-002
+    name: shipping_agent_2
+    description: Shipping & Logistics agent 2
+  - id: support-agv-001
+    name: support_agent_1
+    description: Customer Support agent 1
+  - id: support-agv-002
+    name: support_agent_2
+    description: Customer Support agent 2
+  - id: sales-agv-001
+    name: sales_agent_1
+    description: Sales Analytics agent 1
+  - id: sales-agv-002
+    name: sales_agent_2
+    description: Sales Analytics agent 2
+  - id: operations-agv-001
+    name: operations_agent_1
+    description: Operations agent 1
+  - id: operations-agv-002
+    name: operations_agent_2
+    description: Operations agent 2
+  - id: finance-agv-001
+    name: finance_agent_1
+    description: Finance agent 1
+  - id: finance-agv-002
+    name: finance_agent_2
+    description: Finance agent 2
+  - id: hr-agv-001
+    name: hr_agent_1
+    description: Human Resources agent 1
+  - id: hr-agv-002
+    name: hr_agent_2
+    description: Human Resources agent 2
+  Application:
+  - id: fraud-app-001
+    name: fraud_analytics_platform
+    description: Fraud detection and monitoring
+  - id: cust-app-001
+    name: customer_data_platform
+    description: CDP for customer analytics
+  - id: mkt-app-001
+    name: marketing_automation_platform
+    description: Marketing campaign management
+  - id: risk-app-001
+    name: credit_risk_platform
+    description: Credit risk assessment
+  - id: reg-app-001
+    name: compliance_reporting_platform
+    description: Regulatory compliance
+  - id: rec-app-001
+    name: recommendation_engine
+    description: Product recommendation system
+  - id: payment-app-001
+    name: payment_processing_platform
+    description: Payment Processing platform
+  - id: inventory-app-001
+    name: inventory_management_platform
+    description: Inventory Management platform
+  - id: shipping-app-001
+    name: shipping_&_logistics_platform
+    description: Shipping & Logistics platform
+  - id: support-app-001
+    name: customer_support_platform
+    description: Customer Support platform
+  - id: sales-app-001
+    name: sales_analytics_platform
+    description: Sales Analytics platform
+  - id: operations-app-001
+    name: operations_platform
+    description: Operations platform
+  - id: finance-app-001
+    name: finance_platform
+    description: Finance platform
+  - id: hr-app-001
+    name: human_resources_platform
+    description: Human Resources platform
+  MCPServer:
+  - id: fraud-mcp-001
+    name: fraud_model_server
+    description: Fraud model serving
+  - id: cust-mcp-001
+    name: customer_api_server
+    description: Customer API gateway
+  - id: mkt-mcp-001
+    name: marketing_api_server
+    description: Marketing API endpoints
+  - id: risk-mcp-001
+    name: credit_api_server
+    description: Credit scoring API
+  - id: rec-mcp-001
+    name: recommendation_api_server
+    description: Recommendation API
+  - id: payment-mcp-001
+    name: payment_api_server
+    description: Payment Processing API server
+  - id: inventory-mcp-001
+    name: inventory_api_server
+    description: Inventory Management API server
+  - id: shipping-mcp-001
+    name: shipping_api_server
+    description: Shipping & Logistics API server
+  - id: support-mcp-001
+    name: support_api_server
+    description: Customer Support API server
+  - id: sales-mcp-001
+    name: sales_api_server
+    description: Sales Analytics API server
+  - id: operations-mcp-001
+    name: operations_api_server
+    description: Operations API server
+  - id: finance-mcp-001
+    name: finance_api_server
+    description: Finance API server
+  - id: hr-mcp-001
+    name: hr_api_server
+    description: Human Resources API server
+  MCPResource:
+  - id: fraud-mcpr-001
+    name: fraud_score_endpoint
+    description: /v1/fraud/score
+  - id: cust-mcpr-001
+    name: customer_profile_endpoint
+    description: /v1/customers/{id}
+  - id: mkt-mcpr-001
+    name: campaign_metrics_endpoint
+    description: /v1/campaigns/{id}/metrics
+  - id: risk-mcpr-001
+    name: credit_score_endpoint
+    description: /v1/credit/score
+  - id: rec-mcpr-001
+    name: recommendations_endpoint
+    description: /v1/recommendations/{user_id}
+  - id: payment-mcpr-001
+    name: payment_api_endpoint
+    description: /v1/payment/data
+  - id: inventory-mcpr-001
+    name: inventory_api_endpoint
+    description: /v1/inventory/data
+  - id: shipping-mcpr-001
+    name: shipping_api_endpoint
+    description: /v1/shipping/data
+  - id: support-mcpr-001
+    name: support_api_endpoint
+    description: /v1/support/data
+  - id: sales-mcpr-001
+    name: sales_api_endpoint
+    description: /v1/sales/data
+  - id: operations-mcpr-001
+    name: operations_api_endpoint
+    description: /v1/operations/data
+  - id: finance-mcpr-001
+    name: finance_api_endpoint
+    description: /v1/finance/data
+  - id: hr-mcpr-001
+    name: hr_api_endpoint
+    description: /v1/hr/data
+  MCPTool:
+  - id: fraud-mcpt-001
+    name: fraud_lookup_tool
+    description: Look up fraud scores
+  - id: fraud-mcpt-002
+    name: transaction_search_tool
+    description: Search historical transactions
+  - id: cust-mcpt-001
+    name: customer_lookup_tool
+    description: Customer profile lookup
+  - id: cust-mcpt-002
+    name: interaction_history_tool
+    description: Customer interaction history
+  - id: mkt-mcpt-001
+    name: campaign_analysis_tool
+    description: Campaign performance analysis
+  - id: risk-mcpt-001
+    name: credit_check_tool
+    description: Credit score lookup
+  - id: rec-mcpt-001
+    name: product_search_tool
+    description: Product catalog search
+  - id: payment-mcpt-001
+    name: payment_tool_1
+    description: Payment Processing tool 1
+  - id: payment-mcpt-002
+    name: payment_tool_2
+    description: Payment Processing tool 2
+  - id: inventory-mcpt-001
+    name: inventory_tool_1
+    description: Inventory Management tool 1
+  - id: inventory-mcpt-002
+    name: inventory_tool_2
+    description: Inventory Management tool 2
+  - id: shipping-mcpt-001
+    name: shipping_tool_1
+    description: Shipping & Logistics tool 1
+  - id: shipping-mcpt-002
+    name: shipping_tool_2
+    description: Shipping & Logistics tool 2
+  - id: support-mcpt-001
+    name: support_tool_1
+    description: Customer Support tool 1
+  - id: support-mcpt-002
+    name: support_tool_2
+    description: Customer Support tool 2
+  - id: sales-mcpt-001
+    name: sales_tool_1
+    description: Sales Analytics tool 1
+  - id: sales-mcpt-002
+    name: sales_tool_2
+    description: Sales Analytics tool 2
+  - id: operations-mcpt-001
+    name: operations_tool_1
+    description: Operations tool 1
+  - id: operations-mcpt-002
+    name: operations_tool_2
+    description: Operations tool 2
+  - id: finance-mcpt-001
+    name: finance_tool_1
+    description: Finance tool 1
+  - id: finance-mcpt-002
+    name: finance_tool_2
+    description: Finance tool 2
+  - id: hr-mcpt-001
+    name: hr_tool_1
+    description: Human Resources tool 1
+  - id: hr-mcpt-002
+    name: hr_tool_2
+    description: Human Resources tool 2
+  Workspace:
+  - id: fraud-ws-001
+    name: fraud_detection_workspace
+    description: Fraud team workspace
+  - id: cust-ws-001
+    name: customer_analytics_workspace
+    description: Customer insights workspace
+  - id: mkt-ws-001
+    name: marketing_workspace
+    description: Marketing team workspace
+  - id: payment-ws-001
+    name: payment_workspace
+    description: Payment Processing team workspace
+  - id: inventory-ws-001
+    name: inventory_workspace
+    description: Inventory Management team workspace
+  - id: shipping-ws-001
+    name: shipping_workspace
+    description: Shipping & Logistics team workspace
+  - id: support-ws-001
+    name: support_workspace
+    description: Customer Support team workspace
+  - id: sales-ws-001
+    name: sales_workspace
+    description: Sales Analytics team workspace
+  - id: operations-ws-001
+    name: operations_workspace
+    description: Operations team workspace
+  - id: finance-ws-001
+    name: finance_workspace
+    description: Finance team workspace
+  - id: hr-ws-001
+    name: hr_workspace
+    description: Human Resources team workspace
+  WorkspaceService:
+  - id: fraud-wssvc-001
+    name: fraud_model_service
+    description: Deployed fraud model
+  - id: cust-wssvc-001
+    name: segmentation_service
+    description: Customer segmentation service
+  - id: mkt-wssvc-001
+    name: campaign_opt_service
+    description: Campaign optimization service
+  - id: payment-wssvc-001
+    name: payment_model_service
+    description: Payment Processing model serving
+  - id: inventory-wssvc-001
+    name: inventory_model_service
+    description: Inventory Management model serving
+  - id: shipping-wssvc-001
+    name: shipping_model_service
+    description: Shipping & Logistics model serving
+  - id: support-wssvc-001
+    name: support_model_service
+    description: Customer Support model serving
+  - id: sales-wssvc-001
+    name: sales_model_service
+    description: Sales Analytics model serving
+  - id: operations-wssvc-001
+    name: operations_model_service
+    description: Operations model serving
+  - id: finance-wssvc-001
+    name: finance_model_service
+    description: Finance model serving
+  - id: hr-wssvc-001
+    name: hr_model_service
+    description: Human Resources model serving
+  Report:
+  - id: fraud-rpt-001
+    name: weekly_fraud_dashboard
+    description: Weekly fraud detection metrics
+  - id: cust-rpt-001
+    name: customer_insights_report
+    description: Monthly customer analytics
+  - id: mkt-rpt-001
+    name: campaign_performance_report
+    description: Campaign ROI dashboard
+  - id: risk-rpt-001
+    name: credit_portfolio_report
+    description: Credit risk portfolio view
+  - id: reg-rpt-001
+    name: regulatory_compliance_report
+    description: Compliance status dashboard
+  - id: payment-rpt-001
+    name: payment_dashboard
+    description: Payment Processing metrics dashboard
+  - id: inventory-rpt-001
+    name: inventory_dashboard
+    description: Inventory Management metrics dashboard
+  - id: shipping-rpt-001
+    name: shipping_dashboard
+    description: Shipping & Logistics metrics dashboard
+  - id: support-rpt-001
+    name: support_dashboard
+    description: Customer Support metrics dashboard
+  - id: sales-rpt-001
+    name: sales_dashboard
+    description: Sales Analytics metrics dashboard
+  - id: operations-rpt-001
+    name: operations_dashboard
+    description: Operations metrics dashboard
+  - id: finance-rpt-001
+    name: finance_dashboard
+    description: Finance metrics dashboard
+  - id: hr-rpt-001
+    name: hr_dashboard
+    description: Human Resources metrics dashboard
+  UseCase:
+  - id: uc-001
+    name: fraud_detection
+    description: Fraud detection and prevention
+  - id: uc-002
+    name: customer_analytics
+    description: Customer behavior and segmentation
+  - id: uc-003
+    name: marketing_optimization
+    description: Campaign performance optimization
+  - id: uc-004
+    name: credit_risk_management
+    description: Credit risk assessment
+  - id: uc-005
+    name: regulatory_compliance
+    description: Regulatory reporting and compliance
+  - id: uc-006
+    name: product_recommendations
+    description: Personalized product recommendations
+  - id: payment-uc-001
+    name: payment_processing
+    description: Payment Processing use case
+  - id: inventory-uc-001
+    name: inventory_management
+    description: Inventory Management use case
+  - id: shipping-uc-001
+    name: shipping_&_logistics
+    description: Shipping & Logistics use case
+  - id: support-uc-001
+    name: customer_support
+    description: Customer Support use case
+  - id: sales-uc-001
+    name: sales_analytics
+    description: Sales Analytics use case
+  - id: operations-uc-001
+    name: operations
+    description: Operations use case
+  - id: finance-uc-001
+    name: finance
+    description: Finance use case
+  - id: hr-uc-001
+    name: human_resources
+    description: Human Resources use case
+  Glossary:
+  - id: gloss-001
+    name: enterprise_glossary
+    description: Enterprise-wide business glossary
+  - id: gloss-002
+    name: risk_glossary
+    description: Risk domain terminology
+  - id: gloss-003
+    name: marketing_glossary
+    description: Marketing terminology
+  - id: gloss-004
+    name: regulatory_glossary
+    description: Compliance terminology
+  - id: payment-gloss-001
+    name: payment_glossary
+    description: Payment Processing terminology
+  - id: inventory-gloss-001
+    name: inventory_glossary
+    description: Inventory Management terminology
+  - id: shipping-gloss-001
+    name: shipping_glossary
+    description: Shipping & Logistics terminology
+  - id: support-gloss-001
+    name: support_glossary
+    description: Customer Support terminology
+  - id: sales-gloss-001
+    name: sales_glossary
+    description: Sales Analytics terminology
+  - id: operations-gloss-001
+    name: operations_glossary
+    description: Operations terminology
+  - id: finance-gloss-001
+    name: finance_glossary
+    description: Finance terminology
+  - id: hr-gloss-001
+    name: hr_glossary
+    description: Human Resources terminology
+  DataConcept:
+  - id: dc-001
+    name: Customer Identity
+    description: Customer identification attributes
+  - id: dc-002
+    name: Transaction Data
+    description: Transaction event attributes
+  - id: dc-003
+    name: Financial Metrics
+    description: Financial KPIs and calculations
+  - id: dc-004
+    name: Risk Indicators
+    description: Risk assessment metrics
+  - id: payment-dc-001
+    name: Payment Processing Metrics
+    description: Payment Processing key metrics
+  - id: inventory-dc-001
+    name: Inventory Management Metrics
+    description: Inventory Management key metrics
+  - id: shipping-dc-001
+    name: Shipping & Logistics Metrics
+    description: Shipping & Logistics key metrics
+  - id: support-dc-001
+    name: Customer Support Metrics
+    description: Customer Support key metrics
+  - id: sales-dc-001
+    name: Sales Analytics Metrics
+    description: Sales Analytics key metrics
+  - id: operations-dc-001
+    name: Operations Metrics
+    description: Operations key metrics
+  - id: finance-dc-001
+    name: Finance Metrics
+    description: Finance key metrics
+  - id: hr-dc-001
+    name: Human Resources Metrics
+    description: Human Resources key metrics
+  DataFlow:
+  - id: df-001
+    name: transaction_data_flow
+    description: Transaction data movement
+  - id: df-002
+    name: customer_data_flow
+    description: Customer data integration
+  - id: df-003
+    name: marketing_data_flow
+    description: Marketing event streams
+  - id: payment-df-001
+    name: payment_data_flow
+    description: Payment Processing data movement
+  - id: inventory-df-001
+    name: inventory_data_flow
+    description: Inventory Management data movement
+  - id: shipping-df-001
+    name: shipping_data_flow
+    description: Shipping & Logistics data movement
+  - id: support-df-001
+    name: support_data_flow
+    description: Customer Support data movement
+  - id: sales-df-001
+    name: sales_data_flow
+    description: Sales Analytics data movement
+  - id: operations-df-001
+    name: operations_data_flow
+    description: Operations data movement
+  - id: finance-df-001
+    name: finance_data_flow
+    description: Finance data movement
+  - id: hr-df-001
+    name: hr_data_flow
+    description: Human Resources data movement
+  Process:
+  - id: proc-001
+    name: fraud_case_review_process
+    description: End-to-end fraud review
+  - id: proc-002
+    name: automated_triage
+    description: Automated case triage
+  - id: proc-003
+    name: customer_onboarding_process
+    description: New customer onboarding
+  - id: proc-004
+    name: credit_approval_process
+    description: Credit application approval workflow
+  - id: payment-proc-001
+    name: payment_workflow
+    description: Payment Processing workflow process
+  - id: inventory-proc-001
+    name: inventory_workflow
+    description: Inventory Management workflow process
+  - id: shipping-proc-001
+    name: shipping_workflow
+    description: Shipping & Logistics workflow process
+  - id: support-proc-001
+    name: support_workflow
+    description: Customer Support workflow process
+  - id: sales-proc-001
+    name: sales_workflow
+    description: Sales Analytics workflow process
+  - id: operations-proc-001
+    name: operations_workflow
+    description: Operations workflow process
+  - id: finance-proc-001
+    name: finance_workflow
+    description: Finance workflow process
+  - id: hr-proc-001
+    name: hr_workflow
+    description: Human Resources workflow process
+relationships:
+- type: IS_CONSUMED_BY
+  from: fraud-ds-001
+  to: fraud-job-001
+- type: DATASET_PRODUCED_BY
+  from: fraud-ds-002
+  to: fraud-job-001
+- type: IS_CONSUMED_BY
+  from: fraud-ds-002
+  to: fraud-job-002
+- type: DATASET_PRODUCED_BY
+  from: fraud-ds-003
+  to: fraud-job-002
+- type: IS_CONSUMED_BY
+  from: fraud-ds-003
+  to: fraud-job-003
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: fraud-mv-001
+  to: fraud-job-003
+- type: IS_CONSUMED_BY
+  from: fraud-mv-001
+  to: fraud-job-004
+  properties:
+    context: base_model
+- type: IS_CONSUMED_BY
+  from: fraud-ds-003
+  to: fraud-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: fraud-mv-002
+  to: fraud-job-004
+- type: IS_CONSUMED_BY
+  from: fraud-ds-002
+  to: fraud-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: fraud-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: fraud-ds-004
+  to: fraud-job-005
+- type: IS_CONSUMED_BY
+  from: fraud-ds-002
+  to: fraud-job-006
+  properties:
+    context: source_documents
+- type: IS_CONSUMED_BY
+  from: embed-mv-001
+  to: fraud-job-006
+  properties:
+    context: embedding_model
+- type: DATASET_PRODUCED_BY
+  from: fraud-ds-005
+  to: fraud-job-006
+- type: IS_CONSUMED_BY
+  from: fraud-ds-002
+  to: fraud-job-007
+- type: DATASET_PRODUCED_BY
+  from: fraud-ds-007
+  to: fraud-job-007
+- type: IS_CONSUMED_BY
+  from: cust-ds-001
+  to: cust-job-001
+- type: IS_CONSUMED_BY
+  from: cust-ds-002
+  to: cust-job-001
+- type: DATASET_PRODUCED_BY
+  from: cust-ds-003
+  to: cust-job-001
+- type: IS_CONSUMED_BY
+  from: cust-ds-003
+  to: cust-job-002
+- type: DATASET_PRODUCED_BY
+  from: cust-ds-004
+  to: cust-job-002
+- type: IS_CONSUMED_BY
+  from: cust-ds-004
+  to: cust-job-003
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: cust-mv-001
+  to: cust-job-003
+- type: IS_CONSUMED_BY
+  from: cust-ds-004
+  to: cust-job-004
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: cust-mv-001
+  to: cust-job-004
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: cust-ds-005
+  to: cust-job-004
+- type: IS_CONSUMED_BY
+  from: cust-ds-004
+  to: cust-job-005
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: cust-mv-002
+  to: cust-job-005
+- type: IS_CONSUMED_BY
+  from: cust-ds-004
+  to: cust-job-006
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: cust-mv-002
+  to: cust-job-006
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: cust-ds-006
+  to: cust-job-006
+- type: IS_CONSUMED_BY
+  from: cust-ds-004
+  to: cust-job-007
+- type: DATASET_PRODUCED_BY
+  from: cust-ds-007
+  to: cust-job-007
+- type: IS_CONSUMED_BY
+  from: mkt-ds-001
+  to: mkt-job-001
+- type: IS_CONSUMED_BY
+  from: mkt-ds-002
+  to: mkt-job-001
+- type: DATASET_PRODUCED_BY
+  from: mkt-ds-003
+  to: mkt-job-001
+- type: IS_CONSUMED_BY
+  from: mkt-ds-003
+  to: mkt-job-002
+- type: DATASET_PRODUCED_BY
+  from: mkt-ds-004
+  to: mkt-job-002
+- type: IS_CONSUMED_BY
+  from: mkt-ds-004
+  to: mkt-job-003
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: mkt-mv-001
+  to: mkt-job-003
+- type: IS_CONSUMED_BY
+  from: mkt-ds-004
+  to: mkt-job-004
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: mkt-mv-001
+  to: mkt-job-004
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: mkt-ds-005
+  to: mkt-job-004
+- type: IS_CONSUMED_BY
+  from: mkt-ds-004
+  to: mkt-job-005
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: mkt-mv-002
+  to: mkt-job-005
+- type: IS_CONSUMED_BY
+  from: mkt-ds-004
+  to: mkt-job-006
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: mkt-mv-002
+  to: mkt-job-006
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: mkt-ds-006
+  to: mkt-job-006
+- type: IS_CONSUMED_BY
+  from: risk-ds-001
+  to: risk-job-001
+- type: IS_CONSUMED_BY
+  from: risk-ds-002
+  to: risk-job-001
+- type: DATASET_PRODUCED_BY
+  from: risk-ds-003
+  to: risk-job-001
+- type: IS_CONSUMED_BY
+  from: risk-ds-003
+  to: risk-job-002
+- type: DATASET_PRODUCED_BY
+  from: risk-ds-004
+  to: risk-job-002
+- type: IS_CONSUMED_BY
+  from: risk-ds-004
+  to: risk-job-003
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: risk-mv-001
+  to: risk-job-003
+- type: IS_CONSUMED_BY
+  from: risk-ds-003
+  to: risk-job-004
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: risk-mv-001
+  to: risk-job-004
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: risk-ds-005
+  to: risk-job-004
+- type: IS_CONSUMED_BY
+  from: risk-ds-004
+  to: risk-job-005
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: risk-mv-002
+  to: risk-job-005
+- type: IS_CONSUMED_BY
+  from: risk-ds-004
+  to: risk-job-006
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: risk-mv-002
+  to: risk-job-006
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: risk-ds-006
+  to: risk-job-006
+- type: IS_CONSUMED_BY
+  from: reg-ds-001
+  to: reg-job-001
+- type: IS_CONSUMED_BY
+  from: reg-ds-002
+  to: reg-job-001
+- type: DATASET_PRODUCED_BY
+  from: reg-ds-003
+  to: reg-job-001
+- type: IS_CONSUMED_BY
+  from: reg-ds-003
+  to: reg-job-002
+- type: DATASET_PRODUCED_BY
+  from: reg-ds-004
+  to: reg-job-002
+- type: IS_CONSUMED_BY
+  from: reg-ds-003
+  to: reg-job-003
+- type: IS_CONSUMED_BY
+  from: reg-ds-004
+  to: reg-job-003
+- type: DATASET_PRODUCED_BY
+  from: reg-ds-005
+  to: reg-job-003
+- type: IS_CONSUMED_BY
+  from: rec-ds-002
+  to: rec-job-001
+- type: IS_CONSUMED_BY
+  from: rec-ds-003
+  to: rec-job-001
+- type: DATASET_PRODUCED_BY
+  from: rec-ds-004
+  to: rec-job-001
+- type: IS_CONSUMED_BY
+  from: rec-ds-001
+  to: rec-job-002
+- type: DATASET_PRODUCED_BY
+  from: rec-ds-005
+  to: rec-job-002
+- type: IS_CONSUMED_BY
+  from: rec-ds-004
+  to: rec-job-003
+- type: IS_CONSUMED_BY
+  from: rec-ds-005
+  to: rec-job-003
+- type: DATASET_PRODUCED_BY
+  from: rec-ds-006
+  to: rec-job-003
+- type: IS_CONSUMED_BY
+  from: rec-ds-006
+  to: rec-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: rec-mv-001
+  to: rec-job-004
+- type: IS_CONSUMED_BY
+  from: rec-ds-006
+  to: rec-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: rec-mv-001
+  to: rec-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: rec-ds-007
+  to: rec-job-005
+- type: IS_CONSUMED_BY
+  from: rec-ds-004
+  to: rec-job-006
+  properties:
+    context: source_documents
+- type: IS_CONSUMED_BY
+  from: embed-mv-001
+  to: rec-job-006
+  properties:
+    context: embedding_model
+- type: DATASET_PRODUCED_BY
+  from: rec-ds-008
+  to: rec-job-006
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-001
+  to: fraud-attr-001
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: fraud-dep-001
+  to: fraud-attr-006
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-002
+  to: fraud-attr-002
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: fraud-dep-002
+  to: fraud-attr-007
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-003
+  to: fraud-attr-004
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: fraud-dep-003
+  to: fraud-attr-008
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-004
+  to: fraud-attr-007
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-004
+  to: fraud-attr-008
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: fraud-dep-004
+  to: fraud-attr-011
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-005
+  to: fraud-attr-007
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: fraud-dep-005
+  to: fraud-attr-014
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-006
+  to: fraud-attr-011
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: fraud-dep-006
+  to: fraud-attr-014
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: fraud-dep-006
+  to: fraud-attr-016
+- type: TRANSFORMS
+  from: fraud-mv-002
+  to: fraud-dep-006
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: cust-dep-001
+  to: cust-attr-001
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: cust-dep-001
+  to: cust-attr-011
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: cust-dep-002
+  to: cust-attr-002
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: cust-dep-002
+  to: cust-attr-003
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: cust-dep-002
+  to: cust-attr-012
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: cust-dep-003
+  to: cust-attr-011
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: cust-dep-003
+  to: cust-attr-016
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: cust-dep-004
+  to: cust-attr-015
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: cust-dep-004
+  to: cust-attr-016
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: cust-dep-004
+  to: cust-attr-019
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: mkt-dep-001
+  to: mkt-attr-001
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: mkt-dep-001
+  to: mkt-attr-004
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: mkt-dep-001
+  to: mkt-attr-011
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: mkt-dep-001
+  to: mkt-attr-012
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: mkt-dep-002
+  to: mkt-attr-009
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: mkt-dep-002
+  to: mkt-attr-015
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: risk-dep-001
+  to: risk-attr-002
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: risk-dep-001
+  to: risk-attr-005
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: risk-dep-001
+  to: risk-attr-009
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: risk-dep-002
+  to: risk-attr-006
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: risk-dep-002
+  to: risk-attr-011
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: reg-dep-001
+  to: reg-attr-003
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: reg-dep-001
+  to: reg-attr-010
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: rec-dep-001
+  to: rec-attr-001
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: rec-dep-001
+  to: rec-attr-015
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: rec-dep-002
+  to: rec-attr-012
+- type: DATA_DEPENDENCY_PRODUCED_BY
+  from: rec-dep-002
+  to: rec-attr-015
+- type: DATA_DEPENDENCY_CONSUMED_BY
+  from: rec-dep-002
+  to: rec-attr-017
+- type: MODEL_TO_MODEL_VERSION
+  from: fraud-model-001
+  to: fraud-mv-001
+- type: MODEL_TO_MODEL_VERSION
+  from: fraud-model-001
+  to: fraud-mv-002
+- type: MODEL_TO_MODEL_VERSION
+  from: cust-model-001
+  to: cust-mv-001
+- type: MODEL_TO_MODEL_VERSION
+  from: cust-model-002
+  to: cust-mv-002
+- type: MODEL_TO_MODEL_VERSION
+  from: mkt-model-001
+  to: mkt-mv-001
+- type: MODEL_TO_MODEL_VERSION
+  from: mkt-model-002
+  to: mkt-mv-002
+- type: MODEL_TO_MODEL_VERSION
+  from: risk-model-001
+  to: risk-mv-001
+- type: MODEL_TO_MODEL_VERSION
+  from: risk-model-002
+  to: risk-mv-002
+- type: MODEL_TO_MODEL_VERSION
+  from: rec-model-001
+  to: rec-mv-001
+- type: MODEL_TO_MODEL_VERSION
+  from: embed-model-001
+  to: embed-mv-001
+- type: MODEL_TO_MODEL_VERSION
+  from: embed-model-001
+  to: embed-mv-002
+- type: HAS_VERSION
+  from: fraud-asys-001
+  to: fraud-asysv-001
+- type: HAS_MEMBER
+  from: fraud-asysv-001
+  to: fraud-agv-001
+- type: HAS_MEMBER
+  from: fraud-asysv-001
+  to: fraud-agv-002
+- type: HAS_VERSION
+  from: cust-asys-001
+  to: cust-asysv-001
+- type: HAS_MEMBER
+  from: cust-asysv-001
+  to: cust-agv-001
+- type: HAS_MEMBER
+  from: cust-asysv-001
+  to: cust-agv-002
+- type: HAS_VERSION
+  from: mkt-asys-001
+  to: mkt-asysv-001
+- type: HAS_MEMBER
+  from: mkt-asysv-001
+  to: mkt-agv-001
+- type: HAS_MEMBER
+  from: mkt-asysv-001
+  to: mkt-agv-002
+- type: HAS_VERSION
+  from: risk-asys-001
+  to: risk-asysv-001
+- type: HAS_MEMBER
+  from: risk-asysv-001
+  to: risk-agv-001
+- type: HAS_MEMBER
+  from: risk-asysv-001
+  to: risk-agv-002
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-001
+  to: fraud-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-002
+  to: fraud-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-003
+  to: fraud-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-004
+  to: fraud-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-005
+  to: fraud-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-006
+  to: fraud-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-007
+  to: fraud-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-008
+  to: fraud-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-009
+  to: fraud-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-010
+  to: fraud-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-011
+  to: fraud-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-012
+  to: fraud-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-013
+  to: fraud-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-014
+  to: fraud-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-015
+  to: fraud-ds-007
+- type: IS_ATTRIBUTE_FOR
+  from: fraud-attr-016
+  to: fraud-ds-007
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-001
+  to: cust-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-002
+  to: cust-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-003
+  to: cust-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-004
+  to: cust-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-005
+  to: cust-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-006
+  to: cust-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-007
+  to: cust-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-008
+  to: cust-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-009
+  to: cust-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-010
+  to: cust-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-011
+  to: cust-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-012
+  to: cust-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-013
+  to: cust-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-014
+  to: cust-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-015
+  to: cust-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-016
+  to: cust-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-017
+  to: cust-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-018
+  to: cust-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-019
+  to: cust-ds-007
+- type: IS_ATTRIBUTE_FOR
+  from: cust-attr-020
+  to: cust-ds-007
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-001
+  to: mkt-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-002
+  to: mkt-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-003
+  to: mkt-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-004
+  to: mkt-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-005
+  to: mkt-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-006
+  to: mkt-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-007
+  to: mkt-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-008
+  to: mkt-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-009
+  to: mkt-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-010
+  to: mkt-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-011
+  to: mkt-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-012
+  to: mkt-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-013
+  to: mkt-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-014
+  to: mkt-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: mkt-attr-015
+  to: mkt-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-001
+  to: risk-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-002
+  to: risk-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-003
+  to: risk-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-004
+  to: risk-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-005
+  to: risk-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-006
+  to: risk-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-007
+  to: risk-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-008
+  to: risk-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-009
+  to: risk-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-010
+  to: risk-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-011
+  to: risk-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-012
+  to: risk-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: risk-attr-013
+  to: risk-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-001
+  to: reg-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-002
+  to: reg-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-003
+  to: reg-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-004
+  to: reg-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-005
+  to: reg-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-006
+  to: reg-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-007
+  to: reg-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-008
+  to: reg-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-009
+  to: reg-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-010
+  to: reg-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-011
+  to: reg-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-012
+  to: reg-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-013
+  to: reg-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-014
+  to: reg-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: reg-attr-015
+  to: reg-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-001
+  to: rec-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-002
+  to: rec-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-003
+  to: rec-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-004
+  to: rec-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-005
+  to: rec-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-006
+  to: rec-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-007
+  to: rec-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-008
+  to: rec-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-009
+  to: rec-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-010
+  to: rec-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-011
+  to: rec-ds-003
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-012
+  to: rec-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-013
+  to: rec-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-014
+  to: rec-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-015
+  to: rec-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-016
+  to: rec-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-017
+  to: rec-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: rec-attr-018
+  to: rec-ds-006
+- type: ELEMENT_OF
+  from: rpt-attr-001
+  to: fraud-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-002
+  to: fraud-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-003
+  to: cust-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-004
+  to: cust-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-005
+  to: mkt-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-006
+  to: risk-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-007
+  to: reg-rpt-001
+- type: ELEMENT_OF
+  from: rpt-attr-008
+  to: fraud-rpt-001
+- type: SUB_GLOSSARY_OF
+  from: gloss-002
+  to: gloss-001
+- type: SUB_GLOSSARY_OF
+  from: gloss-003
+  to: gloss-001
+- type: SUB_GLOSSARY_OF
+  from: gloss-004
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: gloss-001
+  to: term-001
+- type: BUSINESS_TERM_OF
+  from: gloss-001
+  to: term-002
+- type: BUSINESS_TERM_OF
+  from: gloss-001
+  to: term-003
+- type: BUSINESS_TERM_OF
+  from: gloss-002
+  to: term-004
+- type: BUSINESS_TERM_OF
+  from: gloss-001
+  to: term-005
+- type: BUSINESS_TERM_OF
+  from: gloss-003
+  to: term-006
+- type: BUSINESS_TERM_OF
+  from: gloss-002
+  to: term-007
+- type: BUSINESS_TERM_OF
+  from: gloss-002
+  to: term-008
+- type: BUSINESS_TERM_OF
+  from: gloss-004
+  to: term-009
+- type: BUSINESS_TERM_OF
+  from: gloss-001
+  to: term-010
+- type: PRODUCED_BY
+  from: fraud-app-001
+  to: fraud-mcp-001
+- type: PROVIDES_RESOURCE
+  from: fraud-mcp-001
+  to: fraud-mcpr-001
+- type: PROVIDES_TOOL
+  from: fraud-mcp-001
+  to: fraud-mcpt-001
+- type: PROVIDES_TOOL
+  from: fraud-mcp-001
+  to: fraud-mcpt-002
+- type: PRODUCED_BY
+  from: cust-app-001
+  to: cust-mcp-001
+- type: PROVIDES_RESOURCE
+  from: cust-mcp-001
+  to: cust-mcpr-001
+- type: PROVIDES_TOOL
+  from: cust-mcp-001
+  to: cust-mcpt-001
+- type: PROVIDES_TOOL
+  from: cust-mcp-001
+  to: cust-mcpt-002
+- type: PRODUCED_BY
+  from: mkt-app-001
+  to: mkt-mcp-001
+- type: PROVIDES_RESOURCE
+  from: mkt-mcp-001
+  to: mkt-mcpr-001
+- type: PROVIDES_TOOL
+  from: mkt-mcp-001
+  to: mkt-mcpt-001
+- type: PRODUCED_BY
+  from: risk-app-001
+  to: risk-mcp-001
+- type: PROVIDES_RESOURCE
+  from: risk-mcp-001
+  to: risk-mcpr-001
+- type: PROVIDES_TOOL
+  from: risk-mcp-001
+  to: risk-mcpt-001
+- type: PRODUCED_BY
+  from: rec-app-001
+  to: rec-mcp-001
+- type: PROVIDES_RESOURCE
+  from: rec-mcp-001
+  to: rec-mcpr-001
+- type: PROVIDES_TOOL
+  from: rec-mcp-001
+  to: rec-mcpt-001
+- type: INSTALLED
+  from: fraud-wssvc-001
+  to: fraud-ws-001
+- type: INSTALLED
+  from: cust-wssvc-001
+  to: cust-ws-001
+- type: INSTALLED
+  from: mkt-wssvc-001
+  to: mkt-ws-001
+- type: CREATED_BY
+  from: fraud-rpt-001
+  to: fraud-app-001
+- type: CREATED_BY
+  from: cust-rpt-001
+  to: cust-app-001
+- type: CREATED_BY
+  from: mkt-rpt-001
+  to: mkt-app-001
+- type: CREATED_BY
+  from: risk-rpt-001
+  to: risk-app-001
+- type: CREATED_BY
+  from: reg-rpt-001
+  to: reg-app-001
+- type: SYSTEM_USE_CASE
+  from: fraud-asys-001
+  to: uc-001
+- type: MODEL_USE_CASE
+  from: fraud-model-001
+  to: uc-001
+- type: SYSTEM_USE_CASE
+  from: cust-asys-001
+  to: uc-002
+- type: MODEL_USE_CASE
+  from: cust-model-001
+  to: uc-002
+- type: MODEL_USE_CASE
+  from: cust-model-002
+  to: uc-002
+- type: SYSTEM_USE_CASE
+  from: mkt-asys-001
+  to: uc-003
+- type: MODEL_USE_CASE
+  from: mkt-model-001
+  to: uc-003
+- type: MODEL_USE_CASE
+  from: mkt-model-002
+  to: uc-003
+- type: SYSTEM_USE_CASE
+  from: risk-asys-001
+  to: uc-004
+- type: MODEL_USE_CASE
+  from: risk-model-001
+  to: uc-004
+- type: MODEL_USE_CASE
+  from: risk-model-002
+  to: uc-004
+- type: MODEL_USE_CASE
+  from: rec-model-001
+  to: uc-006
+- type: SUB_PROCESS_OF
+  from: proc-002
+  to: proc-001
+- type: USES
+  from: fraud-agv-001
+  to: fraud-ds-004
+- type: USES
+  from: fraud-agv-001
+  to: fraud-ds-005
+- type: USES
+  from: fraud-agv-001
+  to: fraud-mcpt-001
+- type: USES
+  from: fraud-agv-001
+  to: embed-mv-002
+- type: USES
+  from: fraud-agv-002
+  to: fraud-ds-002
+- type: USES
+  from: fraud-agv-002
+  to: fraud-mcpt-002
+- type: USES
+  from: cust-agv-001
+  to: cust-ds-004
+- type: USES
+  from: cust-agv-001
+  to: cust-mcpt-001
+- type: USES
+  from: cust-agv-001
+  to: embed-mv-002
+- type: USES
+  from: cust-agv-002
+  to: cust-ds-006
+- type: USES
+  from: cust-agv-002
+  to: cust-mcpt-002
+- type: USES
+  from: mkt-agv-001
+  to: mkt-ds-005
+- type: USES
+  from: mkt-agv-001
+  to: mkt-mcpt-001
+- type: USES
+  from: mkt-agv-002
+  to: mkt-ds-003
+- type: USES
+  from: mkt-agv-002
+  to: embed-mv-002
+- type: USES
+  from: risk-agv-001
+  to: risk-ds-005
+- type: USES
+  from: risk-agv-001
+  to: risk-mcpt-001
+- type: USES
+  from: risk-agv-002
+  to: risk-ds-006
+- type: USES
+  from: risk-agv-002
+  to: risk-ds-003
+- type: IS_MAPPED_TO
+  from: fraud-attr-002
+  to: term-001
+- type: IS_MAPPED_TO
+  from: cust-attr-001
+  to: term-002
+- type: IS_MAPPED_TO
+  from: fraud-attr-004
+  to: term-003
+- type: IS_MAPPED_TO
+  from: cust-attr-019
+  to: term-005
+- type: IS_MAPPED_TO
+  from: risk-attr-009
+  to: term-007
+- type: ALIASED_AS
+  from: term-001
+  to: term-002
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-001
+  to: term-002
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-001
+  to: cust-attr-015
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-002
+  to: term-003
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-002
+  to: fraud-attr-011
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-003
+  to: cust-attr-016
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-004
+  to: risk-attr-011
+- type: DATA_CONCEPT_ATTRIBUTE
+  from: dc-004
+  to: term-008
+- type: RESULTSETS_DATASET
+  from: fraud-ds-006
+  to: fraud-ds-002
+- type: RESULTSETS_REPORT
+  from: fraud-ds-006
+  to: fraud-rpt-001
+- type: RESULTSETS_DATASET
+  from: cust-ds-008
+  to: cust-ds-003
+- type: RESULTSETS_REPORT
+  from: cust-ds-008
+  to: cust-rpt-001
+- type: RESULTSETS_DATASET
+  from: mkt-ds-007
+  to: mkt-ds-003
+- type: RESULTSETS_DATAFLOW
+  from: mkt-ds-007
+  to: df-003
+- type: RESULTSETS_DATASET
+  from: risk-ds-007
+  to: risk-ds-003
+- type: RESULTSETS_DATASET
+  from: reg-ds-006
+  to: reg-ds-003
+- type: RESULTSETS_DATAFLOW
+  from: fraud-ds-006
+  to: df-001
+- type: RESULTSETS_DATASET
+  from: rec-ds-009
+  to: rec-ds-007
+- type: USE_CASE_DATASET
+  from: uc-001
+  to: fraud-ds-002
+- type: USE_CASE_DATASET
+  from: uc-001
+  to: fraud-ds-003
+- type: USE_CASE_DATASET
+  from: uc-002
+  to: cust-ds-004
+- type: USE_CASE_DATASET
+  from: uc-002
+  to: cust-ds-007
+- type: USE_CASE_DATASET
+  from: uc-003
+  to: mkt-ds-003
+- type: USE_CASE_DATASET
+  from: uc-003
+  to: mkt-ds-004
+- type: USE_CASE_DATASET
+  from: uc-004
+  to: risk-ds-004
+- type: USE_CASE_DATASET
+  from: uc-005
+  to: reg-ds-005
+- type: USE_CASE_DATASET
+  from: uc-006
+  to: rec-ds-007
+- type: WORKSPACE_USE_CASE
+  from: fraud-ws-001
+  to: uc-001
+- type: WORKSPACE_DATASET
+  from: fraud-ws-001
+  to: fraud-ds-002
+- type: WORKSPACE_DATASET
+  from: fraud-ws-001
+  to: fraud-ds-003
+- type: WORKSPACE_USE_CASE
+  from: cust-ws-001
+  to: uc-002
+- type: WORKSPACE_DATASET
+  from: cust-ws-001
+  to: cust-ds-004
+- type: WORKSPACE_USE_CASE
+  from: mkt-ws-001
+  to: uc-003
+- type: WORKSPACE_DATASET
+  from: mkt-ws-001
+  to: mkt-ds-003
+- type: IMPLEMENTS
+  from: fraud-wssvc-001
+  to: fraud-mv-002
+- type: IMPLEMENTS
+  from: cust-wssvc-001
+  to: cust-mv-001
+- type: IMPLEMENTS
+  from: mkt-wssvc-001
+  to: mkt-mv-001
+- type: DATA_FLOW_PRODUCED_BY
+  from: df-001
+  to: fraud-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: df-001
+  to: fraud-app-001
+- type: DATA_FLOW_PRODUCED_BY
+  from: df-002
+  to: cust-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: df-002
+  to: cust-app-001
+- type: DATA_FLOW_PRODUCED_BY
+  from: df-003
+  to: mkt-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: df-003
+  to: mkt-app-001
+- type: PRODUCED_BY
+  from: payment-app-001
+  to: payment-mcp-001
+- type: PROVIDES_RESOURCE
+  from: payment-mcp-001
+  to: payment-mcpr-001
+- type: PROVIDES_TOOL
+  from: payment-mcp-001
+  to: payment-mcpt-001
+- type: PROVIDES_TOOL
+  from: payment-mcp-001
+  to: payment-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: payment-ws-001
+  to: payment-uc-001
+- type: SUB_GLOSSARY_OF
+  from: payment-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: payment-gloss-001
+  to: payment-term-001
+- type: BUSINESS_TERM_OF
+  from: payment-gloss-001
+  to: payment-term-002
+- type: BUSINESS_TERM_OF
+  from: payment-gloss-001
+  to: payment-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: payment-df-001
+  to: payment-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: payment-df-001
+  to: payment-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-001
+  to: payment-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-002
+  to: payment-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-003
+  to: payment-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-004
+  to: payment-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-005
+  to: payment-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-006
+  to: payment-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-007
+  to: payment-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-008
+  to: payment-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-009
+  to: payment-ds-002
+- type: IS_CONSUMED_BY
+  from: payment-ds-001
+  to: payment-job-001
+- type: DATASET_PRODUCED_BY
+  from: payment-ds-002
+  to: payment-job-001
+- type: WORKSPACE_DATASET
+  from: payment-ws-001
+  to: payment-ds-002
+- type: RESULTSETS_DATASET
+  from: payment-ds-003
+  to: payment-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: payment-ds-003
+  to: payment-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-010
+  to: payment-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-011
+  to: payment-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-012
+  to: payment-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-013
+  to: payment-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-014
+  to: payment-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-015
+  to: payment-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-016
+  to: payment-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-017
+  to: payment-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-018
+  to: payment-ds-005
+- type: IS_CONSUMED_BY
+  from: payment-ds-004
+  to: payment-job-002
+- type: DATASET_PRODUCED_BY
+  from: payment-ds-005
+  to: payment-job-002
+- type: WORKSPACE_DATASET
+  from: payment-ws-001
+  to: payment-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-019
+  to: payment-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-020
+  to: payment-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-021
+  to: payment-ds-006
+- type: IS_CONSUMED_BY
+  from: payment-ds-005
+  to: payment-job-003
+- type: DATASET_PRODUCED_BY
+  from: payment-ds-006
+  to: payment-job-003
+- type: MODEL_USE_CASE
+  from: payment-model-001
+  to: payment-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: payment-model-001
+  to: payment-mv-001
+- type: IS_CONSUMED_BY
+  from: payment-ds-006
+  to: payment-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: payment-mv-001
+  to: payment-job-004
+- type: IS_CONSUMED_BY
+  from: payment-ds-005
+  to: payment-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: payment-mv-001
+  to: payment-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: payment-ds-007
+  to: payment-job-005
+- type: USE_CASE_DATASET
+  from: payment-uc-001
+  to: payment-ds-006
+- type: INSTALLED
+  from: payment-wssvc-001
+  to: payment-ws-001
+- type: IMPLEMENTS
+  from: payment-wssvc-001
+  to: payment-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-022
+  to: payment-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-023
+  to: payment-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-024
+  to: payment-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-025
+  to: payment-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-026
+  to: payment-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-027
+  to: payment-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-028
+  to: payment-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-029
+  to: payment-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: payment-attr-030
+  to: payment-ds-009
+- type: IS_CONSUMED_BY
+  from: payment-ds-008
+  to: payment-job-006
+- type: DATASET_PRODUCED_BY
+  from: payment-ds-009
+  to: payment-job-006
+- type: WORKSPACE_DATASET
+  from: payment-ws-001
+  to: payment-ds-009
+- type: SYSTEM_USE_CASE
+  from: payment-asys-001
+  to: payment-uc-001
+- type: HAS_VERSION
+  from: payment-asys-001
+  to: payment-asysv-001
+- type: HAS_MEMBER
+  from: payment-asysv-001
+  to: payment-agv-001
+- type: HAS_MEMBER
+  from: payment-asysv-001
+  to: payment-agv-002
+- type: CREATED_BY
+  from: payment-rpt-001
+  to: payment-app-001
+- type: ELEMENT_OF
+  from: payment-rpt-attr-001
+  to: payment-rpt-001
+- type: ELEMENT_OF
+  from: payment-rpt-attr-002
+  to: payment-rpt-001
+- type: ELEMENT_OF
+  from: payment-rpt-attr-003
+  to: payment-rpt-001
+- type: PRODUCED_BY
+  from: inventory-app-001
+  to: inventory-mcp-001
+- type: PROVIDES_RESOURCE
+  from: inventory-mcp-001
+  to: inventory-mcpr-001
+- type: PROVIDES_TOOL
+  from: inventory-mcp-001
+  to: inventory-mcpt-001
+- type: PROVIDES_TOOL
+  from: inventory-mcp-001
+  to: inventory-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: inventory-ws-001
+  to: inventory-uc-001
+- type: SUB_GLOSSARY_OF
+  from: inventory-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: inventory-gloss-001
+  to: inventory-term-001
+- type: BUSINESS_TERM_OF
+  from: inventory-gloss-001
+  to: inventory-term-002
+- type: BUSINESS_TERM_OF
+  from: inventory-gloss-001
+  to: inventory-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: inventory-df-001
+  to: inventory-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: inventory-df-001
+  to: inventory-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-001
+  to: inventory-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-002
+  to: inventory-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-003
+  to: inventory-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-004
+  to: inventory-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-005
+  to: inventory-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-006
+  to: inventory-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-007
+  to: inventory-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-008
+  to: inventory-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-009
+  to: inventory-ds-002
+- type: IS_CONSUMED_BY
+  from: inventory-ds-001
+  to: inventory-job-001
+- type: DATASET_PRODUCED_BY
+  from: inventory-ds-002
+  to: inventory-job-001
+- type: WORKSPACE_DATASET
+  from: inventory-ws-001
+  to: inventory-ds-002
+- type: RESULTSETS_DATASET
+  from: inventory-ds-003
+  to: inventory-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: inventory-ds-003
+  to: inventory-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-010
+  to: inventory-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-011
+  to: inventory-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-012
+  to: inventory-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-013
+  to: inventory-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-014
+  to: inventory-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-015
+  to: inventory-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-016
+  to: inventory-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-017
+  to: inventory-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-018
+  to: inventory-ds-005
+- type: IS_CONSUMED_BY
+  from: inventory-ds-004
+  to: inventory-job-002
+- type: DATASET_PRODUCED_BY
+  from: inventory-ds-005
+  to: inventory-job-002
+- type: WORKSPACE_DATASET
+  from: inventory-ws-001
+  to: inventory-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-019
+  to: inventory-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-020
+  to: inventory-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-021
+  to: inventory-ds-006
+- type: IS_CONSUMED_BY
+  from: inventory-ds-005
+  to: inventory-job-003
+- type: DATASET_PRODUCED_BY
+  from: inventory-ds-006
+  to: inventory-job-003
+- type: MODEL_USE_CASE
+  from: inventory-model-001
+  to: inventory-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: inventory-model-001
+  to: inventory-mv-001
+- type: IS_CONSUMED_BY
+  from: inventory-ds-006
+  to: inventory-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: inventory-mv-001
+  to: inventory-job-004
+- type: IS_CONSUMED_BY
+  from: inventory-ds-005
+  to: inventory-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: inventory-mv-001
+  to: inventory-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: inventory-ds-007
+  to: inventory-job-005
+- type: USE_CASE_DATASET
+  from: inventory-uc-001
+  to: inventory-ds-006
+- type: INSTALLED
+  from: inventory-wssvc-001
+  to: inventory-ws-001
+- type: IMPLEMENTS
+  from: inventory-wssvc-001
+  to: inventory-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-022
+  to: inventory-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-023
+  to: inventory-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-024
+  to: inventory-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-025
+  to: inventory-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-026
+  to: inventory-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-027
+  to: inventory-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-028
+  to: inventory-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-029
+  to: inventory-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: inventory-attr-030
+  to: inventory-ds-009
+- type: IS_CONSUMED_BY
+  from: inventory-ds-008
+  to: inventory-job-006
+- type: DATASET_PRODUCED_BY
+  from: inventory-ds-009
+  to: inventory-job-006
+- type: WORKSPACE_DATASET
+  from: inventory-ws-001
+  to: inventory-ds-009
+- type: SYSTEM_USE_CASE
+  from: inventory-asys-001
+  to: inventory-uc-001
+- type: HAS_VERSION
+  from: inventory-asys-001
+  to: inventory-asysv-001
+- type: HAS_MEMBER
+  from: inventory-asysv-001
+  to: inventory-agv-001
+- type: HAS_MEMBER
+  from: inventory-asysv-001
+  to: inventory-agv-002
+- type: CREATED_BY
+  from: inventory-rpt-001
+  to: inventory-app-001
+- type: ELEMENT_OF
+  from: inventory-rpt-attr-001
+  to: inventory-rpt-001
+- type: ELEMENT_OF
+  from: inventory-rpt-attr-002
+  to: inventory-rpt-001
+- type: ELEMENT_OF
+  from: inventory-rpt-attr-003
+  to: inventory-rpt-001
+- type: PRODUCED_BY
+  from: shipping-app-001
+  to: shipping-mcp-001
+- type: PROVIDES_RESOURCE
+  from: shipping-mcp-001
+  to: shipping-mcpr-001
+- type: PROVIDES_TOOL
+  from: shipping-mcp-001
+  to: shipping-mcpt-001
+- type: PROVIDES_TOOL
+  from: shipping-mcp-001
+  to: shipping-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: shipping-ws-001
+  to: shipping-uc-001
+- type: SUB_GLOSSARY_OF
+  from: shipping-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: shipping-gloss-001
+  to: shipping-term-001
+- type: BUSINESS_TERM_OF
+  from: shipping-gloss-001
+  to: shipping-term-002
+- type: BUSINESS_TERM_OF
+  from: shipping-gloss-001
+  to: shipping-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: shipping-df-001
+  to: shipping-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: shipping-df-001
+  to: shipping-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-001
+  to: shipping-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-002
+  to: shipping-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-003
+  to: shipping-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-004
+  to: shipping-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-005
+  to: shipping-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-006
+  to: shipping-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-007
+  to: shipping-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-008
+  to: shipping-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-009
+  to: shipping-ds-002
+- type: IS_CONSUMED_BY
+  from: shipping-ds-001
+  to: shipping-job-001
+- type: DATASET_PRODUCED_BY
+  from: shipping-ds-002
+  to: shipping-job-001
+- type: WORKSPACE_DATASET
+  from: shipping-ws-001
+  to: shipping-ds-002
+- type: RESULTSETS_DATASET
+  from: shipping-ds-003
+  to: shipping-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: shipping-ds-003
+  to: shipping-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-010
+  to: shipping-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-011
+  to: shipping-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-012
+  to: shipping-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-013
+  to: shipping-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-014
+  to: shipping-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-015
+  to: shipping-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-016
+  to: shipping-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-017
+  to: shipping-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-018
+  to: shipping-ds-005
+- type: IS_CONSUMED_BY
+  from: shipping-ds-004
+  to: shipping-job-002
+- type: DATASET_PRODUCED_BY
+  from: shipping-ds-005
+  to: shipping-job-002
+- type: WORKSPACE_DATASET
+  from: shipping-ws-001
+  to: shipping-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-019
+  to: shipping-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-020
+  to: shipping-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-021
+  to: shipping-ds-006
+- type: IS_CONSUMED_BY
+  from: shipping-ds-005
+  to: shipping-job-003
+- type: DATASET_PRODUCED_BY
+  from: shipping-ds-006
+  to: shipping-job-003
+- type: MODEL_USE_CASE
+  from: shipping-model-001
+  to: shipping-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: shipping-model-001
+  to: shipping-mv-001
+- type: IS_CONSUMED_BY
+  from: shipping-ds-006
+  to: shipping-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: shipping-mv-001
+  to: shipping-job-004
+- type: IS_CONSUMED_BY
+  from: shipping-ds-005
+  to: shipping-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: shipping-mv-001
+  to: shipping-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: shipping-ds-007
+  to: shipping-job-005
+- type: USE_CASE_DATASET
+  from: shipping-uc-001
+  to: shipping-ds-006
+- type: INSTALLED
+  from: shipping-wssvc-001
+  to: shipping-ws-001
+- type: IMPLEMENTS
+  from: shipping-wssvc-001
+  to: shipping-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-022
+  to: shipping-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-023
+  to: shipping-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-024
+  to: shipping-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-025
+  to: shipping-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-026
+  to: shipping-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-027
+  to: shipping-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-028
+  to: shipping-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-029
+  to: shipping-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: shipping-attr-030
+  to: shipping-ds-009
+- type: IS_CONSUMED_BY
+  from: shipping-ds-008
+  to: shipping-job-006
+- type: DATASET_PRODUCED_BY
+  from: shipping-ds-009
+  to: shipping-job-006
+- type: WORKSPACE_DATASET
+  from: shipping-ws-001
+  to: shipping-ds-009
+- type: SYSTEM_USE_CASE
+  from: shipping-asys-001
+  to: shipping-uc-001
+- type: HAS_VERSION
+  from: shipping-asys-001
+  to: shipping-asysv-001
+- type: HAS_MEMBER
+  from: shipping-asysv-001
+  to: shipping-agv-001
+- type: HAS_MEMBER
+  from: shipping-asysv-001
+  to: shipping-agv-002
+- type: CREATED_BY
+  from: shipping-rpt-001
+  to: shipping-app-001
+- type: ELEMENT_OF
+  from: shipping-rpt-attr-001
+  to: shipping-rpt-001
+- type: ELEMENT_OF
+  from: shipping-rpt-attr-002
+  to: shipping-rpt-001
+- type: ELEMENT_OF
+  from: shipping-rpt-attr-003
+  to: shipping-rpt-001
+- type: PRODUCED_BY
+  from: support-app-001
+  to: support-mcp-001
+- type: PROVIDES_RESOURCE
+  from: support-mcp-001
+  to: support-mcpr-001
+- type: PROVIDES_TOOL
+  from: support-mcp-001
+  to: support-mcpt-001
+- type: PROVIDES_TOOL
+  from: support-mcp-001
+  to: support-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: support-ws-001
+  to: support-uc-001
+- type: SUB_GLOSSARY_OF
+  from: support-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: support-gloss-001
+  to: support-term-001
+- type: BUSINESS_TERM_OF
+  from: support-gloss-001
+  to: support-term-002
+- type: BUSINESS_TERM_OF
+  from: support-gloss-001
+  to: support-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: support-df-001
+  to: support-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: support-df-001
+  to: support-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-001
+  to: support-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-002
+  to: support-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-003
+  to: support-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-004
+  to: support-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-005
+  to: support-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-006
+  to: support-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-007
+  to: support-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-008
+  to: support-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-009
+  to: support-ds-002
+- type: IS_CONSUMED_BY
+  from: support-ds-001
+  to: support-job-001
+- type: DATASET_PRODUCED_BY
+  from: support-ds-002
+  to: support-job-001
+- type: WORKSPACE_DATASET
+  from: support-ws-001
+  to: support-ds-002
+- type: RESULTSETS_DATASET
+  from: support-ds-003
+  to: support-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: support-ds-003
+  to: support-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-010
+  to: support-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-011
+  to: support-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-012
+  to: support-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-013
+  to: support-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-014
+  to: support-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-015
+  to: support-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-016
+  to: support-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-017
+  to: support-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-018
+  to: support-ds-005
+- type: IS_CONSUMED_BY
+  from: support-ds-004
+  to: support-job-002
+- type: DATASET_PRODUCED_BY
+  from: support-ds-005
+  to: support-job-002
+- type: WORKSPACE_DATASET
+  from: support-ws-001
+  to: support-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-019
+  to: support-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-020
+  to: support-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-021
+  to: support-ds-006
+- type: IS_CONSUMED_BY
+  from: support-ds-005
+  to: support-job-003
+- type: DATASET_PRODUCED_BY
+  from: support-ds-006
+  to: support-job-003
+- type: MODEL_USE_CASE
+  from: support-model-001
+  to: support-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: support-model-001
+  to: support-mv-001
+- type: IS_CONSUMED_BY
+  from: support-ds-006
+  to: support-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: support-mv-001
+  to: support-job-004
+- type: IS_CONSUMED_BY
+  from: support-ds-005
+  to: support-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: support-mv-001
+  to: support-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: support-ds-007
+  to: support-job-005
+- type: USE_CASE_DATASET
+  from: support-uc-001
+  to: support-ds-006
+- type: INSTALLED
+  from: support-wssvc-001
+  to: support-ws-001
+- type: IMPLEMENTS
+  from: support-wssvc-001
+  to: support-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-022
+  to: support-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-023
+  to: support-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-024
+  to: support-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-025
+  to: support-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-026
+  to: support-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-027
+  to: support-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-028
+  to: support-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-029
+  to: support-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: support-attr-030
+  to: support-ds-009
+- type: IS_CONSUMED_BY
+  from: support-ds-008
+  to: support-job-006
+- type: DATASET_PRODUCED_BY
+  from: support-ds-009
+  to: support-job-006
+- type: WORKSPACE_DATASET
+  from: support-ws-001
+  to: support-ds-009
+- type: SYSTEM_USE_CASE
+  from: support-asys-001
+  to: support-uc-001
+- type: HAS_VERSION
+  from: support-asys-001
+  to: support-asysv-001
+- type: HAS_MEMBER
+  from: support-asysv-001
+  to: support-agv-001
+- type: HAS_MEMBER
+  from: support-asysv-001
+  to: support-agv-002
+- type: CREATED_BY
+  from: support-rpt-001
+  to: support-app-001
+- type: ELEMENT_OF
+  from: support-rpt-attr-001
+  to: support-rpt-001
+- type: ELEMENT_OF
+  from: support-rpt-attr-002
+  to: support-rpt-001
+- type: ELEMENT_OF
+  from: support-rpt-attr-003
+  to: support-rpt-001
+- type: PRODUCED_BY
+  from: sales-app-001
+  to: sales-mcp-001
+- type: PROVIDES_RESOURCE
+  from: sales-mcp-001
+  to: sales-mcpr-001
+- type: PROVIDES_TOOL
+  from: sales-mcp-001
+  to: sales-mcpt-001
+- type: PROVIDES_TOOL
+  from: sales-mcp-001
+  to: sales-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: sales-ws-001
+  to: sales-uc-001
+- type: SUB_GLOSSARY_OF
+  from: sales-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: sales-gloss-001
+  to: sales-term-001
+- type: BUSINESS_TERM_OF
+  from: sales-gloss-001
+  to: sales-term-002
+- type: BUSINESS_TERM_OF
+  from: sales-gloss-001
+  to: sales-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: sales-df-001
+  to: sales-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: sales-df-001
+  to: sales-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-001
+  to: sales-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-002
+  to: sales-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-003
+  to: sales-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-004
+  to: sales-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-005
+  to: sales-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-006
+  to: sales-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-007
+  to: sales-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-008
+  to: sales-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-009
+  to: sales-ds-002
+- type: IS_CONSUMED_BY
+  from: sales-ds-001
+  to: sales-job-001
+- type: DATASET_PRODUCED_BY
+  from: sales-ds-002
+  to: sales-job-001
+- type: WORKSPACE_DATASET
+  from: sales-ws-001
+  to: sales-ds-002
+- type: RESULTSETS_DATASET
+  from: sales-ds-003
+  to: sales-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: sales-ds-003
+  to: sales-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-010
+  to: sales-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-011
+  to: sales-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-012
+  to: sales-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-013
+  to: sales-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-014
+  to: sales-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-015
+  to: sales-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-016
+  to: sales-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-017
+  to: sales-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-018
+  to: sales-ds-005
+- type: IS_CONSUMED_BY
+  from: sales-ds-004
+  to: sales-job-002
+- type: DATASET_PRODUCED_BY
+  from: sales-ds-005
+  to: sales-job-002
+- type: WORKSPACE_DATASET
+  from: sales-ws-001
+  to: sales-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-019
+  to: sales-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-020
+  to: sales-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-021
+  to: sales-ds-006
+- type: IS_CONSUMED_BY
+  from: sales-ds-005
+  to: sales-job-003
+- type: DATASET_PRODUCED_BY
+  from: sales-ds-006
+  to: sales-job-003
+- type: MODEL_USE_CASE
+  from: sales-model-001
+  to: sales-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: sales-model-001
+  to: sales-mv-001
+- type: IS_CONSUMED_BY
+  from: sales-ds-006
+  to: sales-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: sales-mv-001
+  to: sales-job-004
+- type: IS_CONSUMED_BY
+  from: sales-ds-005
+  to: sales-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: sales-mv-001
+  to: sales-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: sales-ds-007
+  to: sales-job-005
+- type: USE_CASE_DATASET
+  from: sales-uc-001
+  to: sales-ds-006
+- type: INSTALLED
+  from: sales-wssvc-001
+  to: sales-ws-001
+- type: IMPLEMENTS
+  from: sales-wssvc-001
+  to: sales-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-022
+  to: sales-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-023
+  to: sales-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-024
+  to: sales-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-025
+  to: sales-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-026
+  to: sales-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-027
+  to: sales-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-028
+  to: sales-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-029
+  to: sales-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: sales-attr-030
+  to: sales-ds-009
+- type: IS_CONSUMED_BY
+  from: sales-ds-008
+  to: sales-job-006
+- type: DATASET_PRODUCED_BY
+  from: sales-ds-009
+  to: sales-job-006
+- type: WORKSPACE_DATASET
+  from: sales-ws-001
+  to: sales-ds-009
+- type: SYSTEM_USE_CASE
+  from: sales-asys-001
+  to: sales-uc-001
+- type: HAS_VERSION
+  from: sales-asys-001
+  to: sales-asysv-001
+- type: HAS_MEMBER
+  from: sales-asysv-001
+  to: sales-agv-001
+- type: HAS_MEMBER
+  from: sales-asysv-001
+  to: sales-agv-002
+- type: CREATED_BY
+  from: sales-rpt-001
+  to: sales-app-001
+- type: ELEMENT_OF
+  from: sales-rpt-attr-001
+  to: sales-rpt-001
+- type: ELEMENT_OF
+  from: sales-rpt-attr-002
+  to: sales-rpt-001
+- type: ELEMENT_OF
+  from: sales-rpt-attr-003
+  to: sales-rpt-001
+- type: PRODUCED_BY
+  from: operations-app-001
+  to: operations-mcp-001
+- type: PROVIDES_RESOURCE
+  from: operations-mcp-001
+  to: operations-mcpr-001
+- type: PROVIDES_TOOL
+  from: operations-mcp-001
+  to: operations-mcpt-001
+- type: PROVIDES_TOOL
+  from: operations-mcp-001
+  to: operations-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: operations-ws-001
+  to: operations-uc-001
+- type: SUB_GLOSSARY_OF
+  from: operations-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: operations-gloss-001
+  to: operations-term-001
+- type: BUSINESS_TERM_OF
+  from: operations-gloss-001
+  to: operations-term-002
+- type: BUSINESS_TERM_OF
+  from: operations-gloss-001
+  to: operations-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: operations-df-001
+  to: operations-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: operations-df-001
+  to: operations-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-001
+  to: operations-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-002
+  to: operations-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-003
+  to: operations-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-004
+  to: operations-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-005
+  to: operations-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-006
+  to: operations-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-007
+  to: operations-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-008
+  to: operations-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-009
+  to: operations-ds-002
+- type: IS_CONSUMED_BY
+  from: operations-ds-001
+  to: operations-job-001
+- type: DATASET_PRODUCED_BY
+  from: operations-ds-002
+  to: operations-job-001
+- type: WORKSPACE_DATASET
+  from: operations-ws-001
+  to: operations-ds-002
+- type: RESULTSETS_DATASET
+  from: operations-ds-003
+  to: operations-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: operations-ds-003
+  to: operations-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-010
+  to: operations-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-011
+  to: operations-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-012
+  to: operations-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-013
+  to: operations-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-014
+  to: operations-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-015
+  to: operations-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-016
+  to: operations-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-017
+  to: operations-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-018
+  to: operations-ds-005
+- type: IS_CONSUMED_BY
+  from: operations-ds-004
+  to: operations-job-002
+- type: DATASET_PRODUCED_BY
+  from: operations-ds-005
+  to: operations-job-002
+- type: WORKSPACE_DATASET
+  from: operations-ws-001
+  to: operations-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-019
+  to: operations-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-020
+  to: operations-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-021
+  to: operations-ds-006
+- type: IS_CONSUMED_BY
+  from: operations-ds-005
+  to: operations-job-003
+- type: DATASET_PRODUCED_BY
+  from: operations-ds-006
+  to: operations-job-003
+- type: MODEL_USE_CASE
+  from: operations-model-001
+  to: operations-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: operations-model-001
+  to: operations-mv-001
+- type: IS_CONSUMED_BY
+  from: operations-ds-006
+  to: operations-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: operations-mv-001
+  to: operations-job-004
+- type: IS_CONSUMED_BY
+  from: operations-ds-005
+  to: operations-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: operations-mv-001
+  to: operations-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: operations-ds-007
+  to: operations-job-005
+- type: USE_CASE_DATASET
+  from: operations-uc-001
+  to: operations-ds-006
+- type: INSTALLED
+  from: operations-wssvc-001
+  to: operations-ws-001
+- type: IMPLEMENTS
+  from: operations-wssvc-001
+  to: operations-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-022
+  to: operations-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-023
+  to: operations-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-024
+  to: operations-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-025
+  to: operations-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-026
+  to: operations-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-027
+  to: operations-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-028
+  to: operations-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-029
+  to: operations-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: operations-attr-030
+  to: operations-ds-009
+- type: IS_CONSUMED_BY
+  from: operations-ds-008
+  to: operations-job-006
+- type: DATASET_PRODUCED_BY
+  from: operations-ds-009
+  to: operations-job-006
+- type: WORKSPACE_DATASET
+  from: operations-ws-001
+  to: operations-ds-009
+- type: SYSTEM_USE_CASE
+  from: operations-asys-001
+  to: operations-uc-001
+- type: HAS_VERSION
+  from: operations-asys-001
+  to: operations-asysv-001
+- type: HAS_MEMBER
+  from: operations-asysv-001
+  to: operations-agv-001
+- type: HAS_MEMBER
+  from: operations-asysv-001
+  to: operations-agv-002
+- type: CREATED_BY
+  from: operations-rpt-001
+  to: operations-app-001
+- type: ELEMENT_OF
+  from: operations-rpt-attr-001
+  to: operations-rpt-001
+- type: ELEMENT_OF
+  from: operations-rpt-attr-002
+  to: operations-rpt-001
+- type: ELEMENT_OF
+  from: operations-rpt-attr-003
+  to: operations-rpt-001
+- type: PRODUCED_BY
+  from: finance-app-001
+  to: finance-mcp-001
+- type: PROVIDES_RESOURCE
+  from: finance-mcp-001
+  to: finance-mcpr-001
+- type: PROVIDES_TOOL
+  from: finance-mcp-001
+  to: finance-mcpt-001
+- type: PROVIDES_TOOL
+  from: finance-mcp-001
+  to: finance-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: finance-ws-001
+  to: finance-uc-001
+- type: SUB_GLOSSARY_OF
+  from: finance-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: finance-gloss-001
+  to: finance-term-001
+- type: BUSINESS_TERM_OF
+  from: finance-gloss-001
+  to: finance-term-002
+- type: BUSINESS_TERM_OF
+  from: finance-gloss-001
+  to: finance-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: finance-df-001
+  to: finance-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: finance-df-001
+  to: finance-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-001
+  to: finance-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-002
+  to: finance-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-003
+  to: finance-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-004
+  to: finance-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-005
+  to: finance-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-006
+  to: finance-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-007
+  to: finance-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-008
+  to: finance-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-009
+  to: finance-ds-002
+- type: IS_CONSUMED_BY
+  from: finance-ds-001
+  to: finance-job-001
+- type: DATASET_PRODUCED_BY
+  from: finance-ds-002
+  to: finance-job-001
+- type: WORKSPACE_DATASET
+  from: finance-ws-001
+  to: finance-ds-002
+- type: RESULTSETS_DATASET
+  from: finance-ds-003
+  to: finance-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: finance-ds-003
+  to: finance-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-010
+  to: finance-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-011
+  to: finance-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-012
+  to: finance-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-013
+  to: finance-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-014
+  to: finance-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-015
+  to: finance-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-016
+  to: finance-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-017
+  to: finance-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-018
+  to: finance-ds-005
+- type: IS_CONSUMED_BY
+  from: finance-ds-004
+  to: finance-job-002
+- type: DATASET_PRODUCED_BY
+  from: finance-ds-005
+  to: finance-job-002
+- type: WORKSPACE_DATASET
+  from: finance-ws-001
+  to: finance-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-019
+  to: finance-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-020
+  to: finance-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-021
+  to: finance-ds-006
+- type: IS_CONSUMED_BY
+  from: finance-ds-005
+  to: finance-job-003
+- type: DATASET_PRODUCED_BY
+  from: finance-ds-006
+  to: finance-job-003
+- type: MODEL_USE_CASE
+  from: finance-model-001
+  to: finance-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: finance-model-001
+  to: finance-mv-001
+- type: IS_CONSUMED_BY
+  from: finance-ds-006
+  to: finance-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: finance-mv-001
+  to: finance-job-004
+- type: IS_CONSUMED_BY
+  from: finance-ds-005
+  to: finance-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: finance-mv-001
+  to: finance-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: finance-ds-007
+  to: finance-job-005
+- type: USE_CASE_DATASET
+  from: finance-uc-001
+  to: finance-ds-006
+- type: INSTALLED
+  from: finance-wssvc-001
+  to: finance-ws-001
+- type: IMPLEMENTS
+  from: finance-wssvc-001
+  to: finance-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-022
+  to: finance-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-023
+  to: finance-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-024
+  to: finance-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-025
+  to: finance-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-026
+  to: finance-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-027
+  to: finance-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-028
+  to: finance-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-029
+  to: finance-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: finance-attr-030
+  to: finance-ds-009
+- type: IS_CONSUMED_BY
+  from: finance-ds-008
+  to: finance-job-006
+- type: DATASET_PRODUCED_BY
+  from: finance-ds-009
+  to: finance-job-006
+- type: WORKSPACE_DATASET
+  from: finance-ws-001
+  to: finance-ds-009
+- type: SYSTEM_USE_CASE
+  from: finance-asys-001
+  to: finance-uc-001
+- type: HAS_VERSION
+  from: finance-asys-001
+  to: finance-asysv-001
+- type: HAS_MEMBER
+  from: finance-asysv-001
+  to: finance-agv-001
+- type: HAS_MEMBER
+  from: finance-asysv-001
+  to: finance-agv-002
+- type: CREATED_BY
+  from: finance-rpt-001
+  to: finance-app-001
+- type: ELEMENT_OF
+  from: finance-rpt-attr-001
+  to: finance-rpt-001
+- type: ELEMENT_OF
+  from: finance-rpt-attr-002
+  to: finance-rpt-001
+- type: ELEMENT_OF
+  from: finance-rpt-attr-003
+  to: finance-rpt-001
+- type: PRODUCED_BY
+  from: hr-app-001
+  to: hr-mcp-001
+- type: PROVIDES_RESOURCE
+  from: hr-mcp-001
+  to: hr-mcpr-001
+- type: PROVIDES_TOOL
+  from: hr-mcp-001
+  to: hr-mcpt-001
+- type: PROVIDES_TOOL
+  from: hr-mcp-001
+  to: hr-mcpt-002
+- type: WORKSPACE_USE_CASE
+  from: hr-ws-001
+  to: hr-uc-001
+- type: SUB_GLOSSARY_OF
+  from: hr-gloss-001
+  to: gloss-001
+- type: BUSINESS_TERM_OF
+  from: hr-gloss-001
+  to: hr-term-001
+- type: BUSINESS_TERM_OF
+  from: hr-gloss-001
+  to: hr-term-002
+- type: BUSINESS_TERM_OF
+  from: hr-gloss-001
+  to: hr-term-003
+- type: DATA_FLOW_PRODUCED_BY
+  from: hr-df-001
+  to: hr-app-001
+- type: DATAFLOW_CONSUMED_BY
+  from: hr-df-001
+  to: hr-app-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-001
+  to: hr-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-002
+  to: hr-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-003
+  to: hr-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-004
+  to: hr-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-005
+  to: hr-ds-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-006
+  to: hr-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-007
+  to: hr-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-008
+  to: hr-ds-002
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-009
+  to: hr-ds-002
+- type: IS_CONSUMED_BY
+  from: hr-ds-001
+  to: hr-job-001
+- type: DATASET_PRODUCED_BY
+  from: hr-ds-002
+  to: hr-job-001
+- type: WORKSPACE_DATASET
+  from: hr-ws-001
+  to: hr-ds-002
+- type: RESULTSETS_DATASET
+  from: hr-ds-003
+  to: hr-ds-002
+- type: RESULTSETS_DATAFLOW
+  from: hr-ds-003
+  to: hr-df-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-010
+  to: hr-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-011
+  to: hr-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-012
+  to: hr-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-013
+  to: hr-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-014
+  to: hr-ds-004
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-015
+  to: hr-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-016
+  to: hr-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-017
+  to: hr-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-018
+  to: hr-ds-005
+- type: IS_CONSUMED_BY
+  from: hr-ds-004
+  to: hr-job-002
+- type: DATASET_PRODUCED_BY
+  from: hr-ds-005
+  to: hr-job-002
+- type: WORKSPACE_DATASET
+  from: hr-ws-001
+  to: hr-ds-005
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-019
+  to: hr-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-020
+  to: hr-ds-006
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-021
+  to: hr-ds-006
+- type: IS_CONSUMED_BY
+  from: hr-ds-005
+  to: hr-job-003
+- type: DATASET_PRODUCED_BY
+  from: hr-ds-006
+  to: hr-job-003
+- type: MODEL_USE_CASE
+  from: hr-model-001
+  to: hr-uc-001
+- type: MODEL_TO_MODEL_VERSION
+  from: hr-model-001
+  to: hr-mv-001
+- type: IS_CONSUMED_BY
+  from: hr-ds-006
+  to: hr-job-004
+  properties:
+    context: training_data
+- type: DATASET_PRODUCED_BY
+  from: hr-mv-001
+  to: hr-job-004
+- type: IS_CONSUMED_BY
+  from: hr-ds-005
+  to: hr-job-005
+  properties:
+    context: scoring_input
+- type: IS_CONSUMED_BY
+  from: hr-mv-001
+  to: hr-job-005
+  properties:
+    context: scoring_model
+- type: DATASET_PRODUCED_BY
+  from: hr-ds-007
+  to: hr-job-005
+- type: USE_CASE_DATASET
+  from: hr-uc-001
+  to: hr-ds-006
+- type: INSTALLED
+  from: hr-wssvc-001
+  to: hr-ws-001
+- type: IMPLEMENTS
+  from: hr-wssvc-001
+  to: hr-mv-001
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-022
+  to: hr-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-023
+  to: hr-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-024
+  to: hr-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-025
+  to: hr-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-026
+  to: hr-ds-008
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-027
+  to: hr-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-028
+  to: hr-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-029
+  to: hr-ds-009
+- type: IS_ATTRIBUTE_FOR
+  from: hr-attr-030
+  to: hr-ds-009
+- type: IS_CONSUMED_BY
+  from: hr-ds-008
+  to: hr-job-006
+- type: DATASET_PRODUCED_BY
+  from: hr-ds-009
+  to: hr-job-006
+- type: WORKSPACE_DATASET
+  from: hr-ws-001
+  to: hr-ds-009
+- type: SYSTEM_USE_CASE
+  from: hr-asys-001
+  to: hr-uc-001
+- type: HAS_VERSION
+  from: hr-asys-001
+  to: hr-asysv-001
+- type: HAS_MEMBER
+  from: hr-asysv-001
+  to: hr-agv-001
+- type: HAS_MEMBER
+  from: hr-asysv-001
+  to: hr-agv-002
+- type: CREATED_BY
+  from: hr-rpt-001
+  to: hr-app-001
+- type: ELEMENT_OF
+  from: hr-rpt-attr-001
+  to: hr-rpt-001
+- type: ELEMENT_OF
+  from: hr-rpt-attr-002
+  to: hr-rpt-001
+- type: ELEMENT_OF
+  from: hr-rpt-attr-003
+  to: hr-rpt-001

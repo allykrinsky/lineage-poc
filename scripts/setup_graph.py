@@ -19,17 +19,47 @@ def main():
         '--version',
         type=str,
         default=None,
-        help='Version suffix for schema and entities files (e.g., "v2" will load schema-v2.yaml and entities-v2.yaml)'
+        help='Version suffix for both schema and entities files (e.g., "v2" will load schema-v2.yaml and entities-v2.yaml)'
+    )
+    parser.add_argument(
+        '--schema-version',
+        type=str,
+        default=None,
+        help='Version suffix for schema file only (overrides --version for schema)'
+    )
+    parser.add_argument(
+        '--entities-version',
+        type=str,
+        default=None,
+        help='Version suffix for entities file only (overrides --version for entities)'
     )
     args = parser.parse_args()
 
     print("🚀 Starting graph setup...")
-    if args.version:
+
+    # Determine which versions are being used
+    schema_ver = args.schema_version if args.schema_version else args.version
+    entities_ver = args.entities_version if args.entities_version else args.version
+
+    if schema_ver and entities_ver:
+        print(f"   Using schema version: {schema_ver}")
+        print(f"   Using entities version: {entities_ver}")
+    elif schema_ver or entities_ver:
+        if schema_ver:
+            print(f"   Using schema version: {schema_ver}")
+        if entities_ver:
+            print(f"   Using entities version: {entities_ver}")
+    elif args.version:
         print(f"   Using metamodel version: {args.version}")
 
     # Load metamodel
     print("\n📖 Loading metamodel...")
-    loader = MetamodelLoader(config_dir=get_metamodel_path(), version=args.version)
+    loader = MetamodelLoader(
+        config_dir=get_metamodel_path(),
+        version=args.version,
+        schema_version=args.schema_version,
+        entities_version=args.entities_version
+    )
     schema = loader.load_schema()
     entities = loader.load_entities()
 
