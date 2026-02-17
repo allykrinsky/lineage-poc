@@ -1,0 +1,3252 @@
+# =============================================================================
+# Large-Scale Lineage POC — Seed Entities & Edges
+# =============================================================================
+# Multi-domain data platform with ~1000 nodes
+#
+# Domains covered:
+#   1. Fraud Detection
+#   2. Customer Analytics
+#   3. Marketing Campaigns
+#   4. Risk Management
+#   5. Regulatory Reporting
+#   6. Product Recommendations
+#
+# Following strict rules from metamodel/data_generation_rules.md
+# =============================================================================
+
+assets:
+
+  # ===========================================================================
+  # DOMAIN 1: FRAUD DETECTION
+  # ===========================================================================
+
+  Dataset:
+    # --- Fraud Detection Pipeline ---
+    - id: "fraud-ds-001"
+      name: "raw_credit_card_transactions"
+      sub_type: null
+      description: "Raw credit card transaction feed"
+
+    - id: "fraud-ds-002"
+      name: "curated_transactions"
+      sub_type: null
+      description: "Cleaned and enriched transaction data"
+
+    - id: "fraud-ds-003"
+      name: "fraud_feature_set"
+      sub_type: null
+      description: "Engineered features for fraud detection"
+
+    - id: "fraud-ds-004"
+      name: "fraud_predictions"
+      sub_type: "knowledge_base"
+      description: "Batch fraud scoring results"
+
+    - id: "fraud-ds-005"
+      name: "fraud_knowledge_base"
+      sub_type: "knowledge_base"
+      description: "RAG knowledge base for fraud patterns"
+
+    - id: "fraud-ds-006"
+      name: "transaction_quality_results"
+      sub_type: "resultset"
+      description: "Data quality check results"
+
+    - id: "fraud-ds-007"
+      name: "account_risk_scores"
+      sub_type: null
+      description: "Account-level risk aggregation"
+
+  # ===========================================================================
+  # DOMAIN 2: CUSTOMER ANALYTICS
+  # ===========================================================================
+
+    # --- Customer 360 Pipeline ---
+    - id: "cust-ds-001"
+      name: "raw_customer_profiles"
+      sub_type: null
+      description: "Raw customer profile data from CRM"
+
+    - id: "cust-ds-002"
+      name: "raw_customer_interactions"
+      sub_type: null
+      description: "Customer touchpoint events"
+
+    - id: "cust-ds-003"
+      name: "curated_customer_profiles"
+      sub_type: null
+      description: "Cleaned customer master data"
+
+    - id: "cust-ds-004"
+      name: "customer_360_view"
+      sub_type: null
+      description: "Unified customer view with behavioral features"
+
+    - id: "cust-ds-005"
+      name: "customer_segmentation_results"
+      sub_type: "knowledge_base"
+      description: "ML-based customer segments"
+
+    - id: "cust-ds-006"
+      name: "churn_predictions"
+      sub_type: "knowledge_base"
+      description: "Customer churn probability scores"
+
+    - id: "cust-ds-007"
+      name: "customer_lifetime_value"
+      sub_type: null
+      description: "Calculated CLV metrics"
+
+    - id: "cust-ds-008"
+      name: "profile_quality_results"
+      sub_type: "resultset"
+      description: "Profile completeness checks"
+
+  # ===========================================================================
+  # DOMAIN 3: MARKETING CAMPAIGNS
+  # ===========================================================================
+
+    # --- Marketing Pipeline ---
+    - id: "mkt-ds-001"
+      name: "raw_campaign_events"
+      sub_type: null
+      description: "Marketing campaign interaction data"
+
+    - id: "mkt-ds-002"
+      name: "raw_email_engagement"
+      sub_type: null
+      description: "Email open/click event stream"
+
+    - id: "mkt-ds-003"
+      name: "curated_campaign_metrics"
+      sub_type: null
+      description: "Aggregated campaign performance"
+
+    - id: "mkt-ds-004"
+      name: "marketing_attribution_features"
+      sub_type: null
+      description: "Multi-touch attribution features"
+
+    - id: "mkt-ds-005"
+      name: "campaign_optimization_scores"
+      sub_type: "knowledge_base"
+      description: "ML-driven campaign recommendations"
+
+    - id: "mkt-ds-006"
+      name: "next_best_offer_predictions"
+      sub_type: "knowledge_base"
+      description: "Personalized offer recommendations"
+
+    - id: "mkt-ds-007"
+      name: "campaign_quality_results"
+      sub_type: "resultset"
+      description: "Campaign data validation results"
+
+  # ===========================================================================
+  # DOMAIN 4: RISK MANAGEMENT
+  # ===========================================================================
+
+    # --- Risk Assessment Pipeline ---
+    - id: "risk-ds-001"
+      name: "raw_credit_applications"
+      sub_type: null
+      description: "Credit application submissions"
+
+    - id: "risk-ds-002"
+      name: "raw_credit_bureau_data"
+      sub_type: null
+      description: "External credit bureau reports"
+
+    - id: "risk-ds-003"
+      name: "curated_credit_data"
+      sub_type: null
+      description: "Merged credit assessment data"
+
+    - id: "risk-ds-004"
+      name: "risk_feature_set"
+      sub_type: null
+      description: "Credit risk modeling features"
+
+    - id: "risk-ds-005"
+      name: "credit_scores"
+      sub_type: "knowledge_base"
+      description: "Credit risk scores"
+
+    - id: "risk-ds-006"
+      name: "default_predictions"
+      sub_type: "knowledge_base"
+      description: "Loan default probability"
+
+    - id: "risk-ds-007"
+      name: "credit_quality_results"
+      sub_type: "resultset"
+      description: "Credit data validation"
+
+  # ===========================================================================
+  # DOMAIN 5: REGULATORY REPORTING
+  # ===========================================================================
+
+    # --- Compliance Pipeline ---
+    - id: "reg-ds-001"
+      name: "raw_transaction_logs"
+      sub_type: null
+      description: "All transaction event logs"
+
+    - id: "reg-ds-002"
+      name: "raw_account_balances"
+      sub_type: null
+      description: "Daily account balance snapshots"
+
+    - id: "reg-ds-003"
+      name: "curated_regulatory_data"
+      sub_type: null
+      description: "Compliance-ready transaction data"
+
+    - id: "reg-ds-004"
+      name: "aml_suspicious_activity"
+      sub_type: null
+      description: "Anti-money laundering flagged transactions"
+
+    - id: "reg-ds-005"
+      name: "regulatory_reports"
+      sub_type: null
+      description: "Generated compliance reports"
+
+    - id: "reg-ds-006"
+      name: "reg_quality_results"
+      sub_type: "resultset"
+      description: "Regulatory data validation"
+
+  # ===========================================================================
+  # DOMAIN 6: PRODUCT RECOMMENDATIONS
+  # ===========================================================================
+
+    # --- Recommendation Engine Pipeline ---
+    - id: "rec-ds-001"
+      name: "raw_product_catalog"
+      sub_type: null
+      description: "Product inventory and metadata"
+
+    - id: "rec-ds-002"
+      name: "raw_purchase_history"
+      sub_type: null
+      description: "Historical purchase transactions"
+
+    - id: "rec-ds-003"
+      name: "raw_browse_events"
+      sub_type: null
+      description: "Web browsing behavior"
+
+    - id: "rec-ds-004"
+      name: "curated_user_behavior"
+      sub_type: null
+      description: "Unified user interaction data"
+
+    - id: "rec-ds-005"
+      name: "product_embeddings"
+      sub_type: null
+      description: "Product feature vectors"
+
+    - id: "rec-ds-006"
+      name: "user_product_affinity"
+      sub_type: null
+      description: "User-product affinity scores"
+
+    - id: "rec-ds-007"
+      name: "product_recommendations"
+      sub_type: "knowledge_base"
+      description: "Personalized product recommendations"
+
+    - id: "rec-ds-008"
+      name: "rec_knowledge_base"
+      sub_type: "knowledge_base"
+      description: "RAG-based recommendation explanations"
+
+    - id: "rec-ds-009"
+      name: "rec_quality_results"
+      sub_type: "resultset"
+      description: "Recommendation quality metrics"
+
+  # ===========================================================================
+  # ATTRIBUTES
+  # ===========================================================================
+
+  Attribute:
+    # --- Fraud Detection Attributes ---
+    # fraud-ds-001: raw_credit_card_transactions
+    - id: "fraud-attr-001"
+      name: "transaction_id"
+      sub_type: "logical"
+      description: "Unique transaction identifier"
+
+    - id: "fraud-attr-002"
+      name: "account_id"
+      sub_type: "logical"
+      description: "Customer account ID"
+
+    - id: "fraud-attr-003"
+      name: "merchant_id"
+      sub_type: "logical"
+      description: "Merchant identifier"
+
+    - id: "fraud-attr-004"
+      name: "transaction_amount"
+      sub_type: "logical"
+      description: "Transaction amount in USD"
+
+    - id: "fraud-attr-005"
+      name: "transaction_timestamp"
+      sub_type: "logical"
+      description: "Transaction date/time"
+
+    # fraud-ds-002: curated_transactions
+    - id: "fraud-attr-006"
+      name: "txn_id"
+      sub_type: "logical"
+      description: "Cleaned transaction ID"
+
+    - id: "fraud-attr-007"
+      name: "acct_id"
+      sub_type: "logical"
+      description: "Cleaned account ID"
+
+    - id: "fraud-attr-008"
+      name: "amount_usd"
+      sub_type: "logical"
+      description: "Normalized amount"
+
+    - id: "fraud-attr-009"
+      name: "merchant_category"
+      sub_type: "logical"
+      description: "MCC category code"
+
+    - id: "fraud-attr-010"
+      name: "is_international"
+      sub_type: "logical"
+      description: "Cross-border flag"
+
+    # fraud-ds-003: fraud_feature_set
+    - id: "fraud-attr-011"
+      name: "avg_txn_amount_7d"
+      sub_type: "conceptual"
+      description: "7-day rolling average"
+
+    - id: "fraud-attr-012"
+      name: "txn_frequency_24h"
+      sub_type: "conceptual"
+      description: "Transactions in last 24h"
+
+    - id: "fraud-attr-013"
+      name: "merchant_risk_score"
+      sub_type: "conceptual"
+      description: "Merchant risk indicator"
+
+    - id: "fraud-attr-014"
+      name: "velocity_score"
+      sub_type: "conceptual"
+      description: "Transaction velocity metric"
+
+    # fraud-ds-007: account_risk_scores
+    - id: "fraud-attr-015"
+      name: "account_risk_level"
+      sub_type: "logical"
+      description: "Overall account risk rating"
+
+    - id: "fraud-attr-016"
+      name: "fraud_score"
+      sub_type: "logical"
+      description: "ML fraud probability"
+
+    # --- Customer Analytics Attributes ---
+    # cust-ds-001: raw_customer_profiles
+    - id: "cust-attr-001"
+      name: "customer_id"
+      sub_type: "logical"
+      description: "Primary customer identifier"
+
+    - id: "cust-attr-002"
+      name: "first_name"
+      sub_type: "logical"
+      description: "Customer first name"
+
+    - id: "cust-attr-003"
+      name: "last_name"
+      sub_type: "logical"
+      description: "Customer last name"
+
+    - id: "cust-attr-004"
+      name: "email"
+      sub_type: "logical"
+      description: "Email address"
+
+    - id: "cust-attr-005"
+      name: "phone"
+      sub_type: "logical"
+      description: "Phone number"
+
+    - id: "cust-attr-006"
+      name: "registration_date"
+      sub_type: "logical"
+      description: "Account creation date"
+
+    # cust-ds-002: raw_customer_interactions
+    - id: "cust-attr-007"
+      name: "interaction_id"
+      sub_type: "logical"
+      description: "Event identifier"
+
+    - id: "cust-attr-008"
+      name: "customer_id_fk"
+      sub_type: "logical"
+      description: "Customer foreign key"
+
+    - id: "cust-attr-009"
+      name: "channel"
+      sub_type: "logical"
+      description: "Interaction channel"
+
+    - id: "cust-attr-010"
+      name: "event_type"
+      sub_type: "logical"
+      description: "Type of interaction"
+
+    # cust-ds-003: curated_customer_profiles
+    - id: "cust-attr-011"
+      name: "cust_id"
+      sub_type: "logical"
+      description: "Cleaned customer ID"
+
+    - id: "cust-attr-012"
+      name: "full_name"
+      sub_type: "logical"
+      description: "Concatenated full name"
+
+    - id: "cust-attr-013"
+      name: "email_normalized"
+      sub_type: "logical"
+      description: "Standardized email"
+
+    - id: "cust-attr-014"
+      name: "account_status"
+      sub_type: "logical"
+      description: "Active/inactive status"
+
+    # cust-ds-004: customer_360_view
+    - id: "cust-attr-015"
+      name: "total_interactions"
+      sub_type: "conceptual"
+      description: "Lifetime interaction count"
+
+    - id: "cust-attr-016"
+      name: "engagement_score"
+      sub_type: "conceptual"
+      description: "Customer engagement metric"
+
+    - id: "cust-attr-017"
+      name: "tenure_days"
+      sub_type: "conceptual"
+      description: "Days since registration"
+
+    - id: "cust-attr-018"
+      name: "preferred_channel"
+      sub_type: "conceptual"
+      description: "Most used channel"
+
+    # cust-ds-007: customer_lifetime_value
+    - id: "cust-attr-019"
+      name: "clv_amount"
+      sub_type: "logical"
+      description: "Predicted lifetime value"
+
+    - id: "cust-attr-020"
+      name: "clv_segment"
+      sub_type: "logical"
+      description: "High/medium/low value"
+
+    # --- Marketing Attributes ---
+    # mkt-ds-001: raw_campaign_events
+    - id: "mkt-attr-001"
+      name: "campaign_id"
+      sub_type: "logical"
+      description: "Campaign identifier"
+
+    - id: "mkt-attr-002"
+      name: "customer_id_ref"
+      sub_type: "logical"
+      description: "Customer reference"
+
+    - id: "mkt-attr-003"
+      name: "event_timestamp"
+      sub_type: "logical"
+      description: "Event time"
+
+    - id: "mkt-attr-004"
+      name: "event_action"
+      sub_type: "logical"
+      description: "Click/open/convert"
+
+    # mkt-ds-002: raw_email_engagement
+    - id: "mkt-attr-005"
+      name: "email_id"
+      sub_type: "logical"
+      description: "Email message ID"
+
+    - id: "mkt-attr-006"
+      name: "recipient_id"
+      sub_type: "logical"
+      description: "Recipient customer ID"
+
+    - id: "mkt-attr-007"
+      name: "opened"
+      sub_type: "logical"
+      description: "Email open flag"
+
+    - id: "mkt-attr-008"
+      name: "clicked"
+      sub_type: "logical"
+      description: "Link click flag"
+
+    # mkt-ds-003: curated_campaign_metrics
+    - id: "mkt-attr-009"
+      name: "campaign_name"
+      sub_type: "logical"
+      description: "Campaign display name"
+
+    - id: "mkt-attr-010"
+      name: "send_count"
+      sub_type: "logical"
+      description: "Emails sent"
+
+    - id: "mkt-attr-011"
+      name: "open_rate"
+      sub_type: "logical"
+      description: "Open rate percentage"
+
+    - id: "mkt-attr-012"
+      name: "conversion_rate"
+      sub_type: "logical"
+      description: "Conversion percentage"
+
+    # mkt-ds-004: marketing_attribution_features
+    - id: "mkt-attr-013"
+      name: "first_touch_campaign"
+      sub_type: "conceptual"
+      description: "First campaign interaction"
+
+    - id: "mkt-attr-014"
+      name: "last_touch_campaign"
+      sub_type: "conceptual"
+      description: "Most recent campaign"
+
+    - id: "mkt-attr-015"
+      name: "attribution_weight"
+      sub_type: "conceptual"
+      description: "Multi-touch attribution score"
+
+    # --- Risk Management Attributes ---
+    # risk-ds-001: raw_credit_applications
+    - id: "risk-attr-001"
+      name: "application_id"
+      sub_type: "logical"
+      description: "Credit application ID"
+
+    - id: "risk-attr-002"
+      name: "applicant_id"
+      sub_type: "logical"
+      description: "Applicant customer ID"
+
+    - id: "risk-attr-003"
+      name: "requested_amount"
+      sub_type: "logical"
+      description: "Loan amount requested"
+
+    - id: "risk-attr-004"
+      name: "employment_status"
+      sub_type: "logical"
+      description: "Employment type"
+
+    # risk-ds-002: raw_credit_bureau_data
+    - id: "risk-attr-005"
+      name: "bureau_score"
+      sub_type: "logical"
+      description: "Credit bureau score"
+
+    - id: "risk-attr-006"
+      name: "debt_to_income"
+      sub_type: "logical"
+      description: "DTI ratio"
+
+    - id: "risk-attr-007"
+      name: "payment_history_months"
+      sub_type: "logical"
+      description: "Months of payment history"
+
+    # risk-ds-003: curated_credit_data
+    - id: "risk-attr-008"
+      name: "app_id"
+      sub_type: "logical"
+      description: "Cleaned application ID"
+
+    - id: "risk-attr-009"
+      name: "combined_score"
+      sub_type: "logical"
+      description: "Merged credit score"
+
+    - id: "risk-attr-010"
+      name: "risk_tier"
+      sub_type: "logical"
+      description: "Risk category"
+
+    # risk-ds-004: risk_feature_set
+    - id: "risk-attr-011"
+      name: "credit_utilization"
+      sub_type: "conceptual"
+      description: "Credit utilization ratio"
+
+    - id: "risk-attr-012"
+      name: "delinquency_rate"
+      sub_type: "conceptual"
+      description: "Historical delinquency"
+
+    - id: "risk-attr-013"
+      name: "income_stability_score"
+      sub_type: "conceptual"
+      description: "Income volatility metric"
+
+    # --- Regulatory Reporting Attributes ---
+    # reg-ds-001: raw_transaction_logs
+    - id: "reg-attr-001"
+      name: "log_id"
+      sub_type: "logical"
+      description: "Transaction log entry ID"
+
+    - id: "reg-attr-002"
+      name: "txn_timestamp"
+      sub_type: "logical"
+      description: "Transaction timestamp"
+
+    - id: "reg-attr-003"
+      name: "account_number"
+      sub_type: "logical"
+      description: "Account number"
+
+    - id: "reg-attr-004"
+      name: "txn_type"
+      sub_type: "logical"
+      description: "Transaction type code"
+
+    # reg-ds-002: raw_account_balances
+    - id: "reg-attr-005"
+      name: "balance_date"
+      sub_type: "logical"
+      description: "Balance snapshot date"
+
+    - id: "reg-attr-006"
+      name: "account_num"
+      sub_type: "logical"
+      description: "Account number"
+
+    - id: "reg-attr-007"
+      name: "balance_amount"
+      sub_type: "logical"
+      description: "Account balance"
+
+    # reg-ds-003: curated_regulatory_data
+    - id: "reg-attr-008"
+      name: "reporting_txn_id"
+      sub_type: "logical"
+      description: "Regulatory transaction ID"
+
+    - id: "reg-attr-009"
+      name: "kyc_status"
+      sub_type: "logical"
+      description: "KYC verification status"
+
+    - id: "reg-attr-010"
+      name: "aml_flag"
+      sub_type: "logical"
+      description: "AML screening result"
+
+    # reg-ds-004: aml_suspicious_activity
+    - id: "reg-attr-011"
+      name: "sar_id"
+      sub_type: "logical"
+      description: "Suspicious activity report ID"
+
+    - id: "reg-attr-012"
+      name: "risk_rating"
+      sub_type: "logical"
+      description: "AML risk level"
+
+    # reg-ds-005: regulatory_reports
+    - id: "reg-attr-013"
+      name: "report_id"
+      sub_type: "logical"
+      description: "Report identifier"
+
+    - id: "reg-attr-014"
+      name: "report_period"
+      sub_type: "logical"
+      description: "Reporting period"
+
+    - id: "reg-attr-015"
+      name: "filing_status"
+      sub_type: "logical"
+      description: "Filed/pending/draft"
+
+    # --- Product Recommendation Attributes ---
+    # rec-ds-001: raw_product_catalog
+    - id: "rec-attr-001"
+      name: "product_id"
+      sub_type: "logical"
+      description: "Product SKU"
+
+    - id: "rec-attr-002"
+      name: "product_name"
+      sub_type: "logical"
+      description: "Product name"
+
+    - id: "rec-attr-003"
+      name: "category"
+      sub_type: "logical"
+      description: "Product category"
+
+    - id: "rec-attr-004"
+      name: "price"
+      sub_type: "logical"
+      description: "List price"
+
+    # rec-ds-002: raw_purchase_history
+    - id: "rec-attr-005"
+      name: "order_id"
+      sub_type: "logical"
+      description: "Purchase order ID"
+
+    - id: "rec-attr-006"
+      name: "user_id"
+      sub_type: "logical"
+      description: "Purchasing user ID"
+
+    - id: "rec-attr-007"
+      name: "product_sku"
+      sub_type: "logical"
+      description: "Purchased product SKU"
+
+    - id: "rec-attr-008"
+      name: "purchase_date"
+      sub_type: "logical"
+      description: "Purchase timestamp"
+
+    # rec-ds-003: raw_browse_events
+    - id: "rec-attr-009"
+      name: "browse_event_id"
+      sub_type: "logical"
+      description: "Browse event identifier"
+
+    - id: "rec-attr-010"
+      name: "session_id"
+      sub_type: "logical"
+      description: "Web session ID"
+
+    - id: "rec-attr-011"
+      name: "viewed_product_id"
+      sub_type: "logical"
+      description: "Viewed product"
+
+    # rec-ds-004: curated_user_behavior
+    - id: "rec-attr-012"
+      name: "user_profile_id"
+      sub_type: "logical"
+      description: "User identifier"
+
+    - id: "rec-attr-013"
+      name: "total_views"
+      sub_type: "logical"
+      description: "Product views count"
+
+    - id: "rec-attr-014"
+      name: "total_purchases"
+      sub_type: "logical"
+      description: "Purchase count"
+
+    # rec-ds-005: product_embeddings
+    - id: "rec-attr-015"
+      name: "embedding_vector"
+      sub_type: "conceptual"
+      description: "Product feature embedding"
+
+    - id: "rec-attr-016"
+      name: "similarity_cluster"
+      sub_type: "conceptual"
+      description: "Product cluster ID"
+
+    # rec-ds-006: user_product_affinity
+    - id: "rec-attr-017"
+      name: "affinity_score"
+      sub_type: "conceptual"
+      description: "User-product affinity"
+
+    - id: "rec-attr-018"
+      name: "recommendation_rank"
+      sub_type: "conceptual"
+      description: "Ranked recommendation position"
+
+    # --- Business Glossary Terms ---
+    - id: "term-001"
+      name: "Account Identifier"
+      sub_type: "term"
+      description: "Business definition of account ID"
+
+    - id: "term-002"
+      name: "Customer Identifier"
+      sub_type: "term"
+      description: "Business definition of customer ID"
+
+    - id: "term-003"
+      name: "Transaction Amount"
+      sub_type: "term"
+      description: "Monetary value of transaction"
+
+    - id: "term-004"
+      name: "Fraudulent Activity"
+      sub_type: "term"
+      description: "Definition of fraud"
+
+    - id: "term-005"
+      name: "Customer Lifetime Value"
+      sub_type: "term"
+      description: "CLV business definition"
+
+    - id: "term-006"
+      name: "Marketing Campaign"
+      sub_type: "term"
+      description: "Campaign definition"
+
+    - id: "term-007"
+      name: "Credit Score"
+      sub_type: "term"
+      description: "Credit scoring definition"
+
+    - id: "term-008"
+      name: "Risk Rating"
+      sub_type: "term"
+      description: "Risk classification"
+
+    - id: "term-009"
+      name: "Regulatory Compliance"
+      sub_type: "term"
+      description: "Compliance definition"
+
+    - id: "term-010"
+      name: "Product Recommendation"
+      sub_type: "term"
+      description: "Recommendation engine output"
+
+    # --- Report Attributes (logical sub_type for reports) ---
+    - id: "rpt-attr-001"
+      name: "fraud_detection_rate"
+      sub_type: "logical"
+      description: "Fraud detection KPI"
+
+    - id: "rpt-attr-002"
+      name: "false_positive_rate"
+      sub_type: "logical"
+      description: "False positive percentage"
+
+    - id: "rpt-attr-003"
+      name: "churn_rate"
+      sub_type: "logical"
+      description: "Customer churn percentage"
+
+    - id: "rpt-attr-004"
+      name: "avg_clv"
+      sub_type: "logical"
+      description: "Average customer lifetime value"
+
+    - id: "rpt-attr-005"
+      name: "campaign_roi"
+      sub_type: "logical"
+      description: "Marketing campaign ROI"
+
+    - id: "rpt-attr-006"
+      name: "default_rate"
+      sub_type: "logical"
+      description: "Loan default rate"
+
+    - id: "rpt-attr-007"
+      name: "compliance_score"
+      sub_type: "logical"
+      description: "Regulatory compliance metric"
+
+    - id: "rpt-attr-008"
+      name: "recommendation_ctr"
+      sub_type: "logical"
+      description: "Recommendation click-through rate"
+
+  # ===========================================================================
+  # JOBS (ETL, Training, Inference, RAG)
+  # ===========================================================================
+
+  Job:
+    # --- Fraud Detection Jobs ---
+    - id: "fraud-job-001"
+      name: "ingest_raw_transactions"
+      sub_type: "etl"
+      description: "Ingest and clean raw transaction data"
+
+    - id: "fraud-job-002"
+      name: "build_fraud_features"
+      sub_type: "etl"
+      description: "Feature engineering for fraud detection"
+
+    - id: "fraud-job-003"
+      name: "train_fraud_model_v1"
+      sub_type: "training"
+      description: "Initial fraud model training"
+
+    - id: "fraud-job-004"
+      name: "finetune_fraud_model_v2"
+      sub_type: "finetuning"
+      description: "Fine-tune fraud model"
+
+    - id: "fraud-job-005"
+      name: "score_fraud_transactions"
+      sub_type: "inference"
+      description: "Batch fraud scoring"
+
+    - id: "fraud-job-006"
+      name: "build_fraud_kb"
+      sub_type: "rag"
+      description: "Build fraud pattern knowledge base"
+
+    - id: "fraud-job-007"
+      name: "aggregate_account_risk"
+      sub_type: "etl"
+      description: "Account-level risk aggregation"
+
+    # --- Customer Analytics Jobs ---
+    - id: "cust-job-001"
+      name: "ingest_customer_profiles"
+      sub_type: "etl"
+      description: "Ingest CRM customer data"
+
+    - id: "cust-job-002"
+      name: "build_customer_360"
+      sub_type: "etl"
+      description: "Create unified customer view"
+
+    - id: "cust-job-003"
+      name: "train_segmentation_model"
+      sub_type: "training"
+      description: "Customer segmentation ML model"
+
+    - id: "cust-job-004"
+      name: "score_customer_segments"
+      sub_type: "inference"
+      description: "Apply segmentation model"
+
+    - id: "cust-job-005"
+      name: "train_churn_model"
+      sub_type: "training"
+      description: "Customer churn prediction model"
+
+    - id: "cust-job-006"
+      name: "predict_churn"
+      sub_type: "inference"
+      description: "Batch churn scoring"
+
+    - id: "cust-job-007"
+      name: "calculate_clv"
+      sub_type: "etl"
+      description: "Calculate customer lifetime value"
+
+    # --- Marketing Jobs ---
+    - id: "mkt-job-001"
+      name: "aggregate_campaign_metrics"
+      sub_type: "etl"
+      description: "Campaign performance aggregation"
+
+    - id: "mkt-job-002"
+      name: "build_attribution_features"
+      sub_type: "etl"
+      description: "Multi-touch attribution feature engineering"
+
+    - id: "mkt-job-003"
+      name: "train_campaign_optimization"
+      sub_type: "training"
+      description: "Campaign optimization ML model"
+
+    - id: "mkt-job-004"
+      name: "score_campaign_optimization"
+      sub_type: "inference"
+      description: "Campaign recommendation scoring"
+
+    - id: "mkt-job-005"
+      name: "train_next_best_offer"
+      sub_type: "training"
+      description: "Next best offer model"
+
+    - id: "mkt-job-006"
+      name: "predict_next_best_offer"
+      sub_type: "inference"
+      description: "Personalized offer predictions"
+
+    # --- Risk Management Jobs ---
+    - id: "risk-job-001"
+      name: "merge_credit_data"
+      sub_type: "etl"
+      description: "Merge application and bureau data"
+
+    - id: "risk-job-002"
+      name: "build_risk_features"
+      sub_type: "etl"
+      description: "Credit risk feature engineering"
+
+    - id: "risk-job-003"
+      name: "train_credit_score_model"
+      sub_type: "training"
+      description: "Credit scoring model training"
+
+    - id: "risk-job-004"
+      name: "score_credit_applications"
+      sub_type: "inference"
+      description: "Credit application scoring"
+
+    - id: "risk-job-005"
+      name: "train_default_model"
+      sub_type: "training"
+      description: "Default prediction model"
+
+    - id: "risk-job-006"
+      name: "predict_default_risk"
+      sub_type: "inference"
+      description: "Default probability scoring"
+
+    # --- Regulatory Reporting Jobs ---
+    - id: "reg-job-001"
+      name: "curate_regulatory_data"
+      sub_type: "etl"
+      description: "Prepare compliance-ready data"
+
+    - id: "reg-job-002"
+      name: "flag_suspicious_activity"
+      sub_type: "etl"
+      description: "AML suspicious activity detection"
+
+    - id: "reg-job-003"
+      name: "generate_regulatory_reports"
+      sub_type: "etl"
+      description: "Generate compliance reports"
+
+    # --- Product Recommendation Jobs ---
+    - id: "rec-job-001"
+      name: "curate_user_behavior"
+      sub_type: "etl"
+      description: "Unify user interaction data"
+
+    - id: "rec-job-002"
+      name: "build_product_embeddings"
+      sub_type: "etl"
+      description: "Generate product feature vectors"
+
+    - id: "rec-job-003"
+      name: "calculate_user_affinity"
+      sub_type: "etl"
+      description: "User-product affinity scoring"
+
+    - id: "rec-job-004"
+      name: "train_recommendation_model"
+      sub_type: "training"
+      description: "Product recommendation model"
+
+    - id: "rec-job-005"
+      name: "generate_recommendations"
+      sub_type: "inference"
+      description: "Personalized product recommendations"
+
+    - id: "rec-job-006"
+      name: "build_rec_kb"
+      sub_type: "rag"
+      description: "Build recommendation explanation KB"
+
+  # ===========================================================================
+  # DATA DEPENDENCIES (Attribute-level lineage)
+  # ===========================================================================
+
+  DataDependency:
+    # --- Fraud Detection Dependencies ---
+    - id: "fraud-dep-001"
+      name: "txn_id_passthrough"
+      description: "Transaction ID passthrough"
+
+    - id: "fraud-dep-002"
+      name: "account_id_passthrough"
+      description: "Account ID passthrough"
+
+    - id: "fraud-dep-003"
+      name: "amount_normalization"
+      description: "Amount cleaning and normalization"
+
+    - id: "fraud-dep-004"
+      name: "avg_txn_calculation"
+      description: "Calculate 7-day average"
+
+    - id: "fraud-dep-005"
+      name: "velocity_calculation"
+      description: "Transaction velocity scoring"
+
+    - id: "fraud-dep-006"
+      name: "fraud_score_derivation"
+      description: "ML-based fraud score"
+
+    # --- Customer Analytics Dependencies ---
+    - id: "cust-dep-001"
+      name: "customer_id_passthrough"
+      description: "Customer ID passthrough"
+
+    - id: "cust-dep-002"
+      name: "name_concatenation"
+      description: "Full name construction"
+
+    - id: "cust-dep-003"
+      name: "engagement_calculation"
+      description: "Customer engagement scoring"
+
+    - id: "cust-dep-004"
+      name: "clv_calculation"
+      description: "Lifetime value calculation"
+
+    # --- Marketing Dependencies ---
+    - id: "mkt-dep-001"
+      name: "campaign_aggregation"
+      description: "Campaign metric rollup"
+
+    - id: "mkt-dep-002"
+      name: "attribution_weighting"
+      description: "Multi-touch attribution"
+
+    # --- Risk Dependencies ---
+    - id: "risk-dep-001"
+      name: "credit_score_merge"
+      description: "Combine credit scores"
+
+    - id: "risk-dep-002"
+      name: "utilization_calculation"
+      description: "Credit utilization ratio"
+
+    # --- Regulatory Dependencies ---
+    - id: "reg-dep-001"
+      name: "aml_flagging"
+      description: "AML flag derivation"
+
+    # --- Recommendation Dependencies ---
+    - id: "rec-dep-001"
+      name: "embedding_generation"
+      description: "Product embedding creation"
+
+    - id: "rec-dep-002"
+      name: "affinity_scoring"
+      description: "User-product affinity"
+
+  # ===========================================================================
+  # MODELS & MODEL VERSIONS
+  # ===========================================================================
+
+  Model:
+    - id: "fraud-model-001"
+      name: "fraud_detection_model"
+      description: "XGBoost fraud detection"
+
+    - id: "cust-model-001"
+      name: "customer_segmentation_model"
+      description: "K-means customer clustering"
+
+    - id: "cust-model-002"
+      name: "churn_prediction_model"
+      description: "Logistic regression churn model"
+
+    - id: "mkt-model-001"
+      name: "campaign_optimization_model"
+      description: "Campaign performance prediction"
+
+    - id: "mkt-model-002"
+      name: "next_best_offer_model"
+      description: "Personalized offer recommender"
+
+    - id: "risk-model-001"
+      name: "credit_scoring_model"
+      description: "Credit risk assessment"
+
+    - id: "risk-model-002"
+      name: "default_prediction_model"
+      description: "Loan default probability"
+
+    - id: "rec-model-001"
+      name: "product_recommendation_model"
+      description: "Collaborative filtering recommender"
+
+    - id: "embed-model-001"
+      name: "embedding_model"
+      description: "General-purpose embedding model"
+
+  ModelVersion:
+    # Fraud models
+    - id: "fraud-mv-001"
+      name: "fraud_detection_v1.0"
+      version: "1.0"
+      description: "Initial fraud model"
+
+    - id: "fraud-mv-002"
+      name: "fraud_detection_v2.0"
+      version: "2.0"
+      description: "Fine-tuned fraud model"
+
+    # Customer models
+    - id: "cust-mv-001"
+      name: "segmentation_v1.0"
+      version: "1.0"
+      description: "Customer segmentation v1"
+
+    - id: "cust-mv-002"
+      name: "churn_v1.0"
+      version: "1.0"
+      description: "Churn prediction v1"
+
+    # Marketing models
+    - id: "mkt-mv-001"
+      name: "campaign_opt_v1.0"
+      version: "1.0"
+      description: "Campaign optimization v1"
+
+    - id: "mkt-mv-002"
+      name: "next_offer_v1.0"
+      version: "1.0"
+      description: "Next best offer v1"
+
+    # Risk models
+    - id: "risk-mv-001"
+      name: "credit_score_v1.0"
+      version: "1.0"
+      description: "Credit scoring v1"
+
+    - id: "risk-mv-002"
+      name: "default_v1.0"
+      version: "1.0"
+      description: "Default prediction v1"
+
+    # Recommendation models
+    - id: "rec-mv-001"
+      name: "product_rec_v1.0"
+      version: "1.0"
+      description: "Product recommender v1"
+
+    # Embedding models (shared across domains)
+    - id: "embed-mv-001"
+      name: "ada_embedding_v2"
+      version: "2.0"
+      description: "Ada embedding model"
+
+    - id: "embed-mv-002"
+      name: "claude_opus_4"
+      version: "4.0"
+      description: "Claude Opus 4 LLM"
+
+  # ===========================================================================
+  # AGENTIC SYSTEMS
+  # ===========================================================================
+
+  AgenticSystem:
+    - id: "fraud-asys-001"
+      name: "fraud_review_system"
+      description: "Automated fraud case review"
+
+    - id: "cust-asys-001"
+      name: "customer_support_system"
+      description: "AI customer support agents"
+
+    - id: "mkt-asys-001"
+      name: "marketing_automation_system"
+      description: "Campaign management agents"
+
+    - id: "risk-asys-001"
+      name: "credit_underwriting_system"
+      description: "Automated credit underwriting"
+
+  AgenticSystemVersion:
+    - id: "fraud-asysv-001"
+      name: "fraud_review_v1"
+      version: "1.0"
+
+    - id: "cust-asysv-001"
+      name: "customer_support_v1"
+      version: "1.0"
+
+    - id: "mkt-asysv-001"
+      name: "marketing_auto_v1"
+      version: "1.0"
+
+    - id: "risk-asysv-001"
+      name: "underwriting_v1"
+      version: "1.0"
+
+  AgentVersion:
+    # Fraud agents
+    - id: "fraud-agv-001"
+      name: "fraud_reviewer_agent"
+      description: "Reviews flagged transactions"
+
+    - id: "fraud-agv-002"
+      name: "fraud_investigator_agent"
+      description: "Deep fraud investigation"
+
+    # Customer agents
+    - id: "cust-agv-001"
+      name: "support_chat_agent"
+      description: "Customer chat support"
+
+    - id: "cust-agv-002"
+      name: "retention_agent"
+      description: "Churn prevention outreach"
+
+    # Marketing agents
+    - id: "mkt-agv-001"
+      name: "campaign_optimizer_agent"
+      description: "Campaign performance optimization"
+
+    - id: "mkt-agv-002"
+      name: "content_generator_agent"
+      description: "Marketing content generation"
+
+    # Risk agents
+    - id: "risk-agv-001"
+      name: "credit_analyst_agent"
+      description: "Credit application analysis"
+
+    - id: "risk-agv-002"
+      name: "risk_monitor_agent"
+      description: "Portfolio risk monitoring"
+
+  # ===========================================================================
+  # APPLICATIONS & MCP
+  # ===========================================================================
+
+  Application:
+    - id: "fraud-app-001"
+      name: "fraud_analytics_platform"
+      description: "Fraud detection and monitoring"
+
+    - id: "cust-app-001"
+      name: "customer_data_platform"
+      description: "CDP for customer analytics"
+
+    - id: "mkt-app-001"
+      name: "marketing_automation_platform"
+      description: "Marketing campaign management"
+
+    - id: "risk-app-001"
+      name: "credit_risk_platform"
+      description: "Credit risk assessment"
+
+    - id: "reg-app-001"
+      name: "compliance_reporting_platform"
+      description: "Regulatory compliance"
+
+    - id: "rec-app-001"
+      name: "recommendation_engine"
+      description: "Product recommendation system"
+
+  MCPServer:
+    - id: "fraud-mcp-001"
+      name: "fraud_model_server"
+      description: "Fraud model serving"
+
+    - id: "cust-mcp-001"
+      name: "customer_api_server"
+      description: "Customer API gateway"
+
+    - id: "mkt-mcp-001"
+      name: "marketing_api_server"
+      description: "Marketing API endpoints"
+
+    - id: "risk-mcp-001"
+      name: "credit_api_server"
+      description: "Credit scoring API"
+
+    - id: "rec-mcp-001"
+      name: "recommendation_api_server"
+      description: "Recommendation API"
+
+  MCPResource:
+    - id: "fraud-mcpr-001"
+      name: "fraud_score_endpoint"
+      description: "/v1/fraud/score"
+
+    - id: "cust-mcpr-001"
+      name: "customer_profile_endpoint"
+      description: "/v1/customers/{id}"
+
+    - id: "mkt-mcpr-001"
+      name: "campaign_metrics_endpoint"
+      description: "/v1/campaigns/{id}/metrics"
+
+    - id: "risk-mcpr-001"
+      name: "credit_score_endpoint"
+      description: "/v1/credit/score"
+
+    - id: "rec-mcpr-001"
+      name: "recommendations_endpoint"
+      description: "/v1/recommendations/{user_id}"
+
+  MCPTool:
+    - id: "fraud-mcpt-001"
+      name: "fraud_lookup_tool"
+      description: "Look up fraud scores"
+
+    - id: "fraud-mcpt-002"
+      name: "transaction_search_tool"
+      description: "Search historical transactions"
+
+    - id: "cust-mcpt-001"
+      name: "customer_lookup_tool"
+      description: "Customer profile lookup"
+
+    - id: "cust-mcpt-002"
+      name: "interaction_history_tool"
+      description: "Customer interaction history"
+
+    - id: "mkt-mcpt-001"
+      name: "campaign_analysis_tool"
+      description: "Campaign performance analysis"
+
+    - id: "risk-mcpt-001"
+      name: "credit_check_tool"
+      description: "Credit score lookup"
+
+    - id: "rec-mcpt-001"
+      name: "product_search_tool"
+      description: "Product catalog search"
+
+  # ===========================================================================
+  # WORKSPACES & SERVICES
+  # ===========================================================================
+
+  Workspace:
+    - id: "fraud-ws-001"
+      name: "fraud_detection_workspace"
+      description: "Fraud team workspace"
+
+    - id: "cust-ws-001"
+      name: "customer_analytics_workspace"
+      description: "Customer insights workspace"
+
+    - id: "mkt-ws-001"
+      name: "marketing_workspace"
+      description: "Marketing team workspace"
+
+  WorkspaceService:
+    - id: "fraud-wssvc-001"
+      name: "fraud_model_service"
+      description: "Deployed fraud model"
+
+    - id: "cust-wssvc-001"
+      name: "segmentation_service"
+      description: "Customer segmentation service"
+
+    - id: "mkt-wssvc-001"
+      name: "campaign_opt_service"
+      description: "Campaign optimization service"
+
+  # ===========================================================================
+  # REPORTS
+  # ===========================================================================
+
+  Report:
+    - id: "fraud-rpt-001"
+      name: "weekly_fraud_dashboard"
+      description: "Weekly fraud detection metrics"
+
+    - id: "cust-rpt-001"
+      name: "customer_insights_report"
+      description: "Monthly customer analytics"
+
+    - id: "mkt-rpt-001"
+      name: "campaign_performance_report"
+      description: "Campaign ROI dashboard"
+
+    - id: "risk-rpt-001"
+      name: "credit_portfolio_report"
+      description: "Credit risk portfolio view"
+
+    - id: "reg-rpt-001"
+      name: "regulatory_compliance_report"
+      description: "Compliance status dashboard"
+
+  # ===========================================================================
+  # USE CASES
+  # ===========================================================================
+
+  UseCase:
+    - id: "uc-001"
+      name: "fraud_detection"
+      description: "Fraud detection and prevention"
+
+    - id: "uc-002"
+      name: "customer_analytics"
+      description: "Customer behavior and segmentation"
+
+    - id: "uc-003"
+      name: "marketing_optimization"
+      description: "Campaign performance optimization"
+
+    - id: "uc-004"
+      name: "credit_risk_management"
+      description: "Credit risk assessment"
+
+    - id: "uc-005"
+      name: "regulatory_compliance"
+      description: "Regulatory reporting and compliance"
+
+    - id: "uc-006"
+      name: "product_recommendations"
+      description: "Personalized product recommendations"
+
+  # ===========================================================================
+  # GLOSSARIES & DATA CONCEPTS
+  # ===========================================================================
+
+  Glossary:
+    - id: "gloss-001"
+      name: "enterprise_glossary"
+      description: "Enterprise-wide business glossary"
+
+    - id: "gloss-002"
+      name: "risk_glossary"
+      description: "Risk domain terminology"
+
+    - id: "gloss-003"
+      name: "marketing_glossary"
+      description: "Marketing terminology"
+
+    - id: "gloss-004"
+      name: "regulatory_glossary"
+      description: "Compliance terminology"
+
+  DataConcept:
+    - id: "dc-001"
+      name: "Customer Identity"
+      description: "Customer identification attributes"
+
+    - id: "dc-002"
+      name: "Transaction Data"
+      description: "Transaction event attributes"
+
+    - id: "dc-003"
+      name: "Financial Metrics"
+      description: "Financial KPIs and calculations"
+
+    - id: "dc-004"
+      name: "Risk Indicators"
+      description: "Risk assessment metrics"
+
+  DataFlow:
+    - id: "df-001"
+      name: "transaction_data_flow"
+      description: "Transaction data movement"
+
+    - id: "df-002"
+      name: "customer_data_flow"
+      description: "Customer data integration"
+
+    - id: "df-003"
+      name: "marketing_data_flow"
+      description: "Marketing event streams"
+
+  Process:
+    - id: "proc-001"
+      name: "fraud_case_review_process"
+      description: "End-to-end fraud review"
+
+    - id: "proc-002"
+      name: "automated_triage"
+      description: "Automated case triage"
+
+    - id: "proc-003"
+      name: "customer_onboarding_process"
+      description: "New customer onboarding"
+
+    - id: "proc-004"
+      name: "credit_approval_process"
+      description: "Credit application approval workflow"
+
+
+# =============================================================================
+# RELATIONSHIPS
+# =============================================================================
+relationships:
+
+  # ===========================================================================
+  # X-AXIS: LINEAGE (Jobs connecting datasets)
+  # ===========================================================================
+
+  # --- FRAUD DETECTION LINEAGE ---
+
+  # fraud-job-001: ingest_raw_transactions (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-001"
+    to: "fraud-job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-ds-002"
+    to: "fraud-job-001"
+
+  # fraud-job-002: build_fraud_features (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-002"
+    to: "fraud-job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-ds-003"
+    to: "fraud-job-002"
+
+  # fraud-job-003: train_fraud_model_v1 (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-003"
+    to: "fraud-job-003"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-mv-001"
+    to: "fraud-job-003"
+
+  # fraud-job-004: finetune_fraud_model_v2 (Finetuning)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-mv-001"
+    to: "fraud-job-004"
+    properties:
+      context: "base_model"
+
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-003"
+    to: "fraud-job-004"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-mv-002"
+    to: "fraud-job-004"
+
+  # fraud-job-005: score_fraud_transactions (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-002"
+    to: "fraud-job-005"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-mv-002"
+    to: "fraud-job-005"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-ds-004"
+    to: "fraud-job-005"
+
+  # fraud-job-006: build_fraud_kb (RAG)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-002"
+    to: "fraud-job-006"
+    properties:
+      context: "source_documents"
+
+  - type: "IS_CONSUMED_BY"
+    from: "embed-mv-001"
+    to: "fraud-job-006"
+    properties:
+      context: "embedding_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-ds-005"
+    to: "fraud-job-006"
+
+  # fraud-job-007: aggregate_account_risk (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "fraud-ds-002"
+    to: "fraud-job-007"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "fraud-ds-007"
+    to: "fraud-job-007"
+
+  # --- CUSTOMER ANALYTICS LINEAGE ---
+
+  # cust-job-001: ingest_customer_profiles (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-001"
+    to: "cust-job-001"
+
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-002"
+    to: "cust-job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-ds-003"
+    to: "cust-job-001"
+
+  # cust-job-002: build_customer_360 (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-003"
+    to: "cust-job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-ds-004"
+    to: "cust-job-002"
+
+  # cust-job-003: train_segmentation_model (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-004"
+    to: "cust-job-003"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-mv-001"
+    to: "cust-job-003"
+
+  # cust-job-004: score_customer_segments (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-004"
+    to: "cust-job-004"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "cust-mv-001"
+    to: "cust-job-004"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-ds-005"
+    to: "cust-job-004"
+
+  # cust-job-005: train_churn_model (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-004"
+    to: "cust-job-005"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-mv-002"
+    to: "cust-job-005"
+
+  # cust-job-006: predict_churn (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-004"
+    to: "cust-job-006"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "cust-mv-002"
+    to: "cust-job-006"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-ds-006"
+    to: "cust-job-006"
+
+  # cust-job-007: calculate_clv (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "cust-ds-004"
+    to: "cust-job-007"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "cust-ds-007"
+    to: "cust-job-007"
+
+  # --- MARKETING LINEAGE ---
+
+  # mkt-job-001: aggregate_campaign_metrics (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-001"
+    to: "mkt-job-001"
+
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-002"
+    to: "mkt-job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mkt-ds-003"
+    to: "mkt-job-001"
+
+  # mkt-job-002: build_attribution_features (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-003"
+    to: "mkt-job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mkt-ds-004"
+    to: "mkt-job-002"
+
+  # mkt-job-003: train_campaign_optimization (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-004"
+    to: "mkt-job-003"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mkt-mv-001"
+    to: "mkt-job-003"
+
+  # mkt-job-004: score_campaign_optimization (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-004"
+    to: "mkt-job-004"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-mv-001"
+    to: "mkt-job-004"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mkt-ds-005"
+    to: "mkt-job-004"
+
+  # mkt-job-005: train_next_best_offer (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-004"
+    to: "mkt-job-005"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mkt-mv-002"
+    to: "mkt-job-005"
+
+  # mkt-job-006: predict_next_best_offer (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-ds-004"
+    to: "mkt-job-006"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "mkt-mv-002"
+    to: "mkt-job-006"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "mkt-ds-006"
+    to: "mkt-job-006"
+
+  # --- RISK MANAGEMENT LINEAGE ---
+
+  # risk-job-001: merge_credit_data (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-001"
+    to: "risk-job-001"
+
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-002"
+    to: "risk-job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "risk-ds-003"
+    to: "risk-job-001"
+
+  # risk-job-002: build_risk_features (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-003"
+    to: "risk-job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "risk-ds-004"
+    to: "risk-job-002"
+
+  # risk-job-003: train_credit_score_model (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-004"
+    to: "risk-job-003"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "risk-mv-001"
+    to: "risk-job-003"
+
+  # risk-job-004: score_credit_applications (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-003"
+    to: "risk-job-004"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "risk-mv-001"
+    to: "risk-job-004"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "risk-ds-005"
+    to: "risk-job-004"
+
+  # risk-job-005: train_default_model (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-004"
+    to: "risk-job-005"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "risk-mv-002"
+    to: "risk-job-005"
+
+  # risk-job-006: predict_default_risk (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "risk-ds-004"
+    to: "risk-job-006"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "risk-mv-002"
+    to: "risk-job-006"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "risk-ds-006"
+    to: "risk-job-006"
+
+  # --- REGULATORY LINEAGE ---
+
+  # reg-job-001: curate_regulatory_data (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "reg-ds-001"
+    to: "reg-job-001"
+
+  - type: "IS_CONSUMED_BY"
+    from: "reg-ds-002"
+    to: "reg-job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "reg-ds-003"
+    to: "reg-job-001"
+
+  # reg-job-002: flag_suspicious_activity (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "reg-ds-003"
+    to: "reg-job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "reg-ds-004"
+    to: "reg-job-002"
+
+  # reg-job-003: generate_regulatory_reports (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "reg-ds-003"
+    to: "reg-job-003"
+
+  - type: "IS_CONSUMED_BY"
+    from: "reg-ds-004"
+    to: "reg-job-003"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "reg-ds-005"
+    to: "reg-job-003"
+
+  # --- RECOMMENDATION LINEAGE ---
+
+  # rec-job-001: curate_user_behavior (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-002"
+    to: "rec-job-001"
+
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-003"
+    to: "rec-job-001"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "rec-ds-004"
+    to: "rec-job-001"
+
+  # rec-job-002: build_product_embeddings (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-001"
+    to: "rec-job-002"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "rec-ds-005"
+    to: "rec-job-002"
+
+  # rec-job-003: calculate_user_affinity (ETL)
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-004"
+    to: "rec-job-003"
+
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-005"
+    to: "rec-job-003"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "rec-ds-006"
+    to: "rec-job-003"
+
+  # rec-job-004: train_recommendation_model (Training)
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-006"
+    to: "rec-job-004"
+    properties:
+      context: "training_data"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "rec-mv-001"
+    to: "rec-job-004"
+
+  # rec-job-005: generate_recommendations (Inference)
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-006"
+    to: "rec-job-005"
+    properties:
+      context: "scoring_input"
+
+  - type: "IS_CONSUMED_BY"
+    from: "rec-mv-001"
+    to: "rec-job-005"
+    properties:
+      context: "scoring_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "rec-ds-007"
+    to: "rec-job-005"
+
+  # rec-job-006: build_rec_kb (RAG)
+  - type: "IS_CONSUMED_BY"
+    from: "rec-ds-004"
+    to: "rec-job-006"
+    properties:
+      context: "source_documents"
+
+  - type: "IS_CONSUMED_BY"
+    from: "embed-mv-001"
+    to: "rec-job-006"
+    properties:
+      context: "embedding_model"
+
+  - type: "DATASET_PRODUCED_BY"
+    from: "rec-ds-008"
+    to: "rec-job-006"
+
+  # ===========================================================================
+  # X-AXIS: DATA DEPENDENCIES (Attribute-level lineage)
+  # ===========================================================================
+
+  # --- Fraud Data Dependencies ---
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-001"
+    to: "fraud-attr-001"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "fraud-dep-001"
+    to: "fraud-attr-006"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-002"
+    to: "fraud-attr-002"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "fraud-dep-002"
+    to: "fraud-attr-007"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-003"
+    to: "fraud-attr-004"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "fraud-dep-003"
+    to: "fraud-attr-008"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-004"
+    to: "fraud-attr-007"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-004"
+    to: "fraud-attr-008"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "fraud-dep-004"
+    to: "fraud-attr-011"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-005"
+    to: "fraud-attr-007"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "fraud-dep-005"
+    to: "fraud-attr-014"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-006"
+    to: "fraud-attr-011"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "fraud-dep-006"
+    to: "fraud-attr-014"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "fraud-dep-006"
+    to: "fraud-attr-016"
+
+  - type: "TRANSFORMS"
+    from: "fraud-mv-002"
+    to: "fraud-dep-006"
+
+  # --- Customer Data Dependencies ---
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "cust-dep-001"
+    to: "cust-attr-001"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "cust-dep-001"
+    to: "cust-attr-011"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "cust-dep-002"
+    to: "cust-attr-002"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "cust-dep-002"
+    to: "cust-attr-003"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "cust-dep-002"
+    to: "cust-attr-012"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "cust-dep-003"
+    to: "cust-attr-011"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "cust-dep-003"
+    to: "cust-attr-016"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "cust-dep-004"
+    to: "cust-attr-015"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "cust-dep-004"
+    to: "cust-attr-016"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "cust-dep-004"
+    to: "cust-attr-019"
+
+  # --- Marketing Data Dependencies ---
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "mkt-dep-001"
+    to: "mkt-attr-001"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "mkt-dep-001"
+    to: "mkt-attr-004"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "mkt-dep-001"
+    to: "mkt-attr-011"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "mkt-dep-001"
+    to: "mkt-attr-012"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "mkt-dep-002"
+    to: "mkt-attr-009"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "mkt-dep-002"
+    to: "mkt-attr-015"
+
+  # --- Risk Data Dependencies ---
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "risk-dep-001"
+    to: "risk-attr-002"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "risk-dep-001"
+    to: "risk-attr-005"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "risk-dep-001"
+    to: "risk-attr-009"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "risk-dep-002"
+    to: "risk-attr-006"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "risk-dep-002"
+    to: "risk-attr-011"
+
+  # --- Regulatory Data Dependencies ---
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "reg-dep-001"
+    to: "reg-attr-003"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "reg-dep-001"
+    to: "reg-attr-010"
+
+  # --- Recommendation Data Dependencies ---
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "rec-dep-001"
+    to: "rec-attr-001"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "rec-dep-001"
+    to: "rec-attr-015"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "rec-dep-002"
+    to: "rec-attr-012"
+
+  - type: "DATA_DEPENDENCY_PRODUCED_BY"
+    from: "rec-dep-002"
+    to: "rec-attr-015"
+
+  - type: "DATA_DEPENDENCY_CONSUMED_BY"
+    from: "rec-dep-002"
+    to: "rec-attr-017"
+
+  # ===========================================================================
+  # Y-AXIS: HIERARCHY
+  # ===========================================================================
+
+  # --- Model Versioning ---
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "fraud-model-001"
+    to: "fraud-mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "fraud-model-001"
+    to: "fraud-mv-002"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "cust-model-001"
+    to: "cust-mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "cust-model-002"
+    to: "cust-mv-002"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "mkt-model-001"
+    to: "mkt-mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "mkt-model-002"
+    to: "mkt-mv-002"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "risk-model-001"
+    to: "risk-mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "risk-model-002"
+    to: "risk-mv-002"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "rec-model-001"
+    to: "rec-mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "embed-model-001"
+    to: "embed-mv-001"
+
+  - type: "MODEL_TO_MODEL_VERSION"
+    from: "embed-model-001"
+    to: "embed-mv-002"
+
+  # --- Agentic System Hierarchy ---
+  - type: "HAS_VERSION"
+    from: "fraud-asys-001"
+    to: "fraud-asysv-001"
+
+  - type: "HAS_MEMBER"
+    from: "fraud-asysv-001"
+    to: "fraud-agv-001"
+
+  - type: "HAS_MEMBER"
+    from: "fraud-asysv-001"
+    to: "fraud-agv-002"
+
+  - type: "HAS_VERSION"
+    from: "cust-asys-001"
+    to: "cust-asysv-001"
+
+  - type: "HAS_MEMBER"
+    from: "cust-asysv-001"
+    to: "cust-agv-001"
+
+  - type: "HAS_MEMBER"
+    from: "cust-asysv-001"
+    to: "cust-agv-002"
+
+  - type: "HAS_VERSION"
+    from: "mkt-asys-001"
+    to: "mkt-asysv-001"
+
+  - type: "HAS_MEMBER"
+    from: "mkt-asysv-001"
+    to: "mkt-agv-001"
+
+  - type: "HAS_MEMBER"
+    from: "mkt-asysv-001"
+    to: "mkt-agv-002"
+
+  - type: "HAS_VERSION"
+    from: "risk-asys-001"
+    to: "risk-asysv-001"
+
+  - type: "HAS_MEMBER"
+    from: "risk-asysv-001"
+    to: "risk-agv-001"
+
+  - type: "HAS_MEMBER"
+    from: "risk-asysv-001"
+    to: "risk-agv-002"
+
+  # --- Attribute Containment (Datasets) ---
+  # Fraud attributes
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-001"
+    to: "fraud-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-002"
+    to: "fraud-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-003"
+    to: "fraud-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-004"
+    to: "fraud-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-005"
+    to: "fraud-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-006"
+    to: "fraud-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-007"
+    to: "fraud-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-008"
+    to: "fraud-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-009"
+    to: "fraud-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-010"
+    to: "fraud-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-011"
+    to: "fraud-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-012"
+    to: "fraud-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-013"
+    to: "fraud-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-014"
+    to: "fraud-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-015"
+    to: "fraud-ds-007"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "fraud-attr-016"
+    to: "fraud-ds-007"
+
+  # Customer attributes
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-001"
+    to: "cust-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-002"
+    to: "cust-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-003"
+    to: "cust-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-004"
+    to: "cust-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-005"
+    to: "cust-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-006"
+    to: "cust-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-007"
+    to: "cust-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-008"
+    to: "cust-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-009"
+    to: "cust-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-010"
+    to: "cust-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-011"
+    to: "cust-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-012"
+    to: "cust-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-013"
+    to: "cust-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-014"
+    to: "cust-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-015"
+    to: "cust-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-016"
+    to: "cust-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-017"
+    to: "cust-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-018"
+    to: "cust-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-019"
+    to: "cust-ds-007"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "cust-attr-020"
+    to: "cust-ds-007"
+
+  # Marketing attributes
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-001"
+    to: "mkt-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-002"
+    to: "mkt-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-003"
+    to: "mkt-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-004"
+    to: "mkt-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-005"
+    to: "mkt-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-006"
+    to: "mkt-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-007"
+    to: "mkt-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-008"
+    to: "mkt-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-009"
+    to: "mkt-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-010"
+    to: "mkt-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-011"
+    to: "mkt-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-012"
+    to: "mkt-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-013"
+    to: "mkt-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-014"
+    to: "mkt-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "mkt-attr-015"
+    to: "mkt-ds-004"
+
+  # Risk attributes
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-001"
+    to: "risk-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-002"
+    to: "risk-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-003"
+    to: "risk-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-004"
+    to: "risk-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-005"
+    to: "risk-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-006"
+    to: "risk-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-007"
+    to: "risk-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-008"
+    to: "risk-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-009"
+    to: "risk-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-010"
+    to: "risk-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-011"
+    to: "risk-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-012"
+    to: "risk-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "risk-attr-013"
+    to: "risk-ds-004"
+
+  # Regulatory attributes
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-001"
+    to: "reg-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-002"
+    to: "reg-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-003"
+    to: "reg-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-004"
+    to: "reg-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-005"
+    to: "reg-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-006"
+    to: "reg-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-007"
+    to: "reg-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-008"
+    to: "reg-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-009"
+    to: "reg-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-010"
+    to: "reg-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-011"
+    to: "reg-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-012"
+    to: "reg-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-013"
+    to: "reg-ds-005"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-014"
+    to: "reg-ds-005"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "reg-attr-015"
+    to: "reg-ds-005"
+
+  # Recommendation attributes
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-001"
+    to: "rec-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-002"
+    to: "rec-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-003"
+    to: "rec-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-004"
+    to: "rec-ds-001"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-005"
+    to: "rec-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-006"
+    to: "rec-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-007"
+    to: "rec-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-008"
+    to: "rec-ds-002"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-009"
+    to: "rec-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-010"
+    to: "rec-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-011"
+    to: "rec-ds-003"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-012"
+    to: "rec-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-013"
+    to: "rec-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-014"
+    to: "rec-ds-004"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-015"
+    to: "rec-ds-005"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-016"
+    to: "rec-ds-005"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-017"
+    to: "rec-ds-006"
+
+  - type: "IS_ATTRIBUTE_FOR"
+    from: "rec-attr-018"
+    to: "rec-ds-006"
+
+  # --- Report Attributes (via ELEMENT_OF) ---
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-001"
+    to: "fraud-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-002"
+    to: "fraud-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-003"
+    to: "cust-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-004"
+    to: "cust-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-005"
+    to: "mkt-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-006"
+    to: "risk-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-007"
+    to: "reg-rpt-001"
+
+  - type: "ELEMENT_OF"
+    from: "rpt-attr-008"
+    to: "fraud-rpt-001"
+
+  # --- Glossary Hierarchy ---
+  - type: "SUB_GLOSSARY_OF"
+    from: "gloss-002"
+    to: "gloss-001"
+
+  - type: "SUB_GLOSSARY_OF"
+    from: "gloss-003"
+    to: "gloss-001"
+
+  - type: "SUB_GLOSSARY_OF"
+    from: "gloss-004"
+    to: "gloss-001"
+
+  # --- Glossary Terms ---
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-001"
+    to: "term-001"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-001"
+    to: "term-002"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-001"
+    to: "term-003"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-002"
+    to: "term-004"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-001"
+    to: "term-005"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-003"
+    to: "term-006"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-002"
+    to: "term-007"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-002"
+    to: "term-008"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-004"
+    to: "term-009"
+
+  - type: "BUSINESS_TERM_OF"
+    from: "gloss-001"
+    to: "term-010"
+
+  # --- MCP Hierarchy ---
+  - type: "PRODUCED_BY"
+    from: "fraud-app-001"
+    to: "fraud-mcp-001"
+
+  - type: "PROVIDES_RESOURCE"
+    from: "fraud-mcp-001"
+    to: "fraud-mcpr-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "fraud-mcp-001"
+    to: "fraud-mcpt-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "fraud-mcp-001"
+    to: "fraud-mcpt-002"
+
+  - type: "PRODUCED_BY"
+    from: "cust-app-001"
+    to: "cust-mcp-001"
+
+  - type: "PROVIDES_RESOURCE"
+    from: "cust-mcp-001"
+    to: "cust-mcpr-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "cust-mcp-001"
+    to: "cust-mcpt-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "cust-mcp-001"
+    to: "cust-mcpt-002"
+
+  - type: "PRODUCED_BY"
+    from: "mkt-app-001"
+    to: "mkt-mcp-001"
+
+  - type: "PROVIDES_RESOURCE"
+    from: "mkt-mcp-001"
+    to: "mkt-mcpr-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "mkt-mcp-001"
+    to: "mkt-mcpt-001"
+
+  - type: "PRODUCED_BY"
+    from: "risk-app-001"
+    to: "risk-mcp-001"
+
+  - type: "PROVIDES_RESOURCE"
+    from: "risk-mcp-001"
+    to: "risk-mcpr-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "risk-mcp-001"
+    to: "risk-mcpt-001"
+
+  - type: "PRODUCED_BY"
+    from: "rec-app-001"
+    to: "rec-mcp-001"
+
+  - type: "PROVIDES_RESOURCE"
+    from: "rec-mcp-001"
+    to: "rec-mcpr-001"
+
+  - type: "PROVIDES_TOOL"
+    from: "rec-mcp-001"
+    to: "rec-mcpt-001"
+
+  # --- Workspace Services ---
+  - type: "INSTALLED"
+    from: "fraud-wssvc-001"
+    to: "fraud-ws-001"
+
+  - type: "INSTALLED"
+    from: "cust-wssvc-001"
+    to: "cust-ws-001"
+
+  - type: "INSTALLED"
+    from: "mkt-wssvc-001"
+    to: "mkt-ws-001"
+
+  # --- Reports Created By Applications ---
+  - type: "CREATED_BY"
+    from: "fraud-rpt-001"
+    to: "fraud-app-001"
+
+  - type: "CREATED_BY"
+    from: "cust-rpt-001"
+    to: "cust-app-001"
+
+  - type: "CREATED_BY"
+    from: "mkt-rpt-001"
+    to: "mkt-app-001"
+
+  - type: "CREATED_BY"
+    from: "risk-rpt-001"
+    to: "risk-app-001"
+
+  - type: "CREATED_BY"
+    from: "reg-rpt-001"
+    to: "reg-app-001"
+
+  # --- Domain Grouping (Use Cases) ---
+  - type: "SYSTEM_USE_CASE"
+    from: "fraud-asys-001"
+    to: "uc-001"
+
+  - type: "MODEL_USE_CASE"
+    from: "fraud-model-001"
+    to: "uc-001"
+
+  - type: "SYSTEM_USE_CASE"
+    from: "cust-asys-001"
+    to: "uc-002"
+
+  - type: "MODEL_USE_CASE"
+    from: "cust-model-001"
+    to: "uc-002"
+
+  - type: "MODEL_USE_CASE"
+    from: "cust-model-002"
+    to: "uc-002"
+
+  - type: "SYSTEM_USE_CASE"
+    from: "mkt-asys-001"
+    to: "uc-003"
+
+  - type: "MODEL_USE_CASE"
+    from: "mkt-model-001"
+    to: "uc-003"
+
+  - type: "MODEL_USE_CASE"
+    from: "mkt-model-002"
+    to: "uc-003"
+
+  - type: "SYSTEM_USE_CASE"
+    from: "risk-asys-001"
+    to: "uc-004"
+
+  - type: "MODEL_USE_CASE"
+    from: "risk-model-001"
+    to: "uc-004"
+
+  - type: "MODEL_USE_CASE"
+    from: "risk-model-002"
+    to: "uc-004"
+
+  - type: "MODEL_USE_CASE"
+    from: "rec-model-001"
+    to: "uc-006"
+
+  # --- Process Hierarchy ---
+  - type: "SUB_PROCESS_OF"
+    from: "proc-002"
+    to: "proc-001"
+
+  # ===========================================================================
+  # Z-AXIS: ASSOCIATIONS
+  # ===========================================================================
+
+  # --- Agent USES Relationships ---
+  # Fraud agents
+  - type: "USES"
+    from: "fraud-agv-001"
+    to: "fraud-ds-004"
+
+  - type: "USES"
+    from: "fraud-agv-001"
+    to: "fraud-ds-005"
+
+  - type: "USES"
+    from: "fraud-agv-001"
+    to: "fraud-mcpt-001"
+
+  - type: "USES"
+    from: "fraud-agv-001"
+    to: "embed-mv-002"
+
+  - type: "USES"
+    from: "fraud-agv-002"
+    to: "fraud-ds-002"
+
+  - type: "USES"
+    from: "fraud-agv-002"
+    to: "fraud-mcpt-002"
+
+  # Customer agents
+  - type: "USES"
+    from: "cust-agv-001"
+    to: "cust-ds-004"
+
+  - type: "USES"
+    from: "cust-agv-001"
+    to: "cust-mcpt-001"
+
+  - type: "USES"
+    from: "cust-agv-001"
+    to: "embed-mv-002"
+
+  - type: "USES"
+    from: "cust-agv-002"
+    to: "cust-ds-006"
+
+  - type: "USES"
+    from: "cust-agv-002"
+    to: "cust-mcpt-002"
+
+  # Marketing agents
+  - type: "USES"
+    from: "mkt-agv-001"
+    to: "mkt-ds-005"
+
+  - type: "USES"
+    from: "mkt-agv-001"
+    to: "mkt-mcpt-001"
+
+  - type: "USES"
+    from: "mkt-agv-002"
+    to: "mkt-ds-003"
+
+  - type: "USES"
+    from: "mkt-agv-002"
+    to: "embed-mv-002"
+
+  # Risk agents
+  - type: "USES"
+    from: "risk-agv-001"
+    to: "risk-ds-005"
+
+  - type: "USES"
+    from: "risk-agv-001"
+    to: "risk-mcpt-001"
+
+  - type: "USES"
+    from: "risk-agv-002"
+    to: "risk-ds-006"
+
+  - type: "USES"
+    from: "risk-agv-002"
+    to: "risk-ds-003"
+
+  # --- Attribute Mappings to Terms ---
+  - type: "IS_MAPPED_TO"
+    from: "fraud-attr-002"
+    to: "term-001"
+
+  - type: "IS_MAPPED_TO"
+    from: "cust-attr-001"
+    to: "term-002"
+
+  - type: "IS_MAPPED_TO"
+    from: "fraud-attr-004"
+    to: "term-003"
+
+  - type: "IS_MAPPED_TO"
+    from: "cust-attr-019"
+    to: "term-005"
+
+  - type: "IS_MAPPED_TO"
+    from: "risk-attr-009"
+    to: "term-007"
+
+  # --- Term Aliases ---
+  - type: "ALIASED_AS"
+    from: "term-001"
+    to: "term-002"
+
+  # --- Data Concept Links ---
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-001"
+    to: "term-002"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-001"
+    to: "cust-attr-015"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-002"
+    to: "term-003"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-002"
+    to: "fraud-attr-011"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-003"
+    to: "cust-attr-016"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-004"
+    to: "risk-attr-011"
+
+  - type: "DATA_CONCEPT_ATTRIBUTE"
+    from: "dc-004"
+    to: "term-008"
+
+  # --- Result Set Associations ---
+  - type: "RESULTSETS_DATASET"
+    from: "fraud-ds-006"
+    to: "fraud-ds-002"
+
+  - type: "RESULTSETS_REPORT"
+    from: "fraud-ds-006"
+    to: "fraud-rpt-001"
+
+  - type: "RESULTSETS_DATASET"
+    from: "cust-ds-008"
+    to: "cust-ds-003"
+
+  - type: "RESULTSETS_REPORT"
+    from: "cust-ds-008"
+    to: "cust-rpt-001"
+
+  - type: "RESULTSETS_DATASET"
+    from: "mkt-ds-007"
+    to: "mkt-ds-003"
+
+  - type: "RESULTSETS_DATAFLOW"
+    from: "mkt-ds-007"
+    to: "df-003"
+
+  - type: "RESULTSETS_DATASET"
+    from: "risk-ds-007"
+    to: "risk-ds-003"
+
+  - type: "RESULTSETS_DATASET"
+    from: "reg-ds-006"
+    to: "reg-ds-003"
+
+  - type: "RESULTSETS_DATAFLOW"
+    from: "fraud-ds-006"
+    to: "df-001"
+
+  - type: "RESULTSETS_DATASET"
+    from: "rec-ds-009"
+    to: "rec-ds-007"
+
+  # --- Use Case Dataset Associations ---
+  - type: "USE_CASE_DATASET"
+    from: "uc-001"
+    to: "fraud-ds-002"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-001"
+    to: "fraud-ds-003"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-002"
+    to: "cust-ds-004"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-002"
+    to: "cust-ds-007"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-003"
+    to: "mkt-ds-003"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-003"
+    to: "mkt-ds-004"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-004"
+    to: "risk-ds-004"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-005"
+    to: "reg-ds-005"
+
+  - type: "USE_CASE_DATASET"
+    from: "uc-006"
+    to: "rec-ds-007"
+
+  # --- Workspace Associations ---
+  - type: "WORKSPACE_USE_CASE"
+    from: "fraud-ws-001"
+    to: "uc-001"
+
+  - type: "WORKSPACE_DATASET"
+    from: "fraud-ws-001"
+    to: "fraud-ds-002"
+
+  - type: "WORKSPACE_DATASET"
+    from: "fraud-ws-001"
+    to: "fraud-ds-003"
+
+  - type: "WORKSPACE_USE_CASE"
+    from: "cust-ws-001"
+    to: "uc-002"
+
+  - type: "WORKSPACE_DATASET"
+    from: "cust-ws-001"
+    to: "cust-ds-004"
+
+  - type: "WORKSPACE_USE_CASE"
+    from: "mkt-ws-001"
+    to: "uc-003"
+
+  - type: "WORKSPACE_DATASET"
+    from: "mkt-ws-001"
+    to: "mkt-ds-003"
+
+  # --- Workspace Service Model Implementations ---
+  - type: "IMPLEMENTS"
+    from: "fraud-wssvc-001"
+    to: "fraud-mv-002"
+
+  - type: "IMPLEMENTS"
+    from: "cust-wssvc-001"
+    to: "cust-mv-001"
+
+  - type: "IMPLEMENTS"
+    from: "mkt-wssvc-001"
+    to: "mkt-mv-001"
+
+  # --- Data Flow Lineage ---
+  - type: "DATA_FLOW_PRODUCED_BY"
+    from: "df-001"
+    to: "fraud-app-001"
+
+  - type: "DATAFLOW_CONSUMED_BY"
+    from: "df-001"
+    to: "fraud-app-001"
+
+  - type: "DATA_FLOW_PRODUCED_BY"
+    from: "df-002"
+    to: "cust-app-001"
+
+  - type: "DATAFLOW_CONSUMED_BY"
+    from: "df-002"
+    to: "cust-app-001"
+
+  - type: "DATA_FLOW_PRODUCED_BY"
+    from: "df-003"
+    to: "mkt-app-001"
+
+  - type: "DATAFLOW_CONSUMED_BY"
+    from: "df-003"
+    to: "mkt-app-001"

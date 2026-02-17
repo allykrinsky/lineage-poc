@@ -1,0 +1,268 @@
+# =============================================================================
+# Generic Lineage POC — Test Scenarios
+# =============================================================================
+# Each test starts from a specific node in the seed graph and validates
+# that the traversal engine returns the correct results with proper constraints.
+# =============================================================================
+
+scenarios:
+
+  # ─────────────────────────────────────────────
+  # X-AXIS TESTS (Lineage / Derivation)
+  # ─────────────────────────────────────────────
+
+  - id: X-01
+    name: "Full upstream lineage from predictions dataset"
+    start_node: ds-004 (fraud_predictions)
+    traversal: { axes: [x], direction: upstream }
+    expected_logical_path:
+      - fraud_predictions
+      - "← (via job: score_transactions)"
+      - curated_transactions
+      - "← (via job: ingest_raw_transactions)"
+      - raw_transactions
+    also_expect:
+      - fraud_detection_v2.0 appears as another upstream input to score_transactions
+    validates:
+      - Hop collapsing works (dataset→job→dataset shown as one logical step)
+      - Multi-input jobs show all upstream sources
+
+  - id: X-02
+    name: "Downstream lineage from raw_transactions"
+    start_node: ds-001 (raw_transactions)
+    traversal: { axes: [x], direction: downstream }
+    expected_logical_path:
+      - raw_transactions
+      - "→ (via job: ingest_raw_transactions)"
+      - curated_transactions
+      - "→ (via job: build_fraud_features)"
+      - fraud_feature_set
+      - "→ (via job: train_fraud_model)"
+      - fraud_detection_v2.0
+    also_expect:
+      - curated_transactions also feeds score_transactions → fraud_predictions (branch)
+    validates:
+      - Branching downstream lineage is captured
+      - Cross-type lineage works (dataset → model_version via training job)
+
+  - id: X-03
+    name: "Attribute-level lineage from transaction_amount"
+    start_node: attr-002 (transaction_amount)
+    traversal: { axes: [x], direction: downstream }
+    expected_logical_path:
+      - transaction_amount (logical attribute)
+      - "→ (via dependency: avg_txn_calculation)"
+      - avg_transaction_30d (conceptual attribute)
+    also_expect:
+      - model_version fraud_detection_v2.0 appears as related (it TRANSFORMS the dependency)
+    validates:
+      - Attribute-level X-axis hop collapsing works
+      - Data dependency as transformer node functions correctly
+
+  - id: X-04
+    name: "Model version upstream — what data produced this model?"
+    start_node: mv-002 (fraud_detection_v2.0)
+    traversal: { axes: [x], direction: upstream }
+    expected:
+      - fraud_feature_set (via is_consumed_by → train_fraud_model)
+      - Data dependencies: avg_txn_calculation, frequency_calculation (via TRANSFORMS)
+      - Source attributes: transaction_amount, account_id
+    validates:
+      - Model-to-dependency-to-attribute chain works
+      - Mixed hop groups traversed correctly
+
+
+  # ─────────────────────────────────────────────
+  # Y-AXIS TESTS (Hierarchy)
+  # ─────────────────────────────────────────────
+
+  - id: Y-01
+    name: "Walk up from agent_version to agentic system"
+    start_node: agv-001 (fraud_reviewer_agent_v1)
+    traversal: { axes: [y], direction: up }
+    expected_path:
+      - fraud_reviewer_agent_v1
+      - "↑ (via has_member, reversed)"
+      - fraud_review_v1 (agentic_system_version)
+      - "↑ (via has_version, reversed)"
+      - fraud_review_system (agentic_system)
+    validates:
+      - Reverse flag correctly interprets "up" direction
+      - Multi-level hierarchy traversal works
+
+  - id: Y-02
+    name: "Walk down from curated_transactions to its attributes"
+    start_node: ds-002 (curated_transactions)
+    traversal: { axes: [y], direction: down }
+    expected:
+      - account_id (attr-001)
+      - transaction_amount (attr-002)
+      - is_fraud (attr-003)
+    validates:
+      - is_attribute_for edge traversed in correct direction
+      - All child attributes returned
+
+  - id: Y-03
+    name: "Glossary hierarchy — walk down from enterprise_glossary"
+    start_node: gloss-001 (enterprise_glossary)
+    traversal: { axes: [y], direction: down }
+    expected:
+      - risk_glossary (via sub_glossary_of)
+      - "Account Identifier" term (via business_term_of)
+      - "Fraudulent Transaction" term (via business_element_term_of)
+    also_expect:
+      - risk_glossary further has "Fraudulent Transaction" (via business_term_of)
+    validates:
+      - Mixed hierarchy edge types under same parent
+      - Sub-glossary nesting works
+
+  - id: Y-04
+    name: "Model → Model Versions hierarchy"
+    start_node: model-001 (fraud_detection_model)
+    traversal: { axes: [y], direction: down }
+    expected:
+      - fraud_detection_v1.0 (mv-001)
+      - fraud_detection_v2.0 (mv-002)
+    validates:
+      - model_to_model_version reverse direction works
+
+
+  # ─────────────────────────────────────────────
+  # Z-AXIS TESTS (Association)
+  # ─────────────────────────────────────────────
+
+  - id: Z-01
+    name: "Associations of curated_transactions"
+    start_node: ds-002 (curated_transactions)
+    traversal: { axes: [z] }
+    expected:
+      - txn_quality_results (via resultsets_dataset)
+      - fraud_detection use case (via use_case_dataset, reverse)
+      - fraud_detection_workspace (via workspace_dataset, reverse)
+    validates:
+      - Z-axis association discovery works
+      - Reverse associations found
+
+  - id: Z-02
+    name: "Agent version uses — what does the agent touch?"
+    start_node: agv-001 (fraud_reviewer_agent_v1)
+    traversal: { axes: [z] }
+    expected:
+      - fraud_predictions dataset (via uses)
+      - fraud_lookup_tool (via uses)
+      - fraud_detection_v2.0 model version (via uses)
+    validates:
+      - Multiple Z-hops from same node (but each is only 1 hop)
+
+
+  # ─────────────────────────────────────────────
+  # CROSS-AXIS TESTS (The interesting ones)
+  # ─────────────────────────────────────────────
+
+  - id: XZ-01
+    name: "Lineage + association: what's associated with my upstream data?"
+    start_node: ds-004 (fraud_predictions)
+    traversal: { axes: [x, z], direction: upstream }
+    expected:
+      - X-axis: curated_transactions ← raw_transactions (upstream chain)
+      - Z-axis from curated_transactions:
+        - txn_quality_results (result set)
+        - fraud_detection use case
+        - fraud_detection_workspace
+      - Z from raw_transactions: (none in seed data)
+    validates:
+      - X traversal happens first, then Z associations discovered at each node
+      - Z-hop is only 1 deep
+
+  - id: XZ-02
+    name: "BLOCKED — Z-of-Z should not traverse"
+    start_node: ds-002 (curated_transactions)
+    traversal: { axes: [x, y, z] }
+    expected_blocked:
+      - curated_transactions → Z → fraud_detection_workspace → Z → uc_fraud
+        # This would be workspace_use_case from workspace, which is Z→Z
+        # The engine should NOT follow this path
+      - curated_transactions → Z → uc_fraud → Z → feature_set
+        # This would be use_case_dataset, which is Z→Z
+        # BLOCKED
+    expected_allowed:
+      - curated_transactions → Z → fraud_detection_workspace → Y → fraud_model_service
+        # workspace → installed (Y-axis) is allowed after Z-hop
+      - curated_transactions → Z → uc_fraud → Y → fraud_detection_model
+        # model_use_case (Y-axis) is allowed after Z-hop
+    validates:
+      - "THE KEY CONSTRAINT: Z-of-Z is blocked"
+      - Y-axis continuation after Z-hop is allowed
+
+  - id: YZ-01
+    name: "Hierarchy + association: walk up then find associations"
+    start_node: attr-002 (transaction_amount)
+    traversal: { axes: [y, z], direction: up }
+    expected:
+      - Y-axis up: curated_transactions (via is_attribute_for)
+      - Z from curated_transactions: workspace, use case, result set
+      - Z from transaction_amount: "Account Identifier" term (via is_mapped_to)
+    validates:
+      - Y traversal followed by Z discovery at each level
+      - Attribute-level Z associations work
+
+  - id: XYZ-01
+    name: "Full traversal — all three axes from feature_set"
+    start_node: ds-003 (fraud_feature_set)
+    traversal: { axes: [x, y, z], direction: both }
+    expected_x_upstream:
+      - curated_transactions (via build_fraud_features job)
+      - raw_transactions (via ingest_raw_transactions job)
+    expected_x_downstream:
+      - fraud_detection_v2.0 (via train_fraud_model job)
+    expected_y_down:
+      - avg_transaction_30d (attr-004)
+      - txn_frequency_7d (attr-005)
+    expected_z:
+      - fraud_detection use case (via use_case_dataset)
+      - fraud_detection_workspace (via workspace_dataset)
+    expected_z_then_y_allowed:
+      - fraud_detection use case → Y → fraud_detection_model → Y → model versions
+    expected_z_then_z_blocked:
+      - fraud_detection use case → Z → any further associations
+      - fraud_detection_workspace → Z → use case (blocked, this is Z→Z)
+    validates:
+      - All three axes fire simultaneously
+      - Z-constraint holds under full traversal
+      - Rich subgraph returned
+
+
+  # ─────────────────────────────────────────────
+  # EDGE CASE TESTS
+  # ─────────────────────────────────────────────
+
+  - id: EDGE-01
+    name: "Node with no lineage — only hierarchy and association"
+    start_node: mcp-001 (fraud_model_server)
+    traversal: { axes: [x, y, z] }
+    expected:
+      - X-axis: nothing (MCP server has no lineage edges)
+      - Y-axis down: fraud_score_endpoint, fraud_lookup_tool (provides_resource, provides_tool)
+      - Y-axis up: fraud_analytics_platform (produced_by, reversed)
+      - Z-axis: nothing in seed data
+    validates:
+      - Graceful handling when an axis has no edges
+
+  - id: EDGE-02
+    name: "Passthrough node — process_dataset should be collapsed"
+    note: "Not modeled in current seed (process_dataset as separate node). Add if needed."
+    validates:
+      - Passthrough/collapse logic
+      - "Stretch goal for POC"
+
+  - id: EDGE-03
+    name: "Same edge name, different source/destination types"
+    description: "is_consumed_by appears on both dataset→etl_job and model_version→etl_job"
+    start_node: job-004 (score_transactions)
+    traversal: { axes: [x], direction: upstream }
+    expected:
+      - fraud_detection_v2.0 (model_version, via is_consumed_by)
+      - curated_transactions (dataset, via is_consumed_by)
+    validates:
+      - Edge name disambiguation based on source/destination types
+      - Correct hop group assignment when edge name is reused

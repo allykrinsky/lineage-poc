@@ -3,7 +3,7 @@
 # data/AI lineage tracking and deprecation impact analysis
 
 version: "1.0"
-description: "Neo4j graph metamodel for AI/ML lineage, data governance, and deprecation impact analysis"
+description: "Graph schema for Manoj presentation"
 
 # Node type definitions
 node_types:
@@ -31,9 +31,13 @@ node_types:
       - name: owner
         type: string
         required: false
+      - name: tag
+        type: string
+        required: false
+        allowed_values: ['AI50']
 
-  Model:
-    description: "Machine learning or statistical models used in AI systems"
+  AgenticSystem:
+    description: "High-level agentic systems composed of multiple agents"
     properties:
       - name: id
         type: string
@@ -46,9 +50,127 @@ node_types:
         type: string
         required: true
         allowed_values: ["active", "deprecated"]
-      - name: version
+      - name: owner
         type: string
         required: false
+
+  AgentVersion:
+    description: "Versioned instances of AI agents with specific configurations"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: version
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  ModelVersion:
+    description: "Specific version of a model"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: version
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  Tool:
+    description: "Tools that can be invoked by agents"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  MCPServer:
+    description: "MCP (Model Context Protocol) servers that host tools"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: owner
+        type: string
+        required: false
+
+  Application:
+    description: "Backend applications and systems that provide data or services"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: type
+        type: string
+        required: false
+      - name: owner
+        type: string
+        required: false
+
+  DataFlow:
+    description: "Data processing pipelines and flows"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: type
+        type: string
+        required: false
+        allowed_values: ["pipeline", "stream", "batch"]
       - name: owner
         type: string
         required: false
@@ -99,60 +221,6 @@ node_types:
         type: string
         required: false
 
-  MCPTool:
-    description: "MCP (Model Context Protocol) tools providing capabilities to agents"
-    properties:
-      - name: id
-        type: string
-        required: true
-        unique: true
-      - name: name
-        type: string
-        required: true
-      - name: status
-        type: string
-        required: true
-        allowed_values: ["active", "deprecated"]
-      - name: owner
-        type: string
-        required: false
-
-  AgenticSystem:
-    description: "High-level agentic systems composed of multiple agents"
-    properties:
-      - name: id
-        type: string
-        required: true
-        unique: true
-      - name: name
-        type: string
-        required: true
-      - name: status
-        type: string
-        required: true
-        allowed_values: ["active", "deprecated"]
-      - name: owner
-        type: string
-        required: false
-
-  Agent:
-    description: "Individual AI agents that perform specific tasks"
-    properties:
-      - name: id
-        type: string
-        required: true
-        unique: true
-      - name: name
-        type: string
-        required: true
-      - name: status
-        type: string
-        required: true
-        allowed_values: ["active", "deprecated"]
-      - name: owner
-        type: string
-        required: false
-
   Term:
     description: "Business terms and definitions for semantic consistency"
     properties:
@@ -170,80 +238,171 @@ node_types:
       - name: definition
         type: string
         required: true
-      - name: domain
+      - name: classification
         type: string
         required: false
+        allowed_values: ['PII']
 
-  # User:
-  #   description: "Individual identity"
-  #   properties:
-  #     - name: id
-  #       type: int
-  #       required: true
-  #       unique: true
-  #     - name: name
-  #       type: string
-  #       required: true
+  Workspace:
+    description: "Fusion boundary for Services, Entitlements and Data Access"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+      - name: type
+        type: string
+        required: true
+        allowed_values: ["managed", "byoa", "llm"]
+
+  Guardrail:
+    description: "Preventative measure to block LLM intake or response of specific rule"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: status
+        type: string
+        required: true
+        allowed_values: ["active", "deprecated"]
+
+
 
 
 # Allowed Relationships
 relationships:
+  # Use Case relationships
+  - type: USES
+    from: UseCase
+    to: AgenticSystem
+    description: "Use case leverages an agentic system"
+
+  - type: IS_DEPLOYED
+    from: ModelVersion
+    to: UseCase
+    description: "Use Case has a deployed model"
+
+  # Agentic System relationships
+  - type: CONTAINS
+    from: AgenticSystem
+    to: AgentVersion
+    description: "Agentic system contains agent versions"
+
+    # Agentic System relationships
+  - type: CONTAINS
+    from: AgenticSystem
+    to: AgenticSystem
+    description: "Agentic system contains agent versions"
+
+  # Agent Version relationships
+  - type: USES
+    from: AgentVersion
+    to: ModelVersion
+    description: "Agent version uses a specific model version"
+
+  - type: USES
+    from: AgentVersion
+    to: Tool
+    description: "Agent version uses a tool"
+
+  - type: ACCESSES
+    from: AgentVersion
+    to: Dataset
+    description: "Agent version accesses a dataset"
+
+  - type: DERIVED_FROM
+    from: ModelVersion
+    to: ModelVersion
+    description: "Model derived from another model"
+
+  - type: DERIVED_FROM
+    from: Dataset
+    to: ModelVersion
+    description: "Model finetuned using a Dataset"
+
+
+  # - type: HOSTED_IN
+  #   from: ModelVersion
+  #   to: Workspace
+  #   description: ModelVersions are deployed inside of a Workspace
+
+  # Tool and MCP Server relationships
+  - type: PROVIDED_BY
+    from: Tool
+    to: MCPServer
+    description: "Tool is provided by an MCP server"
+
+  - type: HOSTED_BY
+    from: MCPServer
+    to: Application
+    description: "MCP server is hosted by an application"
+
+# Data Flow relationships
+  - type: SOURCES_FROM
+    from: DataFlow
+    to: Application
+    description: "Data flow sources data from an application"
+
+  - type: OUTPUTS_TO
+    from: DataFlow
+    to: Application
+    description: "Data flow outputs to an application"
+
+  # Dataset relationships
   - type: DERIVED_FROM
     from: Dataset
     to: Dataset
+    description: "Dataset derived from another dataset"
 
-  - type: DERIVED_FROM
-    from: Model
-    to: Model
+  - type: CONTAINS
+    from: Dataset
+    to: Attribute
+    description: "Dataset contains attributes. Datasets of type Knowedge Base cannot contain attributes."
 
+  - type: FLOWS_ON
+    from: Dataset
+    to: DataFlow
+    description: "Datasets flow on a DataFlow"
+
+  - type: PRODUCED_BY
+    from: Dataset
+    to: Application
+    description: "Dataset is produced by an application"
+
+  # Attribute relationships
   - type: DERIVED_FROM
     from: Attribute
     to: Attribute
-
-  # - type: USED_IN
-  #   from: Dataset
-  #   to: UseCase
-
-  - type: USED_IN
-    from: Dataset
-    to: Model
-
-  - type: USED_IN
-    from: Attribute
-    to: Dataset
-
-  - type: USED_IN
-    from: Model
-    to: UseCase
-
-  - type: USED_IN
-    from: Agent
-    to: AgenticSystem
-
-  - type: USED_IN
-    from: AgenticSystem
-    to: UseCase
-
-  - type: USES
-    from: Agent
-    to: Model
-
-  - type: USES
-    from: Agent
-    to: MCPTool
+    description: "Attribute derived from another attribute"
 
   - type: MEANS
     from: Attribute
     to: Term
+    description: "Attribute represents a business term"
 
-  - type: PROVIDES_ACCESS
-    from: MCPTool
+  - type: ACCESSES
+    from: Workspace
     to: Dataset
+    description: "Workspace accesses a dataset"
 
-  # - type: has_access
-  #   from: User
-  #   to: Dataset
+  # Guardrails 
+  - type: IMPLEMENTS
+    from: UseCase
+    to: Guardrail
+    description: "Guardrail can be applied to a Use Case"
 
-  # - type: has_access
-  #   from: User
-  #   to: Use Case
+  - type: USES
+    from: Guardrail
+    to: ModelVersion
+    description: "Workspace accesses a dataset"

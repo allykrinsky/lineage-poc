@@ -337,6 +337,60 @@ class GraphLoader:
                 session.run(cypher, {"rows": rows})
                 print(f"  ✅ {from_label}-[:{rtype}]->{to_label}: {len(rows)}")
 
+    def _validate_graph_constraints(self):
+        """
+        Validate graph constraints that cannot be enforced by schema alone.
+
+        Currently validates:
+        - Data dependencies: source and target attributes must be from different datasets
+        """
+        print("🔍 Validating graph constraints...")
+
+        with self.driver.session() as session:
+            # Validate data dependency cross-dataset constraint
+            result = session.run("""
+                // Find all data dependencies
+                MATCH (dep:DataDependency)
+
+                // Get source attributes
+                MATCH (dep)-[:DATA_DEPENDENCY_PRODUCED_BY]->(source_attr:Attribute)
+                MATCH (source_attr)-[:IS_ATTRIBUTE_FOR]->(source_dataset:Dataset)
+
+                // Get target attributes
+                MATCH (dep)-[:DATA_DEPENDENCY_CONSUMED_BY]->(target_attr:Attribute)
+                MATCH (target_attr)-[:IS_ATTRIBUTE_FOR]->(target_dataset:Dataset)
+
+                // Find violations: same dataset
+                WITH dep, source_dataset, target_dataset,
+                     collect(DISTINCT source_attr.id) as source_attrs,
+                     collect(DISTINCT target_attr.id) as target_attrs
+                WHERE source_dataset.id = target_dataset.id
+
+                RETURN dep.id as dependency_id,
+                       dep.name as dependency_name,
+                       source_dataset.id as dataset_id,
+                       source_dataset.name as dataset_name,
+                       source_attrs,
+                       target_attrs
+            """)
+
+            violations = list(result)
+
+            if violations:
+                error_messages = ["❌ Data Dependency Constraint Violations:"]
+                for v in violations:
+                    error_messages.append(
+                        f"\n  Dependency: {v['dependency_id']} ({v['dependency_name']})"
+                        f"\n    Source attributes: {v['source_attrs']}"
+                        f"\n    Target attributes: {v['target_attrs']}"
+                        f"\n    Problem: Both belong to same dataset '{v['dataset_id']}' ({v['dataset_name']})"
+                        f"\n    Rule: Data dependencies must connect attributes from DIFFERENT datasets"
+                    )
+
+                raise DataValidationError("\n".join(error_messages))
+
+        print("  ✅ Data dependency cross-dataset constraint: PASSED")
+
     def build_gds_projection(self, mm: Metamodel, projection_name: str = "domainGraph"):
         """
         Build GDS projection dynamically from schema node labels + relationship types.
@@ -391,6 +445,9 @@ class GraphLoader:
 
         self.create_nodes(mm, assets)
         self.create_relationships(rels)
+
+        # Validate graph constraints after loading
+        self._validate_graph_constraints()
 
         if build_gds:
             self.build_gds_projection(mm, projection_name=projection_name)

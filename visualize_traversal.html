@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lineage Traversal Visualizer</title>
+    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px 8px 0 0;
+        }
+        .controls {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            background: #fafafa;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+            font-weight: 600;
+            color: #333;
+        }
+        input, select, button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 10px 20px;
+            margin-left: 10px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .checkbox-group {
+            display: inline-block;
+            margin-right: 15px;
+        }
+        #network {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #e0e0e0;
+        }
+        .stats {
+            padding: 20px;
+            background: #f9f9f9;
+            border-top: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+        .legend {
+            padding: 20px;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+        }
+        .legend-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c00;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #060;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Lineage Traversal Visualizer</h1>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Start Node ID:</label>
+                <input type="text" id="startNode" value="ds-002" placeholder="e.g., ds-002">
+            </div>
+
+            <div class="control-group">
+                <label>Axes:</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="axisX" checked> <label for="axisX">X (Lineage)</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="axisY" checked> <label for="axisY">Y (Hierarchy)</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="axisZ" checked> <label for="axisZ">Z (Association)</label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>X Direction:</label>
+                <select id="xDirection">
+                    <option value="both">Both</option>
+                    <option value="upstream">Upstream</option>
+                    <option value="downstream">Downstream</option>
+                </select>
+
+                <label style="margin-left: 20px;">Y Direction:</label>
+                <select id="yDirection">
+                    <option value="both">Both</option>
+                    <option value="up">Up</option>
+                    <option value="down">Down</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Max Z-Hops:</label>
+                <input type="number" id="maxZHops" value="1" min="1" max="3">
+
+                <label style="margin-left: 20px;">Max Depth:</label>
+                <input type="number" id="maxDepth" value="10" min="1" max="20">
+            </div>
+
+            <div class="control-group">
+                <button onclick="runTraversal()">🚀 Run Traversal</button>
+                <button onclick="clearGraph()" style="background: #999;">Clear</button>
+            </div>
+        </div>
+
+        <div id="network"></div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Total Nodes</div>
+                <div class="stat-value" id="statNodes">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Edges</div>
+                <div class="stat-value" id="statEdges">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Max Z-Hops</div>
+                <div class="stat-value" id="statZHops">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Node Types</div>
+                <div class="stat-value" id="statTypes">0</div>
+            </div>
+        </div>
+
+        <div class="legend" id="legend" style="display: none;">
+            <div class="legend-title">Node Types</div>
+            <div class="legend-items" id="legendItems"></div>
+        </div>
+    </div>
+
+    <script>
+        let network = null;
+        let nodeColors = {
+            'dataset': '#4CAF50',
+            'etl_job': '#FF9800',
+            'model': '#2196F3',
+            'model_version': '#03A9F4',
+            'agent_version': '#9C27B0',
+            'agentic_system': '#673AB7',
+            'agentic_system_version': '#7E57C2',
+            'workspace': '#FFC107',
+            'workspace_service': '#FFB300',
+            'use_case': '#E91E63',
+            'attribute': '#8BC34A',
+            'data_dependency': '#FF5722',
+            'mcp_server': '#00BCD4',
+            'mcp_tool': '#00ACC1',
+            'mcp_resource': '#0097A7',
+            'application': '#795548',
+            'glossary': '#607D8B',
+            'data_concept': '#9E9E9E'
+        };
+
+        function getAxes() {
+            const axes = [];
+            if (document.getElementById('axisX').checked) axes.push('x');
+            if (document.getElementById('axisY').checked) axes.push('y');
+            if (document.getElementById('axisZ').checked) axes.push('z');
+            return axes;
+        }
+
+        async function runTraversal() {
+            const startNode = document.getElementById('startNode').value;
+            const axes = getAxes();
+            const xDirection = document.getElementById('xDirection').value;
+            const yDirection = document.getElementById('yDirection').value;
+            const maxZHops = parseInt(document.getElementById('maxZHops').value);
+            const maxDepth = parseInt(document.getElementById('maxDepth').value);
+
+            if (!startNode) {
+                alert('Please enter a start node ID');
+                return;
+            }
+
+            if (axes.length === 0) {
+                alert('Please select at least one axis');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/api/lineage/traverse', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        start_node_id: startNode,
+                        axes: axes,
+                        x_direction: xDirection,
+                        y_direction: yDirection,
+                        max_z_hops: maxZHops,
+                        max_depth: maxDepth,
+                        include_transformers: true
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Traversal failed');
+                }
+
+                const data = await response.json();
+                visualizeGraph(data);
+                updateStats(data);
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        function visualizeGraph(data) {
+            // Convert nodes
+            const nodes = data.nodes.map(node => ({
+                id: node.id,
+                label: node.properties.name || node.id,
+                title: `${node.type}\n${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
+                color: {
+                    background: nodeColors[node.type] || '#999',
+                    border: node.id === data.start_node.id ? '#000' : '#666',
+                    highlight: {
+                        background: nodeColors[node.type] || '#999',
+                        border: '#000'
+                    }
+                },
+                borderWidth: node.id === data.start_node.id ? 4 : 2,
+                font: {
+                    size: node.id === data.start_node.id ? 16 : 14,
+                    color: '#333',
+                    face: 'Arial'
+                },
+                shape: node.id === data.start_node.id ? 'star' : 'dot',
+                size: node.id === data.start_node.id ? 30 : 20
+            }));
+
+            // Convert edges
+            const edges = data.edges.map((edge, idx) => ({
+                id: idx,
+                from: edge.source,
+                to: edge.target,
+                label: edge.type,
+                arrows: 'to',
+                color: {
+                    color: '#666',
+                    highlight: '#000'
+                },
+                font: {
+                    size: 10,
+                    align: 'middle',
+                    color: '#333',
+                    background: 'rgba(255,255,255,0.8)'
+                }
+            }));
+
+            // Create network
+            const container = document.getElementById('network');
+            const graphData = {
+                nodes: new vis.DataSet(nodes),
+                edges: new vis.DataSet(edges)
+            };
+
+            const options = {
+                physics: {
+                    enabled: true,
+                    barnesHut: {
+                        gravitationalConstant: -8000,
+                        centralGravity: 0.3,
+                        springLength: 150,
+                        springConstant: 0.04,
+                        damping: 0.09
+                    },
+                    stabilization: {
+                        iterations: 200
+                    }
+                },
+                layout: {
+                    improvedLayout: true,
+                    hierarchical: false
+                },
+                interaction: {
+                    hover: true,
+                    tooltipDelay: 100,
+                    zoomView: true
+                },
+                nodes: {
+                    borderWidth: 2,
+                    shadow: true
+                },
+                edges: {
+                    width: 2,
+                    smooth: {
+                        type: 'continuous'
+                    }
+                }
+            };
+
+            if (network) {
+                network.destroy();
+            }
+
+            network = new vis.Network(container, graphData, options);
+
+            // Update legend
+            updateLegend(data);
+        }
+
+        function updateStats(data) {
+            document.getElementById('stats').style.display = 'grid';
+
+            const nodeTypes = new Set(data.nodes.map(n => n.type));
+
+            document.getElementById('statNodes').textContent = data.traversal_metadata.total_nodes_visited;
+            document.getElementById('statEdges').textContent = data.traversal_metadata.total_edges_traversed;
+            document.getElementById('statZHops').textContent = data.traversal_metadata.z_hops_taken;
+            document.getElementById('statTypes').textContent = nodeTypes.size;
+        }
+
+        function updateLegend(data) {
+            const nodeTypes = {};
+            data.nodes.forEach(node => {
+                nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1;
+            });
+
+            const legendItems = Object.entries(nodeTypes)
+                .sort((a, b) => b[1] - a[1])
+                .map(([type, count]) => `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: ${nodeColors[type] || '#999'}"></div>
+                        <span>${type} (${count})</span>
+                    </div>
+                `).join('');
+
+            document.getElementById('legendItems').innerHTML = legendItems;
+            document.getElementById('legend').style.display = 'block';
+        }
+
+        function clearGraph() {
+            if (network) {
+                network.destroy();
+                network = null;
+            }
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('legend').style.display = 'none';
+        }
+
+        // Auto-run on load
+        window.onload = () => {
+            runTraversal();
+        };
+    </script>
+</body>
+</html>
