@@ -148,13 +148,13 @@
             <div class="control-group">
                 <label>Axes:</label>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="axisX" checked> <label for="axisX">X (Lineage)</label>
+                    <input type="checkbox" id="axisX" checked onchange="syncDirectionControls()"> <label for="axisX">X (Lineage)</label>
                 </div>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="axisY" checked> <label for="axisY">Y (Hierarchy)</label>
+                    <input type="checkbox" id="axisY" checked onchange="syncDirectionControls()"> <label for="axisY">Y (Hierarchy)</label>
                 </div>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="axisZ" checked> <label for="axisZ">Z (Association)</label>
+                    <input type="checkbox" id="axisZ" checked onchange="syncDirectionControls()"> <label for="axisZ">Z (Association)</label>
                 </div>
             </div>
 
@@ -171,6 +171,13 @@
                     <option value="both">Both</option>
                     <option value="up">Up</option>
                     <option value="down">Down</option>
+                </select>
+
+                <label style="margin-left: 20px;">Z Direction:</label>
+                <select id="zDirection">
+                    <option value="both">Both</option>
+                    <option value="outgoing">Outgoing (node is source)</option>
+                    <option value="incoming">Incoming (node is target)</option>
                 </select>
             </div>
 
@@ -251,6 +258,7 @@
             const axes = getAxes();
             const xDirection = document.getElementById('xDirection').value;
             const yDirection = document.getElementById('yDirection').value;
+            const zDirection = document.getElementById('zDirection').value;
             const maxZHops = parseInt(document.getElementById('maxZHops').value);
             const maxDepth = parseInt(document.getElementById('maxDepth').value);
 
@@ -275,6 +283,7 @@
                         axes: axes,
                         x_direction: xDirection,
                         y_direction: yDirection,
+                        z_direction: zDirection,
                         max_z_hops: maxZHops,
                         max_depth: maxDepth,
                         include_transformers: true
@@ -421,6 +430,12 @@
             document.getElementById('legend').style.display = 'block';
         }
 
+        function syncDirectionControls() {
+            document.getElementById('xDirection').disabled = !document.getElementById('axisX').checked;
+            document.getElementById('yDirection').disabled = !document.getElementById('axisY').checked;
+            document.getElementById('zDirection').disabled = !document.getElementById('axisZ').checked;
+        }
+
         function clearGraph() {
             if (network) {
                 network.destroy();
@@ -432,6 +447,7 @@
 
         // Auto-run on load
         window.onload = () => {
+            syncDirectionControls();
             runTraversal();
         };
     </script>

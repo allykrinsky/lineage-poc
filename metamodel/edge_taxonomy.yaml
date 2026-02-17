@@ -547,7 +547,8 @@ traversal_rules:
   z_axis:
     max_hops: 1               # ONE hop only — no Z-of-Z
     allow_after_z_hop: false  # cannot continue on Z after Z
-    description: "After reaching an associated node, traversal may continue on X or Y only"
+    direction_modes: [outgoing, incoming, both]  # outgoing = follow edges where node is source; incoming = follow edges where node is target
+    description: "After reaching an associated node, traversal may continue on X or Y only. Direction controls whether to follow edges going out from (outgoing), coming into (incoming), or either direction (both)."
 
   passthrough_nodes:
     collapse_in_output: true

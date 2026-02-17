@@ -44,7 +44,7 @@ class OneHopResult:
     start_node: Dict
     x_axis: Dict[str, List[Dict]]  # {"upstream": [...], "downstream": [...]}
     y_axis: Dict[str, List[Dict]]  # {"up": [...], "down": [...]}
-    z_axis: List[Dict]  # List of Z-axis neighbors
+    z_axis: Dict[str, List[Dict]]  # {"outgoing": [...], "incoming": [...]}
     metadata: Dict
 
 
@@ -87,6 +87,7 @@ class TraversalEngine:
         axes: List[str] = None,
         x_direction: str = "both",
         y_direction: str = "both",
+        z_direction: str = "both",
         max_z_hops: int = 1,
         max_depth: Optional[int] = None,
         include_transformers: bool = True
@@ -99,6 +100,8 @@ class TraversalEngine:
             axes: List of axes to traverse ['x', 'y', 'z'] or subset
             x_direction: 'upstream', 'downstream', or 'both'
             y_direction: 'up', 'down', or 'both'
+            z_direction: 'outgoing' (follow edges where node is source),
+                         'incoming' (follow edges where node is target), or 'both'
             max_z_hops: Maximum Z-axis hops per path (default 1)
             max_depth: Optional global depth limit
             include_transformers: Whether to include transformer nodes in results
@@ -160,6 +163,7 @@ class TraversalEngine:
                     axes,
                     x_direction,
                     y_direction,
+                    z_direction,
                     current_state.z_hops_taken,
                     max_z_hops,
                     current_state.y_direction_committed,
@@ -268,7 +272,8 @@ class TraversalEngine:
     def one_hop(
         self,
         start_node_id: str,
-        axes: List[str] = None
+        axes: List[str] = None,
+        z_direction: str = "both"
     ) -> OneHopResult:
         """
         Get immediate neighbors (1-hop) from a node, grouped by axis and direction.
@@ -279,6 +284,8 @@ class TraversalEngine:
         Args:
             start_node_id: ID of the starting node
             axes: List of axes to include ['x', 'y', 'z'] or subset (default: all)
+            z_direction: 'outgoing' (edges where node is source),
+                         'incoming' (edges where node is target), or 'both'
 
         Returns:
             OneHopResult with neighbors grouped by axis and direction
@@ -299,7 +306,8 @@ class TraversalEngine:
             x_downstream = []
             y_up = []
             y_down = []
-            z_neighbors = []
+            z_outgoing = []  # Z-edges where start_node is the source
+            z_incoming = []  # Z-edges where start_node is the target
 
             # Get all neighbors respecting axis constraints
             # Z-hops = 0 since we're at the base node, so Z-axis is available
@@ -314,6 +322,7 @@ class TraversalEngine:
                 axes,
                 x_direction="both",
                 y_direction="both",
+                z_direction=z_direction,
                 current_z_hops=0,  # At base node, Z is available
                 max_z_hops=1,
                 y_direction_committed=None,  # At base node, no Y-direction committed yet
@@ -371,7 +380,12 @@ class TraversalEngine:
                         y_down.append(neighbor_entry)
 
                 elif edge_axis == Axis.Z:
-                    z_neighbors.append(neighbor_entry)
+                    # Bucket by whether start_node is the source (outgoing) or target (incoming)
+                    is_outgoing = edge['source'] == start_node['id']
+                    if is_outgoing:
+                        z_outgoing.append(neighbor_entry)
+                    else:
+                        z_incoming.append(neighbor_entry)
 
             return OneHopResult(
                 start_node=start_node,
@@ -383,13 +397,18 @@ class TraversalEngine:
                     "up": y_up,
                     "down": y_down
                 },
-                z_axis=z_neighbors,
+                z_axis={
+                    "outgoing": z_outgoing,
+                    "incoming": z_incoming
+                },
                 metadata={
                     'total_x_upstream': len(x_upstream),
                     'total_x_downstream': len(x_downstream),
                     'total_y_up': len(y_up),
                     'total_y_down': len(y_down),
-                    'total_z': len(z_neighbors)
+                    'total_z_outgoing': len(z_outgoing),
+                    'total_z_incoming': len(z_incoming),
+                    'total_z': len(z_outgoing) + len(z_incoming)
                 }
             )
 
@@ -444,6 +463,7 @@ class TraversalEngine:
         axes: List[Axis],
         x_direction: str,
         y_direction: str,
+        z_direction: str,
         current_z_hops: int,
         max_z_hops: int,
         y_direction_committed: Optional[str] = None,
@@ -526,7 +546,8 @@ class TraversalEngine:
                 classification,
                 is_outgoing,
                 x_direction,
-                y_direction
+                y_direction,
+                z_direction
             )
 
             if not should_traverse:
@@ -599,7 +620,8 @@ class TraversalEngine:
         classification,
         is_outgoing: bool,
         x_direction: str,
-        y_direction: str
+        y_direction: str,
+        z_direction: str = "both"
     ) -> bool:
         """
         Determine if an edge should be traversed based on direction constraints.
@@ -609,6 +631,7 @@ class TraversalEngine:
             is_outgoing: Whether we're traversing in the stored edge direction
             x_direction: 'upstream', 'downstream', or 'both'
             y_direction: 'up', 'down', or 'both'
+            z_direction: 'outgoing' (node is source), 'incoming' (node is target), or 'both'
 
         Returns:
             True if edge should be traversed
@@ -653,7 +676,15 @@ class TraversalEngine:
                 return y_direction == actual_dir
 
         elif classification.axis == Axis.Z:
-            # Z-axis: always traverse (constraint is on hop count)
-            return True
+            # Z-axis: filter by edge direction relative to the current node.
+            # 'outgoing' = current node is source (we follow the stored edge forward)
+            # 'incoming' = current node is target (we follow the stored edge backward)
+            # 'both'     = traverse in either direction (original behavior)
+            if z_direction == "both":
+                return True
+            elif z_direction == "outgoing":
+                return is_outgoing
+            elif z_direction == "incoming":
+                return not is_outgoing
 
         return False
