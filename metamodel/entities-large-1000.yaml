@@ -4431,9 +4431,9 @@ relationships:
 - type: USES
   from: fraud-agv-001
   to: embed-mv-002
-- type: USES
-  from: fraud-agv-002
-  to: fraud-ds-002
+# - type: USES
+#   from: fraud-agv-002
+#   to: fraud-ds-002
 - type: USES
   from: fraud-agv-002
   to: fraud-mcpt-002
@@ -6206,7 +6206,7 @@ relationships:
   to: hr-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: hr-df-001
-  to: finance-app-001
+  to: hr-app-001
 - type: IS_ATTRIBUTE_FOR
   from: hr-attr-001
   to: hr-ds-001

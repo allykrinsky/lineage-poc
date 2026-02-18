@@ -1,259 +1,411 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Lineage Traversal Visualizer</title>
+    <title>Lineage Traversal</title>
+    <link rel="stylesheet" href="https://unpkg.com/@salt-ds/theme@latest/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
     <style>
+        /* Salt design token overrides + page layout */
+        :root {
+            --salt-blue-500: #0B6EDB;
+            --salt-blue-700: #1352AE;
+            --salt-blue-100: #D1E5FA;
+            --salt-gray-10:  #F5F5F5;
+            --salt-gray-20:  #EAEAEA;
+            --salt-gray-50:  #C5C8CB;
+            --salt-gray-200: #6B737A;
+            --salt-gray-600: #2F3438;
+            --salt-text:     #1A1A1A;
+            --salt-border:   #C5C8CB;
+            --salt-radius:   2px;
+            --salt-space-1:  4px;
+            --salt-space-2:  8px;
+            --salt-space-3:  12px;
+            --salt-space-4:  16px;
+            --salt-space-6:  24px;
+            --salt-g-color:  #6929C4;
+            --salt-font:     'Open Sans', Arial, sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        h1 {
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 8px 8px 0 0;
-        }
-        .controls {
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
-            background: #fafafa;
-        }
-        .control-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: inline-block;
-            width: 150px;
-            font-weight: 600;
-            color: #333;
-        }
-        input, select, button {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            font-family: var(--salt-font);
             font-size: 14px;
+            color: var(--salt-text);
+            background: var(--salt-gray-10);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
+
+        /* ── App header ── */
+        .app-header {
+            background: var(--salt-blue-700);
+            color: #fff;
+            padding: 0 var(--salt-space-6);
+            height: 44px;
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-3);
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--salt-blue-500);
+        }
+        .app-header-title {
+            font-size: 15px;
             font-weight: 600;
-            padding: 10px 20px;
-            margin-left: 10px;
+            letter-spacing: 0.01em;
+            margin: 0;
         }
-        button:hover {
-            background: #5568d3;
+        .app-header-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.25);
         }
-        .checkbox-group {
-            display: inline-block;
-            margin-right: 15px;
+        .app-header-sub {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.75;
+        }
+
+        /* ── Controls toolbar ── */
+        .toolbar {
+            background: #fff;
+            border-bottom: 1px solid var(--salt-border);
+            padding: var(--salt-space-3) var(--salt-space-6);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--salt-space-4);
+            flex-shrink: 0;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-2);
+        }
+        .toolbar-group + .toolbar-group {
+            border-left: 1px solid var(--salt-border);
+            padding-left: var(--salt-space-4);
+        }
+
+        .toolbar-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--salt-gray-200);
+            white-space: nowrap;
+            margin-right: var(--salt-space-1);
+        }
+
+        /* Salt-style text input */
+        .salt-input {
+            height: 28px;
+            padding: 0 var(--salt-space-2);
+            border: 1px solid var(--salt-border);
+            border-radius: var(--salt-radius);
+            font-family: var(--salt-font);
+            font-size: 13px;
+            color: var(--salt-text);
+            background: #fff;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .salt-input:focus {
+            border-color: var(--salt-blue-500);
+            box-shadow: 0 0 0 2px var(--salt-blue-100);
+        }
+        .salt-input[type="number"] { width: 64px; }
+        .salt-input[type="text"]   { width: 120px; }
+
+        /* Salt-style select */
+        .salt-select {
+            height: 28px;
+            padding: 0 var(--salt-space-2);
+            border: 1px solid var(--salt-border);
+            border-radius: var(--salt-radius);
+            font-family: var(--salt-font);
+            font-size: 13px;
+            color: var(--salt-text);
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .salt-select:focus { border-color: var(--salt-blue-500); }
+        .salt-select:disabled { opacity: 0.45; cursor: default; }
+
+        /* Salt-style checkbox */
+        .salt-checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-1);
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+        }
+        .salt-checkbox-wrap input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--salt-blue-500);
+            cursor: pointer;
+        }
+
+        /* G-axis checkbox badge */
+        .g-checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-1);
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+            padding: 3px var(--salt-space-2);
+            background: #F3EFFE;
+            border: 1px solid #C0A8F0;
+            border-radius: var(--salt-radius);
+        }
+        .g-checkbox-wrap input[type="checkbox"] {
+            accent-color: var(--salt-g-color);
+            cursor: pointer;
+        }
+        .g-checkbox-wrap span { color: var(--salt-g-color); font-weight: 500; }
+
+        /* Salt-style buttons */
+        .salt-btn {
+            height: 28px;
+            padding: 0 var(--salt-space-4);
+            border: none;
+            border-radius: var(--salt-radius);
+            font-family: var(--salt-font);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+        .salt-btn-primary {
+            background: var(--salt-blue-500);
+            color: #fff;
+        }
+        .salt-btn-primary:hover { background: var(--salt-blue-700); }
+        .salt-btn-secondary {
+            background: transparent;
+            color: var(--salt-gray-600);
+            border: 1px solid var(--salt-border);
+        }
+        .salt-btn-secondary:hover { background: var(--salt-gray-10); }
+
+        /* ── Main area (graph + legend sidebar) ── */
+        .main {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            background: #fff;
+            border-bottom: 1px solid var(--salt-border);
         }
         #network {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #e0e0e0;
+            flex: 1;
+            height: 100%;
+            min-width: 0;
         }
-        .stats {
-            padding: 20px;
-            background: #f9f9f9;
-            border-top: 1px solid #e0e0e0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .stat-card {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-top: 5px;
-        }
-        .legend {
-            padding: 20px;
-            background: #fff;
-            border-top: 1px solid #e0e0e0;
+
+        /* Legend sidebar */
+        .legend-sidebar {
+            width: 176px;
+            flex-shrink: 0;
+            border-left: 1px solid var(--salt-border);
+            background: var(--salt-gray-10);
+            padding: var(--salt-space-3) var(--salt-space-3);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--salt-space-3);
         }
         .legend-title {
+            font-size: 10px;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--salt-gray-200);
+            margin-bottom: var(--salt-space-1);
         }
         .legend-items {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            flex-direction: column;
+            gap: 6px;
         }
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            font-size: 12px;
+            color: var(--salt-gray-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 2px solid #ddd;
-        }
-        .error {
-            background: #fee;
-            border: 1px solid #fcc;
-            color: #c00;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 4px;
-        }
-        .success {
-            background: #efe;
-            border: 1px solid #cfc;
-            color: #060;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 4px;
-        }
-        .g-axis-group {
-            display: inline-block;
-            padding: 6px 12px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%);
-            border-radius: 4px;
-            border: 1px solid #4a4a8a;
-            margin-left: 10px;
-        }
-        .g-axis-group label {
-            color: #c0b0ff;
-            width: auto;
-        }
-        .g-axis-group input[type="checkbox"] {
-            accent-color: #9d74ff;
-        }
-        .legend-section-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #888;
-            margin: 12px 0 6px;
-            width: 100%;
-        }
-        .legend-g-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .legend-g-badge {
-            width: 20px;
-            height: 20px;
-            border-radius: 3px;
-            border: 2px solid #9d74ff;
-            transform: rotate(45deg);
+        .legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
             flex-shrink: 0;
         }
-        .stat-card.g-stat {
-            border-left-color: #9d74ff;
+        .legend-diamond {
+            width: 9px;
+            height: 9px;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+            border: 1.5px solid var(--salt-g-color);
         }
+
+        /* ── Bottom panel (stats only) ── */
+        .bottom-panel {
+            background: #fff;
+            border-top: 1px solid var(--salt-border);
+            flex-shrink: 0;
+        }
+        .stats-row {
+            display: flex;
+            gap: 0;
+            padding: var(--salt-space-2) var(--salt-space-6);
+        }
+        .stat-card {
+            padding: var(--salt-space-2) var(--salt-space-4);
+            border-right: 1px solid var(--salt-gray-20);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 100px;
+        }
+        .stat-card:last-child { border-right: none; }
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--salt-gray-200);
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--salt-blue-500);
+            line-height: 1;
+        }
+        .stat-card.g-stat .stat-value { color: var(--salt-g-color); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔍 Lineage Traversal Visualizer</h1>
 
-        <div class="controls">
-            <div class="control-group">
-                <label>Start Node ID:</label>
-                <input type="text" id="startNode" value="ds-002" placeholder="e.g., ds-002">
-            </div>
+    <!-- App Header -->
+    <header class="app-header">
+        <h1 class="app-header-title">Lineage Traversal</h1>
+        <div class="app-header-divider"></div>
+        <span class="app-header-sub">Multi-axis graph explorer</span>
+    </header>
 
-            <div class="control-group">
-                <label>Axes:</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisX" checked onchange="syncDirectionControls()"> <label for="axisX"> Show Lineage</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisY" checked onchange="syncDirectionControls()"> <label for="axisY">Show Hierarchy</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisZ" checked onchange="syncDirectionControls()"> <label for="axisZ">Show Associations</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisG" onchange="syncDirectionControls()"> <label for="axisG">Show Governance</label>
-                </div>
-            </div>
+    <!-- Controls Toolbar -->
+    <div class="toolbar">
 
-            <div class="control-group">
-                <label>X Direction:</label>
-                <select id="xDirection">
-                    <option value="both">Both</option>
-                    <option value="upstream">Upstream</option>
-                    <option value="downstream">Downstream</option>
-                </select>
-
-                <label style="margin-left: 20px;">Y Direction:</label>
-                <select id="yDirection">
-                    <option value="both">Both</option>
-                    <option value="up">Up</option>
-                    <option value="down">Down</option>
-                </select>
-
-                <label style="margin-left: 20px;">Z Direction:</label>
-                <select id="zDirection">
-                    <option value="both">Both</option>
-                    <option value="outgoing">Outgoing (node is source)</option>
-                    <option value="incoming">Incoming (node is target)</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Max Z-Hops:</label>
-                <input type="number" id="maxZHops" value="1" min="1" max="3">
-
-                <label style="margin-left: 20px;">Max Depth:</label>
-                <input type="number" id="maxDepth" value="10" min="1" max="20">
-            </div>
-
-            <div class="control-group">
-                <button onclick="runTraversal()">🚀 Run Traversal</button>
-                <button onclick="clearGraph()" style="background: #999;">Clear</button>
-            </div>
+        <!-- Start Node -->
+        <div class="toolbar-group">
+            <span class="toolbar-label">Start node</span>
+            <input class="salt-input" type="text" id="startNode" value="ds-002" placeholder="e.g. ds-002">
         </div>
 
-        <div id="network"></div>
+        <!-- Axes -->
+        <div class="toolbar-group">
+            <span class="toolbar-label">Axes</span>
+            <label class="salt-checkbox-wrap">
+                <input type="checkbox" id="axisX" checked onchange="syncDirectionControls()">
+                <span>Lineage</span>
+            </label>
+            <label class="salt-checkbox-wrap">
+                <input type="checkbox" id="axisY" checked onchange="syncDirectionControls()">
+                <span>Hierarchy</span>
+            </label>
+            <label class="salt-checkbox-wrap">
+                <input type="checkbox" id="axisZ" checked onchange="syncDirectionControls()">
+                <span>Associations</span>
+            </label>
+            <label class="g-checkbox-wrap">
+                <input type="checkbox" id="axisG" onchange="syncDirectionControls()">
+                <span>Governance</span>
+            </label>
+        </div>
 
-        <div class="stats" id="stats" style="display: none;">
+        <!-- Directions -->
+        <div class="toolbar-group">
+            <span class="toolbar-label">Direction</span>
+            <select class="salt-select" id="xDirection">
+                <option value="both">X: Both</option>
+                <option value="upstream">X: Upstream</option>
+                <option value="downstream">X: Downstream</option>
+            </select>
+            <select class="salt-select" id="yDirection">
+                <option value="both">Y: Both</option>
+                <option value="up">Y: Up</option>
+                <option value="down">Y: Down</option>
+            </select>
+            <select class="salt-select" id="zDirection">
+                <option value="both">Z: Both</option>
+                <option value="outgoing">Z: Outgoing</option>
+                <option value="incoming">Z: Incoming</option>
+            </select>
+        </div>
+
+        <!-- Params -->
+        <div class="toolbar-group">
+            <span class="toolbar-label">Z-Hops</span>
+            <input class="salt-input" type="number" id="maxZHops" value="1" min="1" max="3">
+            <span class="toolbar-label" style="margin-left:8px;">Depth</span>
+            <input class="salt-input" type="number" id="maxDepth" value="10" min="1" max="20">
+        </div>
+
+        <!-- Actions -->
+        <div class="toolbar-group" style="margin-left: auto; border-left: 1px solid var(--salt-border); padding-left: 16px;">
+            <button class="salt-btn salt-btn-primary" onclick="runTraversal()">Run Traversal</button>
+            <button class="salt-btn salt-btn-secondary" onclick="clearGraph()">Clear</button>
+        </div>
+    </div>
+
+    <!-- Graph + Legend sidebar -->
+    <div class="main">
+        <div id="network"></div>
+        <div class="legend-sidebar" id="legend" style="display: none;">
+            <div>
+                <div class="legend-title">Node types</div>
+                <div class="legend-items" id="legendItems"></div>
+            </div>
+            <div id="legendGSection" style="display: none;">
+                <div class="legend-title">Governance</div>
+                <div class="legend-items" id="legendGItems"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom panel: stats only -->
+    <div class="bottom-panel" id="bottomPanel" style="display: none;">
+        <div class="stats-row">
             <div class="stat-card">
-                <div class="stat-label">Total Nodes</div>
+                <div class="stat-label">Nodes</div>
                 <div class="stat-value" id="statNodes">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Total Edges</div>
+                <div class="stat-label">Edges</div>
                 <div class="stat-value" id="statEdges">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Max Z-Hops</div>
+                <div class="stat-label">Z-Hops</div>
                 <div class="stat-value" id="statZHops">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Node Types</div>
+                <div class="stat-label">Types</div>
                 <div class="stat-value" id="statTypes">0</div>
             </div>
             <div class="stat-card g-stat" id="statGCard" style="display: none;">
@@ -261,57 +413,44 @@
                 <div class="stat-value" id="statGNodes">0</div>
             </div>
         </div>
-
-        <div class="legend" id="legend" style="display: none;">
-            <div class="legend-title">Node Types</div>
-            <div class="legend-items" id="legendItems"></div>
-            <div id="legendGSection" style="display: none;">
-                <div class="legend-items" style="margin-top: 8px;">
-                    <div class="legend-section-title">Governance Overlay (G-axis)</div>
-                    <div id="legendGItems" class="legend-items"></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
         let network = null;
 
-        // Node colors for X/Y/Z axis nodes
-        let nodeColors = {
-            'dataset': '#4CAF50',
-            'job': '#FF9800',
-            'etl_job': '#FF9800',
-            'model': '#2196F3',
-            'model_version': '#03A9F4',
-            'agent_version': '#9C27B0',
-            'agentic_system': '#673AB7',
+        const nodeColors = {
+            'dataset':                '#4CAF50',
+            'job':                    '#FF9800',
+            'etl_job':                '#FF9800',
+            'model':                  '#2196F3',
+            'model_version':          '#03A9F4',
+            'agent_version':          '#9C27B0',
+            'agentic_system':         '#673AB7',
             'agentic_system_version': '#7E57C2',
-            'workspace': '#FFC107',
-            'workspace_service': '#FFB300',
-            'use_case': '#E91E63',
-            'attribute': '#8BC34A',
-            'data_dependency': '#FF5722',
-            'mcp_server': '#00BCD4',
-            'mcp_tool': '#00ACC1',
-            'mcp_resource': '#0097A7',
-            'application': '#795548',
-            'glossary': '#607D8B',
-            'data_concept': '#9E9E9E',
-            'report': '#26A69A',
-            'data_flow': '#42A5F5',
-            'process': '#AB47BC'
+            'workspace':              '#FFC107',
+            'workspace_service':      '#FFB300',
+            'use_case':               '#E91E63',
+            'attribute':              '#8BC34A',
+            'data_dependency':        '#FF5722',
+            'mcp_server':             '#00BCD4',
+            'mcp_tool':               '#00ACC1',
+            'mcp_resource':           '#0097A7',
+            'application':            '#795548',
+            'glossary':               '#607D8B',
+            'data_concept':           '#9E9E9E',
+            'report':                 '#26A69A',
+            'data_flow':              '#42A5F5',
+            'process':                '#AB47BC'
         };
 
-        // G-axis governance node colors (by sub_type where possible)
         const gNodeColors = {
-            'guardrail': '#7B2FBE',
-            'guardrail_safety': '#E53935',
-            'guardrail_security': '#F57C00',
-            'guardrail_quality': '#388E3C',
-            'guardrail_compliance': '#1565C0',
-            'guardrail_privacy': '#AD1457',
-            'dataset_resultset': '#FFD600'   // resultset datasets
+            'guardrail':             '#6929C4',
+            'guardrail_safety':      '#E53935',
+            'guardrail_security':    '#F57C00',
+            'guardrail_quality':     '#388E3C',
+            'guardrail_compliance':  '#1565C0',
+            'guardrail_privacy':     '#AD1457',
+            'dataset_resultset':     '#FFD600'
         };
 
         function getGNodeColor(node) {
@@ -347,25 +486,16 @@
             const maxDepth = parseInt(document.getElementById('maxDepth').value);
             const governance = includeGovernance();
 
-            if (!startNode) {
-                alert('Please enter a start node ID');
-                return;
-            }
-
-            if (axes.length === 0) {
-                alert('Please select at least one axis');
-                return;
-            }
+            if (!startNode) { alert('Please enter a start node ID'); return; }
+            if (axes.length === 0) { alert('Please select at least one axis'); return; }
 
             try {
                 const response = await fetch('http://localhost:8000/api/lineage/traverse', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         start_node_id: startNode,
-                        axes: axes,
+                        axes,
                         x_direction: xDirection,
                         y_direction: yDirection,
                         z_direction: zDirection,
@@ -394,7 +524,6 @@
         function visualizeGraph(data) {
             const startId = data.start_node.id;
 
-            // X/Y/Z axis nodes
             const xyzNodes = data.nodes.map(node => ({
                 id: node.id,
                 label: node.properties.name || node.id,
@@ -402,44 +531,31 @@
                 color: {
                     background: nodeColors[node.type] || '#999',
                     border: node.id === startId ? '#000' : '#555',
-                    highlight: {
-                        background: nodeColors[node.type] || '#999',
-                        border: '#000'
-                    }
+                    highlight: { background: nodeColors[node.type] || '#999', border: '#000' }
                 },
                 borderWidth: node.id === startId ? 4 : 2,
-                font: {
-                    size: node.id === startId ? 16 : 13,
-                    color: '#222',
-                    face: 'Arial'
-                },
+                font: { size: node.id === startId ? 16 : 13, color: '#222', face: 'Open Sans' },
                 shape: node.id === startId ? 'star' : 'dot',
                 size: node.id === startId ? 30 : 20,
                 group: 'xyz'
             }));
 
-            // G-axis governance nodes (diamond shape, governance color, dashed border)
             const gNodes = (data.g_nodes || []).map(node => {
                 const gColor = getGNodeColor(node);
                 return {
                     id: node.id,
                     label: node.properties.name || node.id,
-                    title: `[G-axis: ${node.type}${node.properties.sub_type ? '/' + node.properties.sub_type : ''}] ${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
-                    color: {
-                        background: gColor,
-                        border: '#9d74ff',
-                        highlight: { background: gColor, border: '#fff' }
-                    },
+                    title: `[G: ${node.type}${node.properties.sub_type ? '/' + node.properties.sub_type : ''}] ${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
+                    color: { background: gColor, border: '#9d74ff', highlight: { background: gColor, border: '#fff' } },
                     borderWidth: 3,
                     borderDashes: [5, 3],
-                    font: { size: 12, color: '#fff', face: 'Arial', bold: true },
+                    font: { size: 12, color: '#fff', face: 'Open Sans', bold: true },
                     shape: 'diamond',
                     size: 18,
                     group: 'g'
                 };
             });
 
-            // X/Y/Z edges
             const xyzEdges = data.edges.map((edge, idx) => ({
                 id: 'xyz_' + idx,
                 from: edge.source,
@@ -447,16 +563,10 @@
                 label: edge.type,
                 arrows: 'to',
                 color: { color: '#666', highlight: '#000' },
-                font: {
-                    size: 9,
-                    align: 'middle',
-                    color: '#444',
-                    background: 'rgba(255,255,255,0.85)'
-                },
+                font: { size: 9, align: 'middle', color: '#444', background: 'rgba(255,255,255,0.85)' },
                 width: 2
             }));
 
-            // G-axis edges — dashed, purple
             const gEdges = (data.g_edges || []).map((edge, idx) => ({
                 id: 'g_' + idx,
                 from: edge.source,
@@ -465,22 +575,14 @@
                 arrows: 'to',
                 dashes: true,
                 color: { color: '#9d74ff', highlight: '#fff', opacity: 0.9 },
-                font: {
-                    size: 9,
-                    align: 'middle',
-                    color: '#9d74ff',
-                    background: 'rgba(255,255,255,0.85)'
-                },
+                font: { size: 9, align: 'middle', color: '#9d74ff', background: 'rgba(255,255,255,0.85)' },
                 width: 2
             }));
 
-            const allNodes = [...xyzNodes, ...gNodes];
-            const allEdges = [...xyzEdges, ...gEdges];
-
             const container = document.getElementById('network');
             const graphData = {
-                nodes: new vis.DataSet(allNodes),
-                edges: new vis.DataSet(allEdges)
+                nodes: new vis.DataSet([...xyzNodes, ...gNodes]),
+                edges: new vis.DataSet([...xyzEdges, ...gEdges])
             };
 
             const options = {
@@ -498,21 +600,16 @@
                 layout: { improvedLayout: true, hierarchical: false },
                 interaction: { hover: true, tooltipDelay: 100, zoomView: true },
                 nodes: { borderWidth: 2, shadow: true },
-                edges: {
-                    width: 2,
-                    smooth: { type: 'continuous' }
-                }
+                edges: { width: 2, smooth: { type: 'continuous' } }
             };
 
             if (network) network.destroy();
             network = new vis.Network(container, graphData, options);
-
             updateLegend(data);
         }
 
         function updateStats(data) {
-            document.getElementById('stats').style.display = 'grid';
-
+            document.getElementById('bottomPanel').style.display = '';
             const nodeTypes = new Set(data.nodes.map(n => n.type));
             document.getElementById('statNodes').textContent = data.traversal_metadata.total_nodes_visited;
             document.getElementById('statEdges').textContent = data.traversal_metadata.total_edges_traversed;
@@ -530,46 +627,38 @@
         }
 
         function updateLegend(data) {
-            // X/Y/Z node types
             const nodeTypes = {};
-            data.nodes.forEach(node => {
-                nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1;
-            });
+            data.nodes.forEach(node => { nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1; });
 
-            const legendItems = Object.entries(nodeTypes)
+            document.getElementById('legend').style.display = 'flex';
+            document.getElementById('legendItems').innerHTML = Object.entries(nodeTypes)
                 .sort((a, b) => b[1] - a[1])
                 .map(([type, count]) => `
                     <div class="legend-item">
-                        <div class="legend-color" style="background: ${nodeColors[type] || '#999'}"></div>
+                        <div class="legend-dot" style="background:${nodeColors[type] || '#999'}"></div>
                         <span>${type} (${count})</span>
-                    </div>
-                `).join('');
+                    </div>`)
+                .join('');
 
-            document.getElementById('legendItems').innerHTML = legendItems;
-            document.getElementById('legend').style.display = 'block';
-
-            // G-axis nodes
             const gSection = document.getElementById('legendGSection');
             const gNodes = data.g_nodes || [];
             if (gNodes.length > 0) {
                 const gTypes = {};
                 gNodes.forEach(node => {
                     const key = node.type + (node.properties && node.properties.sub_type ? '/' + node.properties.sub_type : '');
-                    gTypes[key] = (gTypes[key] || { count: 0, node });
+                    if (!gTypes[key]) gTypes[key] = { count: 0, node };
                     gTypes[key].count++;
                 });
 
-                const gItems = Object.entries(gTypes)
+                document.getElementById('legendGItems').innerHTML = Object.entries(gTypes)
                     .sort((a, b) => b[1].count - a[1].count)
                     .map(([key, { count, node }]) => `
-                        <div class="legend-g-item">
-                            <div class="legend-g-badge" style="background: ${getGNodeColor(node)}"></div>
+                        <div class="legend-item">
+                            <div class="legend-diamond" style="background:${getGNodeColor(node)}"></div>
                             <span>${key} (${count})</span>
-                        </div>
-                    `).join('');
-
-                document.getElementById('legendGItems').innerHTML = gItems;
-                gSection.style.display = '';
+                        </div>`)
+                    .join('');
+                gSection.style.display = 'flex';
             } else {
                 gSection.style.display = 'none';
             }
@@ -582,17 +671,15 @@
         }
 
         function clearGraph() {
-            if (network) {
-                network.destroy();
-                network = null;
-            }
-            document.getElementById('stats').style.display = 'none';
-            document.getElementById('legend').style.display = 'none';
+            if (network) { network.destroy(); network = null; }
+            document.getElementById('bottomPanel').style.display = 'none';
             document.getElementById('statGCard').style.display = 'none';
+            document.getElementById('legend').style.display = 'none';
+            document.getElementById('legendItems').innerHTML = '';
+            document.getElementById('legendGItems').innerHTML = '';
             document.getElementById('legendGSection').style.display = 'none';
         }
 
-        // Auto-run on load
         window.onload = () => {
             syncDirectionControls();
             runTraversal();
