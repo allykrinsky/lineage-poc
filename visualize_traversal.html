@@ -133,6 +133,45 @@
             margin: 20px;
             border-radius: 4px;
         }
+        .g-axis-group {
+            display: inline-block;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d5e 100%);
+            border-radius: 4px;
+            border: 1px solid #4a4a8a;
+            margin-left: 10px;
+        }
+        .g-axis-group label {
+            color: #c0b0ff;
+            width: auto;
+        }
+        .g-axis-group input[type="checkbox"] {
+            accent-color: #9d74ff;
+        }
+        .legend-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin: 12px 0 6px;
+            width: 100%;
+        }
+        .legend-g-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-g-badge {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 2px solid #9d74ff;
+            transform: rotate(45deg);
+            flex-shrink: 0;
+        }
+        .stat-card.g-stat {
+            border-left-color: #9d74ff;
+        }
     </style>
 </head>
 <body>
@@ -148,13 +187,16 @@
             <div class="control-group">
                 <label>Axes:</label>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="axisX" checked onchange="syncDirectionControls()"> <label for="axisX">X (Lineage)</label>
+                    <input type="checkbox" id="axisX" checked onchange="syncDirectionControls()"> <label for="axisX"> Show Lineage</label>
                 </div>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="axisY" checked onchange="syncDirectionControls()"> <label for="axisY">Y (Hierarchy)</label>
+                    <input type="checkbox" id="axisY" checked onchange="syncDirectionControls()"> <label for="axisY">Show Hierarchy</label>
                 </div>
                 <div class="checkbox-group">
-                    <input type="checkbox" id="axisZ" checked onchange="syncDirectionControls()"> <label for="axisZ">Z (Association)</label>
+                    <input type="checkbox" id="axisZ" checked onchange="syncDirectionControls()"> <label for="axisZ">Show Associations</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="axisG" onchange="syncDirectionControls()"> <label for="axisG">Show Governance</label>
                 </div>
             </div>
 
@@ -214,18 +256,31 @@
                 <div class="stat-label">Node Types</div>
                 <div class="stat-value" id="statTypes">0</div>
             </div>
+            <div class="stat-card g-stat" id="statGCard" style="display: none;">
+                <div class="stat-label">G Nodes</div>
+                <div class="stat-value" id="statGNodes">0</div>
+            </div>
         </div>
 
         <div class="legend" id="legend" style="display: none;">
             <div class="legend-title">Node Types</div>
             <div class="legend-items" id="legendItems"></div>
+            <div id="legendGSection" style="display: none;">
+                <div class="legend-items" style="margin-top: 8px;">
+                    <div class="legend-section-title">Governance Overlay (G-axis)</div>
+                    <div id="legendGItems" class="legend-items"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         let network = null;
+
+        // Node colors for X/Y/Z axis nodes
         let nodeColors = {
             'dataset': '#4CAF50',
+            'job': '#FF9800',
             'etl_job': '#FF9800',
             'model': '#2196F3',
             'model_version': '#03A9F4',
@@ -242,8 +297,33 @@
             'mcp_resource': '#0097A7',
             'application': '#795548',
             'glossary': '#607D8B',
-            'data_concept': '#9E9E9E'
+            'data_concept': '#9E9E9E',
+            'report': '#26A69A',
+            'data_flow': '#42A5F5',
+            'process': '#AB47BC'
         };
+
+        // G-axis governance node colors (by sub_type where possible)
+        const gNodeColors = {
+            'guardrail': '#7B2FBE',
+            'guardrail_safety': '#E53935',
+            'guardrail_security': '#F57C00',
+            'guardrail_quality': '#388E3C',
+            'guardrail_compliance': '#1565C0',
+            'guardrail_privacy': '#AD1457',
+            'dataset_resultset': '#FFD600'   // resultset datasets
+        };
+
+        function getGNodeColor(node) {
+            if (node.type === 'guardrail') {
+                const sub = node.properties && node.properties.sub_type;
+                return gNodeColors['guardrail_' + sub] || gNodeColors['guardrail'];
+            }
+            if (node.type === 'dataset' && node.properties && node.properties.sub_type === 'resultset') {
+                return gNodeColors['dataset_resultset'];
+            }
+            return '#9d74ff';
+        }
 
         function getAxes() {
             const axes = [];
@@ -251,6 +331,10 @@
             if (document.getElementById('axisY').checked) axes.push('y');
             if (document.getElementById('axisZ').checked) axes.push('z');
             return axes;
+        }
+
+        function includeGovernance() {
+            return document.getElementById('axisG').checked;
         }
 
         async function runTraversal() {
@@ -261,6 +345,7 @@
             const zDirection = document.getElementById('zDirection').value;
             const maxZHops = parseInt(document.getElementById('maxZHops').value);
             const maxDepth = parseInt(document.getElementById('maxDepth').value);
+            const governance = includeGovernance();
 
             if (!startNode) {
                 alert('Please enter a start node ID');
@@ -286,7 +371,8 @@
                         z_direction: zDirection,
                         max_z_hops: maxZHops,
                         max_depth: maxDepth,
-                        include_transformers: true
+                        include_transformers: true,
+                        include_governance: governance
                     })
                 });
 
@@ -306,53 +392,95 @@
         }
 
         function visualizeGraph(data) {
-            // Convert nodes
-            const nodes = data.nodes.map(node => ({
+            const startId = data.start_node.id;
+
+            // X/Y/Z axis nodes
+            const xyzNodes = data.nodes.map(node => ({
                 id: node.id,
                 label: node.properties.name || node.id,
-                title: `${node.type}\n${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
+                title: `[${node.type}] ${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
                 color: {
                     background: nodeColors[node.type] || '#999',
-                    border: node.id === data.start_node.id ? '#000' : '#666',
+                    border: node.id === startId ? '#000' : '#555',
                     highlight: {
                         background: nodeColors[node.type] || '#999',
                         border: '#000'
                     }
                 },
-                borderWidth: node.id === data.start_node.id ? 4 : 2,
+                borderWidth: node.id === startId ? 4 : 2,
                 font: {
-                    size: node.id === data.start_node.id ? 16 : 14,
-                    color: '#333',
+                    size: node.id === startId ? 16 : 13,
+                    color: '#222',
                     face: 'Arial'
                 },
-                shape: node.id === data.start_node.id ? 'star' : 'dot',
-                size: node.id === data.start_node.id ? 30 : 20
+                shape: node.id === startId ? 'star' : 'dot',
+                size: node.id === startId ? 30 : 20,
+                group: 'xyz'
             }));
 
-            // Convert edges
-            const edges = data.edges.map((edge, idx) => ({
-                id: idx,
+            // G-axis governance nodes (diamond shape, governance color, dashed border)
+            const gNodes = (data.g_nodes || []).map(node => {
+                const gColor = getGNodeColor(node);
+                return {
+                    id: node.id,
+                    label: node.properties.name || node.id,
+                    title: `[G-axis: ${node.type}${node.properties.sub_type ? '/' + node.properties.sub_type : ''}] ${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
+                    color: {
+                        background: gColor,
+                        border: '#9d74ff',
+                        highlight: { background: gColor, border: '#fff' }
+                    },
+                    borderWidth: 3,
+                    borderDashes: [5, 3],
+                    font: { size: 12, color: '#fff', face: 'Arial', bold: true },
+                    shape: 'diamond',
+                    size: 18,
+                    group: 'g'
+                };
+            });
+
+            // X/Y/Z edges
+            const xyzEdges = data.edges.map((edge, idx) => ({
+                id: 'xyz_' + idx,
                 from: edge.source,
                 to: edge.target,
                 label: edge.type,
                 arrows: 'to',
-                color: {
-                    color: '#666',
-                    highlight: '#000'
-                },
+                color: { color: '#666', highlight: '#000' },
                 font: {
-                    size: 10,
+                    size: 9,
                     align: 'middle',
-                    color: '#333',
-                    background: 'rgba(255,255,255,0.8)'
-                }
+                    color: '#444',
+                    background: 'rgba(255,255,255,0.85)'
+                },
+                width: 2
             }));
 
-            // Create network
+            // G-axis edges — dashed, purple
+            const gEdges = (data.g_edges || []).map((edge, idx) => ({
+                id: 'g_' + idx,
+                from: edge.source,
+                to: edge.target,
+                label: edge.type,
+                arrows: 'to',
+                dashes: true,
+                color: { color: '#9d74ff', highlight: '#fff', opacity: 0.9 },
+                font: {
+                    size: 9,
+                    align: 'middle',
+                    color: '#9d74ff',
+                    background: 'rgba(255,255,255,0.85)'
+                },
+                width: 2
+            }));
+
+            const allNodes = [...xyzNodes, ...gNodes];
+            const allEdges = [...xyzEdges, ...gEdges];
+
             const container = document.getElementById('network');
             const graphData = {
-                nodes: new vis.DataSet(nodes),
-                edges: new vis.DataSet(edges)
+                nodes: new vis.DataSet(allNodes),
+                edges: new vis.DataSet(allEdges)
             };
 
             const options = {
@@ -365,38 +493,20 @@
                         springConstant: 0.04,
                         damping: 0.09
                     },
-                    stabilization: {
-                        iterations: 200
-                    }
+                    stabilization: { iterations: 200 }
                 },
-                layout: {
-                    improvedLayout: true,
-                    hierarchical: false
-                },
-                interaction: {
-                    hover: true,
-                    tooltipDelay: 100,
-                    zoomView: true
-                },
-                nodes: {
-                    borderWidth: 2,
-                    shadow: true
-                },
+                layout: { improvedLayout: true, hierarchical: false },
+                interaction: { hover: true, tooltipDelay: 100, zoomView: true },
+                nodes: { borderWidth: 2, shadow: true },
                 edges: {
                     width: 2,
-                    smooth: {
-                        type: 'continuous'
-                    }
+                    smooth: { type: 'continuous' }
                 }
             };
 
-            if (network) {
-                network.destroy();
-            }
-
+            if (network) network.destroy();
             network = new vis.Network(container, graphData, options);
 
-            // Update legend
             updateLegend(data);
         }
 
@@ -404,14 +514,23 @@
             document.getElementById('stats').style.display = 'grid';
 
             const nodeTypes = new Set(data.nodes.map(n => n.type));
-
             document.getElementById('statNodes').textContent = data.traversal_metadata.total_nodes_visited;
             document.getElementById('statEdges').textContent = data.traversal_metadata.total_edges_traversed;
             document.getElementById('statZHops').textContent = data.traversal_metadata.z_hops_taken;
             document.getElementById('statTypes').textContent = nodeTypes.size;
+
+            const gCount = (data.g_nodes || []).length;
+            const gCard = document.getElementById('statGCard');
+            if (gCount > 0) {
+                document.getElementById('statGNodes').textContent = gCount;
+                gCard.style.display = '';
+            } else {
+                gCard.style.display = 'none';
+            }
         }
 
         function updateLegend(data) {
+            // X/Y/Z node types
             const nodeTypes = {};
             data.nodes.forEach(node => {
                 nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1;
@@ -428,6 +547,32 @@
 
             document.getElementById('legendItems').innerHTML = legendItems;
             document.getElementById('legend').style.display = 'block';
+
+            // G-axis nodes
+            const gSection = document.getElementById('legendGSection');
+            const gNodes = data.g_nodes || [];
+            if (gNodes.length > 0) {
+                const gTypes = {};
+                gNodes.forEach(node => {
+                    const key = node.type + (node.properties && node.properties.sub_type ? '/' + node.properties.sub_type : '');
+                    gTypes[key] = (gTypes[key] || { count: 0, node });
+                    gTypes[key].count++;
+                });
+
+                const gItems = Object.entries(gTypes)
+                    .sort((a, b) => b[1].count - a[1].count)
+                    .map(([key, { count, node }]) => `
+                        <div class="legend-g-item">
+                            <div class="legend-g-badge" style="background: ${getGNodeColor(node)}"></div>
+                            <span>${key} (${count})</span>
+                        </div>
+                    `).join('');
+
+                document.getElementById('legendGItems').innerHTML = gItems;
+                gSection.style.display = '';
+            } else {
+                gSection.style.display = 'none';
+            }
         }
 
         function syncDirectionControls() {
@@ -443,6 +588,8 @@
             }
             document.getElementById('stats').style.display = 'none';
             document.getElementById('legend').style.display = 'none';
+            document.getElementById('statGCard').style.display = 'none';
+            document.getElementById('legendGSection').style.display = 'none';
         }
 
         // Auto-run on load
