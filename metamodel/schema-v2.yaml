@@ -322,6 +322,24 @@ node_types:
         type: string
         required: false
 
+  Guardrail:
+    description: "Governance control applied to a use case (G-axis entity)"
+    properties:
+      - name: id
+        type: string
+        required: true
+        unique: true
+      - name: name
+        type: string
+        required: true
+      - name: sub_type
+        type: string
+        required: false
+        allowed_values: [null, "safety", "security", "quality", "compliance", "privacy"]
+      - name: description
+        type: string
+        required: false
+
 
 # ---------------------------------------------------------------------------
 # Allowed Relationships
@@ -497,25 +515,34 @@ relationships:
     to: Attribute
     description: "Data concept groups an attribute"
 
+  # ── G-Axis (Governance / Controls) ─────────────────────────────────────
+
   - type: RESULTSETS_DATASET
     from: Dataset
     to: Dataset
-    description: "Result set dataset is associated with a source dataset"
+    description: "Result set linked to a dataset (data quality — G-axis)"
 
   - type: RESULTSETS_REPORT
     from: Dataset
     to: Report
-    description: "Result set dataset is associated with a report"
+    description: "Result set linked to a report (data quality — G-axis)"
 
   - type: RESULTSETS_DATAFLOW
     from: Dataset
     to: DataFlow
-    description: "Result set dataset is associated with a data flow"
+    description: "Result set linked to a data flow (data quality — G-axis)"
 
   - type: RESULTSETS_JOB
     from: Dataset
     to: Job
-    description: "Result set dataset is associated with a source dataset"
+    description: "Result set linked to a job (data quality — G-axis)"
+
+  - type: GUARDRAIL_USE_CASE
+    from: Guardrail
+    to: UseCase
+    description: "Guardrail applied to a use case (G-axis)"
+
+  # ── Z-Axis (Association / Cross-cutting) ────────────────────────────────
 
   - type: USE_CASE_DATASET
     from: UseCase

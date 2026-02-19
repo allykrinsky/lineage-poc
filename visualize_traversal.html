@@ -1,224 +1,431 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Lineage Traversal Visualizer</title>
-    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <title>Lineage Traversal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@salt-ds/theme@latest/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Cytoscape.js -->
+    <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+    <!-- Dagre layout for hierarchical graphs -->
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+
     <style>
+        :root {
+            --salt-blue-500: #0B6EDB;
+            --salt-blue-700: #1352AE;
+            --salt-blue-100: #D1E5FA;
+            --salt-gray-10:  #F5F5F5;
+            --salt-gray-20:  #EAEAEA;
+            --salt-gray-50:  #C5C8CB;
+            --salt-gray-200: #6B737A;
+            --salt-gray-600: #2F3438;
+            --salt-text:     #1A1A1A;
+            --salt-border:   #C5C8CB;
+            --salt-radius:   2px;
+            --salt-space-1:  4px;
+            --salt-space-2:  8px;
+            --salt-space-3:  12px;
+            --salt-space-4:  16px;
+            --salt-space-6:  24px;
+            --salt-g-color:  #6929C4;
+            --salt-font:     'Open Sans', Arial, sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
+            font-family: var(--salt-font);
+            font-size: 14px;
+            color: var(--salt-text);
+            background: var(--salt-gray-10);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+        .app-header {
+            background: var(--salt-blue-700);
+            color: #fff;
+            padding: 0 var(--salt-space-6);
+            height: 44px;
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-3);
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--salt-blue-500);
         }
-        h1 {
+        .app-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 8px 8px 0 0;
         }
-        .controls {
-            padding: 20px;
-            border-bottom: 1px solid #e0e0e0;
+        .app-header-divider {
+            width: 1px;
+            height: 20px;
+            background: rgba(255,255,255,0.25);
+        }
+        .app-header-sub {
+            font-size: 12px;
+            font-weight: 400;
+            opacity: 0.75;
+        }
+
+        .toolbar {
+            background: #fff;
+            border-bottom: 1px solid var(--salt-border);
+            padding: var(--salt-space-3) var(--salt-space-6);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: var(--salt-space-4);
+            flex-shrink: 0;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-2);
+        }
+        .toolbar-group + .toolbar-group {
+            border-left: 1px solid var(--salt-border);
+            padding-left: var(--salt-space-4);
+        }
+
+        .toolbar-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--salt-gray-200);
+            white-space: nowrap;
+            margin-right: var(--salt-space-1);
+        }
+
+        .salt-input {
+            height: 28px;
+            padding: 0 var(--salt-space-2);
+            border: 1px solid var(--salt-border);
+            border-radius: var(--salt-radius);
+            font-family: var(--salt-font);
+            font-size: 13px;
+            color: var(--salt-text);
+            background: #fff;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .salt-input:focus {
+            border-color: var(--salt-blue-500);
+            box-shadow: 0 0 0 2px var(--salt-blue-100);
+        }
+        .salt-input[type="number"] { width: 64px; }
+        .salt-input[type="text"]   { width: 120px; }
+
+        .salt-select {
+            height: 28px;
+            padding: 0 var(--salt-space-2);
+            border: 1px solid var(--salt-border);
+            border-radius: var(--salt-radius);
+            font-family: var(--salt-font);
+            font-size: 13px;
+            color: var(--salt-text);
+            background: #fff;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .salt-select:focus { border-color: var(--salt-blue-500); }
+        .salt-select:disabled { opacity: 0.45; cursor: default; }
+
+        .salt-checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-1);
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+        }
+        .salt-checkbox-wrap input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--salt-blue-500);
+            cursor: pointer;
+        }
+
+        .g-checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: var(--salt-space-1);
+            cursor: pointer;
+            user-select: none;
+            font-size: 13px;
+            padding: 3px var(--salt-space-2);
+            background: #F3EFFE;
+            border: 1px solid #C0A8F0;
+            border-radius: var(--salt-radius);
+        }
+        .g-checkbox-wrap input[type="checkbox"] {
+            accent-color: var(--salt-g-color);
+            cursor: pointer;
+        }
+        .g-checkbox-wrap span { color: var(--salt-g-color); font-weight: 500; }
+
+        .salt-btn {
+            height: 28px;
+            padding: 0 var(--salt-space-4);
+            border: none;
+            border-radius: var(--salt-radius);
+            font-family: var(--salt-font);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+            white-space: nowrap;
+        }
+        .salt-btn-primary {
+            background: var(--salt-blue-500);
+            color: #fff;
+        }
+        .salt-btn-primary:hover { background: var(--salt-blue-700); }
+        .salt-btn-secondary {
+            background: transparent;
+            color: var(--salt-gray-600);
+            border: 1px solid var(--salt-border);
+        }
+        .salt-btn-secondary:hover { background: var(--salt-gray-10); }
+
+        .main {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row;
+            background: #fff;
+            border-bottom: 1px solid var(--salt-border);
+        }
+        #cy {
+            flex: 1;
+            height: 100%;
+            min-width: 0;
             background: #fafafa;
         }
-        .control-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: inline-block;
-            width: 150px;
-            font-weight: 600;
-            color: #333;
-        }
-        input, select, button {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            padding: 10px 20px;
-            margin-left: 10px;
-        }
-        button:hover {
-            background: #5568d3;
-        }
-        .checkbox-group {
-            display: inline-block;
-            margin-right: 15px;
-        }
-        #network {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #e0e0e0;
-        }
-        .stats {
-            padding: 20px;
-            background: #f9f9f9;
-            border-top: 1px solid #e0e0e0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .stat-card {
-            background: white;
-            padding: 15px;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
-        }
-        .stat-label {
-            font-size: 12px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-top: 5px;
-        }
-        .legend {
-            padding: 20px;
-            background: #fff;
-            border-top: 1px solid #e0e0e0;
+
+        .legend-sidebar {
+            width: 176px;
+            flex-shrink: 0;
+            border-left: 1px solid var(--salt-border);
+            background: var(--salt-gray-10);
+            padding: var(--salt-space-3) var(--salt-space-3);
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+            gap: var(--salt-space-3);
         }
         .legend-title {
+            font-size: 10px;
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--salt-gray-200);
+            margin-bottom: var(--salt-space-1);
         }
         .legend-items {
             display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            flex-direction: column;
+            gap: 6px;
         }
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            font-size: 12px;
+            color: var(--salt-gray-600);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 2px solid #ddd;
+        .legend-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
-        .error {
-            background: #fee;
-            border: 1px solid #fcc;
-            color: #c00;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 4px;
+        .legend-diamond {
+            width: 9px;
+            height: 9px;
+            flex-shrink: 0;
+            transform: rotate(45deg);
+            border: 1.5px solid var(--salt-g-color);
         }
-        .success {
-            background: #efe;
-            border: 1px solid #cfc;
-            color: #060;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 4px;
+
+        .bottom-panel {
+            background: #fff;
+            border-top: 1px solid var(--salt-border);
+            flex-shrink: 0;
+            display: none;
         }
+        .stats-row {
+            display: flex;
+            gap: 0;
+            padding: var(--salt-space-2) var(--salt-space-6);
+        }
+        .stat-card {
+            padding: var(--salt-space-2) var(--salt-space-4);
+            border-right: 1px solid var(--salt-gray-20);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 100px;
+        }
+        .stat-card:last-child { border-right: none; }
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--salt-gray-200);
+        }
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--salt-blue-500);
+            line-height: 1;
+        }
+        .stat-card.g-stat .stat-value { color: var(--salt-g-color); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🔍 Lineage Traversal Visualizer</h1>
+    <header class="app-header">
+        <h1 class="app-header-title">Lineage Traversal</h1>
+        <div class="app-header-divider"></div>
+        <span class="app-header-sub">Multi-axis graph explorer</span>
+    </header>
 
-        <div class="controls">
-            <div class="control-group">
-                <label>Start Node ID:</label>
-                <input type="text" id="startNode" value="ds-002" placeholder="e.g., ds-002">
-            </div>
-
-            <div class="control-group">
-                <label>Axes:</label>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisX" checked> <label for="axisX">X (Lineage)</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisY" checked> <label for="axisY">Y (Hierarchy)</label>
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="axisZ" checked> <label for="axisZ">Z (Association)</label>
-                </div>
-            </div>
-
-            <div class="control-group">
-                <label>X Direction:</label>
-                <select id="xDirection">
-                    <option value="both">Both</option>
-                    <option value="upstream">Upstream</option>
-                    <option value="downstream">Downstream</option>
-                </select>
-
-                <label style="margin-left: 20px;">Y Direction:</label>
-                <select id="yDirection">
-                    <option value="both">Both</option>
-                    <option value="up">Up</option>
-                    <option value="down">Down</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label>Max Z-Hops:</label>
-                <input type="number" id="maxZHops" value="1" min="1" max="3">
-
-                <label style="margin-left: 20px;">Max Depth:</label>
-                <input type="number" id="maxDepth" value="10" min="1" max="20">
-            </div>
-
-            <div class="control-group">
-                <button onclick="runTraversal()">🚀 Run Traversal</button>
-                <button onclick="clearGraph()" style="background: #999;">Clear</button>
-            </div>
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <span class="toolbar-label">Start node</span>
+            <input class="salt-input" type="text" id="startNode" value="fraud-asys-001" placeholder="e.g. fraud-asys-001">
         </div>
 
-        <div id="network"></div>
+        <div class="toolbar-group">
+            <span class="toolbar-label">Axes</span>
+            <label class="salt-checkbox-wrap">
+                <input type="checkbox" id="axisX" checked onchange="syncDirectionControls()">
+                <span>Lineage</span>
+            </label>
+            <label class="salt-checkbox-wrap">
+                <input type="checkbox" id="axisY" checked onchange="syncDirectionControls()">
+                <span>Hierarchy</span>
+            </label>
+            <label class="salt-checkbox-wrap">
+                <input type="checkbox" id="axisZ" checked onchange="syncDirectionControls()">
+                <span>Associations</span>
+            </label>
+            <label class="g-checkbox-wrap">
+                <input type="checkbox" id="axisG" onchange="syncDirectionControls()">
+                <span>Governance</span>
+            </label>
+        </div>
 
-        <div class="stats" id="stats" style="display: none;">
+        <div class="toolbar-group">
+            <span class="toolbar-label">Direction</span>
+            <select class="salt-select" id="xDirection">
+                <option value="both">X: Both</option>
+                <option value="upstream" selected>X: Upstream</option>
+                <option value="downstream">X: Downstream</option>
+            </select>
+            <select class="salt-select" id="yDirection">
+                <option value="both">Y: Both</option>
+                <option value="up">Y: Up</option>
+                <option value="down">Y: Down</option>
+            </select>
+            <select class="salt-select" id="zDirection">
+                <option value="both">Z: Both</option>
+                <option value="outgoing">Z: Outgoing</option>
+                <option value="incoming">Z: Incoming</option>
+            </select>
+        </div>
+
+        <div class="toolbar-group">
+            <span class="toolbar-label">Layout</span>
+            <select class="salt-select" id="layoutDirection">
+                <option value="TB">Vertical</option>
+                <option value="LR">Horizontal</option>
+            </select>
+        </div>
+
+        <div class="toolbar-group">
+            <span class="toolbar-label">X-Hops</span>
+            <input class="salt-input" type="number" id="maxXHops" value="2" min="0" max="20">
+            <span class="toolbar-label" style="margin-left:8px;">Y Up</span>
+            <input class="salt-input" type="number" id="maxYUp" value="2" min="0" max="20">
+            <span class="toolbar-label" style="margin-left:8px;">Y Down</span>
+            <input class="salt-input" type="number" id="maxYDown" value="2" min="0" max="20">
+        </div>
+
+        <div class="toolbar-group">
+            <span class="toolbar-label">Z-Hops</span>
+            <input class="salt-input" type="number" id="maxZHops" value="1" min="0" max="3">
+            <span class="toolbar-label" style="margin-left:8px;">Depth</span>
+            <input class="salt-input" type="number" id="maxDepth" value="10" min="1" max="20">
+        </div>
+
+        <div class="toolbar-group" style="margin-left: auto; border-left: 1px solid var(--salt-border); padding-left: 16px;">
+            <button class="salt-btn salt-btn-primary" onclick="runTraversal()">Run Traversal</button>
+            <button class="salt-btn salt-btn-secondary" onclick="clearGraph()">Clear</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div id="cy"></div>
+        <div class="legend-sidebar" id="legend">
+            <div>
+                <div class="legend-title">Node types</div>
+                <div class="legend-items" id="legendItems"></div>
+            </div>
+            <div id="legendGSection" style="display: none;">
+                <div class="legend-title">Governance</div>
+                <div class="legend-items" id="legendGItems"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-panel" id="bottomPanel">
+        <div class="stats-row">
             <div class="stat-card">
-                <div class="stat-label">Total Nodes</div>
+                <div class="stat-label">Nodes</div>
                 <div class="stat-value" id="statNodes">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Total Edges</div>
+                <div class="stat-label">Edges</div>
                 <div class="stat-value" id="statEdges">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Max Z-Hops</div>
+                <div class="stat-label">Z-Hops</div>
                 <div class="stat-value" id="statZHops">0</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Node Types</div>
+                <div class="stat-label">Types</div>
                 <div class="stat-value" id="statTypes">0</div>
             </div>
-        </div>
-
-        <div class="legend" id="legend" style="display: none;">
-            <div class="legend-title">Node Types</div>
-            <div class="legend-items" id="legendItems"></div>
+            <div class="stat-card g-stat" id="statGCard" style="display: none;">
+                <div class="stat-label">G Nodes</div>
+                <div class="stat-value" id="statGNodes">0</div>
+            </div>
         </div>
     </div>
 
     <script>
-        let network = null;
-        let nodeColors = {
+        let cy = null;
+
+        const nodeColors = {
             'dataset': '#4CAF50',
+            'job': '#FF9800',
             'etl_job': '#FF9800',
             'model': '#2196F3',
             'model_version': '#03A9F4',
@@ -235,8 +442,32 @@
             'mcp_resource': '#0097A7',
             'application': '#795548',
             'glossary': '#607D8B',
-            'data_concept': '#9E9E9E'
+            'data_concept': '#9E9E9E',
+            'report': '#26A69A',
+            'data_flow': '#42A5F5',
+            'process': '#AB47BC'
         };
+
+        const gNodeColors = {
+            'guardrail': '#6929C4',
+            'guardrail_safety': '#E53935',
+            'guardrail_security': '#F57C00',
+            'guardrail_quality': '#388E3C',
+            'guardrail_compliance': '#1565C0',
+            'guardrail_privacy': '#AD1457',
+            'dataset_resultset': '#FFD600'
+        };
+
+        function getGNodeColor(node) {
+            if (node.type === 'guardrail') {
+                const sub = node.properties?.sub_type;
+                return gNodeColors['guardrail_' + sub] || gNodeColors['guardrail'];
+            }
+            if (node.type === 'dataset' && node.properties?.sub_type === 'resultset') {
+                return gNodeColors['dataset_resultset'];
+            }
+            return '#9d74ff';
+        }
 
         function getAxes() {
             const axes = [];
@@ -246,13 +477,22 @@
             return axes;
         }
 
+        function includeGovernance() {
+            return document.getElementById('axisG').checked;
+        }
+
         async function runTraversal() {
             const startNode = document.getElementById('startNode').value;
             const axes = getAxes();
             const xDirection = document.getElementById('xDirection').value;
             const yDirection = document.getElementById('yDirection').value;
+            const zDirection = document.getElementById('zDirection').value;
+            const maxXHops = parseInt(document.getElementById('maxXHops').value);
+            const maxYUp = parseInt(document.getElementById('maxYUp').value);
+            const maxYDown = parseInt(document.getElementById('maxYDown').value);
             const maxZHops = parseInt(document.getElementById('maxZHops').value);
             const maxDepth = parseInt(document.getElementById('maxDepth').value);
+            const governance = includeGovernance();
 
             if (!startNode) {
                 alert('Please enter a start node ID');
@@ -267,17 +507,20 @@
             try {
                 const response = await fetch('http://localhost:8000/api/lineage/traverse', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         start_node_id: startNode,
-                        axes: axes,
+                        axes,
                         x_direction: xDirection,
                         y_direction: yDirection,
+                        z_direction: zDirection,
+                        max_x_hops: maxXHops,
+                        max_y_hops_up: maxYUp,
+                        max_y_hops_down: maxYDown,
                         max_z_hops: maxZHops,
                         max_depth: maxDepth,
-                        include_transformers: true
+                        include_transformers: true,
+                        include_governance: governance
                     })
                 });
 
@@ -289,6 +532,7 @@
                 const data = await response.json();
                 visualizeGraph(data);
                 updateStats(data);
+                updateLegend(data);
 
             } catch (error) {
                 alert('Error: ' + error.message);
@@ -297,141 +541,300 @@
         }
 
         function visualizeGraph(data) {
-            // Convert nodes
-            const nodes = data.nodes.map(node => ({
-                id: node.id,
-                label: node.properties.name || node.id,
-                title: `${node.type}\n${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
-                color: {
-                    background: nodeColors[node.type] || '#999',
-                    border: node.id === data.start_node.id ? '#000' : '#666',
-                    highlight: {
-                        background: nodeColors[node.type] || '#999',
-                        border: '#000'
-                    }
-                },
-                borderWidth: node.id === data.start_node.id ? 4 : 2,
-                font: {
-                    size: node.id === data.start_node.id ? 16 : 14,
-                    color: '#333',
-                    face: 'Arial'
-                },
-                shape: node.id === data.start_node.id ? 'star' : 'dot',
-                size: node.id === data.start_node.id ? 30 : 20
-            }));
+            const startId = data.start_node.id;
+            const layoutDirection = document.getElementById('layoutDirection').value;
 
-            // Convert edges
-            const edges = data.edges.map((edge, idx) => ({
-                id: idx,
-                from: edge.source,
-                to: edge.target,
-                label: edge.type,
-                arrows: 'to',
-                color: {
-                    color: '#666',
-                    highlight: '#000'
-                },
-                font: {
-                    size: 10,
-                    align: 'middle',
-                    color: '#333',
-                    background: 'rgba(255,255,255,0.8)'
-                }
-            }));
+            // Build nodes
+            const xyzNodes = data.nodes.map(node => {
+                const color = nodeColors[node.type] || '#999';
+                const isStart = node.id === startId;
 
-            // Create network
-            const container = document.getElementById('network');
-            const graphData = {
-                nodes: new vis.DataSet(nodes),
-                edges: new vis.DataSet(edges)
-            };
-
-            const options = {
-                physics: {
-                    enabled: true,
-                    barnesHut: {
-                        gravitationalConstant: -8000,
-                        centralGravity: 0.3,
-                        springLength: 150,
-                        springConstant: 0.04,
-                        damping: 0.09
+                return {
+                    data: {
+                        id: node.id,
+                        label: node.properties.name || node.id,
+                        type: node.type,
+                        isStart,
+                        isGNode: false,
+                        rawNode: node
                     },
-                    stabilization: {
-                        iterations: 200
+                    classes: isStart ? 'start-node' : ''
+                };
+            });
+
+            const gNodes = (data.g_nodes || []).map(node => {
+                return {
+                    data: {
+                        id: node.id,
+                        label: node.properties.name || node.id,
+                        type: node.type + (node.properties?.sub_type ? `/${node.properties.sub_type}` : ''),
+                        isStart: false,
+                        isGNode: true,
+                        rawNode: node
+                    },
+                    classes: 'g-node'
+                };
+            });
+
+            // Build edges
+            const xyzEdges = data.edges.map((edge, idx) => {
+                return {
+                    data: {
+                        id: `xyz_${idx}`,
+                        source: edge.source,
+                        target: edge.target,
+                        label: edge.type,
+                        isGEdge: false
                     }
+                };
+            });
+
+            const gEdges = (data.g_edges || []).map((edge, idx) => ({
+                data: {
+                    id: `g_${idx}`,
+                    source: edge.source,
+                    target: edge.target,
+                    label: edge.type,
+                    isGEdge: true
                 },
+                classes: 'g-edge'
+            }));
+
+            const allNodes = [...xyzNodes, ...gNodes];
+            const allEdges = [...xyzEdges, ...gEdges];
+
+            // Debug: log node and edge counts
+            console.log(`Rendering ${allNodes.length} nodes and ${allEdges.length} edges`);
+            console.log('Node IDs:', allNodes.map(n => n.data.id));
+            console.log('Edges:');
+            allEdges.forEach(e => {
+                console.log(`  ${e.data.source} --${e.data.label}--> ${e.data.target}`);
+            });
+
+            // Check for specific path
+            const hasFraudDs002 = allNodes.some(n => n.data.id === 'fraud-ds-002');
+            const hasFraudJob005 = allNodes.some(n => n.data.id === 'fraud-job-005');
+            const hasFraudDs004 = allNodes.some(n => n.data.id === 'fraud-ds-004');
+            const hasDs002ToJob005Edge = allEdges.some(e =>
+                e.data.source === 'fraud-ds-002' && e.data.target === 'fraud-job-005'
+            );
+            const hasJob005ToDs004Edge = allEdges.some(e =>
+                e.data.source === 'fraud-ds-004' && e.data.target === 'fraud-job-005'
+            );
+
+            console.log('Path check:');
+            console.log(`  fraud-ds-002 present: ${hasFraudDs002}`);
+            console.log(`  fraud-job-005 present: ${hasFraudJob005}`);
+            console.log(`  fraud-ds-004 present: ${hasFraudDs004}`);
+            console.log(`  fraud-ds-002 -> fraud-job-005 edge: ${hasDs002ToJob005Edge}`);
+            console.log(`  fraud-ds-004 -> fraud-job-005 edge: ${hasJob005ToDs004Edge}`);
+
+            // Initialize Cytoscape
+            if (cy) cy.destroy();
+
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: [...allNodes, ...allEdges],
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'background-color': function(ele) {
+                                if (ele.data('isGNode')) {
+                                    return getGNodeColor(ele.data('rawNode'));
+                                }
+                                return nodeColors[ele.data('type')] || '#999';
+                            },
+                            'border-width': function(ele) {
+                                return ele.data('isStart') ? 4 : 2;
+                            },
+                            'border-color': function(ele) {
+                                if (ele.data('isGNode')) {
+                                    return '#9d74ff';
+                                }
+                                if (ele.data('isStart')) {
+                                    return '#0B6EDB';
+                                }
+                                return nodeColors[ele.data('type')] || '#999';
+                            },
+                            'border-style': function(ele) {
+                                return ele.data('isGNode') ? 'dashed' : 'solid';
+                            },
+                            'width': 60,
+                            'height': 60,
+                            'font-size': 10,
+                            'font-weight': 500,
+                            'color': '#1A1A1A',
+                            'text-wrap': 'wrap',
+                            'text-max-width': 80,
+                            'font-family': 'Open Sans, Arial, sans-serif'
+                        }
+                    },
+                    {
+                        selector: 'node.start-node',
+                        style: {
+                            'width': 70,
+                            'height': 70,
+                            'font-size': 11,
+                            'font-weight': 700
+                        }
+                    },
+                    {
+                        selector: 'node.g-node',
+                        style: {
+                            'shape': 'diamond'
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#999',
+                            'target-arrow-color': '#999',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': 8,
+                            'text-rotation': 'autorotate',
+                            'text-margin-y': -10,
+                            'color': '#666',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.85,
+                            'text-background-padding': 2
+                        }
+                    },
+                    {
+                        selector: 'edge.g-edge',
+                        style: {
+                            'line-color': '#9d74ff',
+                            'target-arrow-color': '#9d74ff',
+                            'line-style': 'dashed',
+                            'color': '#9d74ff'
+                        }
+                    }
+                ],
                 layout: {
-                    improvedLayout: true,
-                    hierarchical: false
+                    name: 'dagre',
+                    rankDir: layoutDirection,
+                    nodeSep: 60,
+                    rankSep: 100,
+                    fit: true,
+                    padding: 40,
+                    animate: false
                 },
-                interaction: {
-                    hover: true,
-                    tooltipDelay: 100,
-                    zoomView: true
-                },
-                nodes: {
-                    borderWidth: 2,
-                    shadow: true
-                },
-                edges: {
-                    width: 2,
-                    smooth: {
-                        type: 'continuous'
-                    }
+                minZoom: 0.1,
+                maxZoom: 3,
+                wheelSensitivity: 0.2
+            });
+
+            // Wait for layout to complete, then ensure graph is visible
+            cy.ready(function() {
+                console.log('Cytoscape ready. Total nodes rendered:', cy.nodes().length);
+
+                // Fit the graph with some padding after layout
+                setTimeout(() => {
+                    cy.fit(null, 80);
+                }, 100);
+            });
+
+            // Add tooltips on hover
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                const raw = data.rawNode;
+                if (raw) {
+                    node.qtip({
+                        content: `<strong>${raw.type}</strong><br>${raw.id}<br><pre>${JSON.stringify(raw.properties, null, 2)}</pre>`,
+                        position: { my: 'bottom center', at: 'top center' },
+                        style: { classes: 'qtip-light' }
+                    });
                 }
-            };
-
-            if (network) {
-                network.destroy();
-            }
-
-            network = new vis.Network(container, graphData, options);
-
-            // Update legend
-            updateLegend(data);
+            });
         }
 
         function updateStats(data) {
-            document.getElementById('stats').style.display = 'grid';
-
+            document.getElementById('bottomPanel').style.display = '';
             const nodeTypes = new Set(data.nodes.map(n => n.type));
-
             document.getElementById('statNodes').textContent = data.traversal_metadata.total_nodes_visited;
             document.getElementById('statEdges').textContent = data.traversal_metadata.total_edges_traversed;
             document.getElementById('statZHops').textContent = data.traversal_metadata.z_hops_taken;
             document.getElementById('statTypes').textContent = nodeTypes.size;
+
+            const gCount = (data.g_nodes || []).length;
+            const gCard = document.getElementById('statGCard');
+            if (gCount > 0) {
+                document.getElementById('statGNodes').textContent = gCount;
+                gCard.style.display = '';
+            } else {
+                gCard.style.display = 'none';
+            }
         }
 
         function updateLegend(data) {
+            document.getElementById('legend').style.display = 'flex';
+
             const nodeTypes = {};
             data.nodes.forEach(node => {
                 nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1;
             });
 
-            const legendItems = Object.entries(nodeTypes)
+            document.getElementById('legendItems').innerHTML = Object.entries(nodeTypes)
                 .sort((a, b) => b[1] - a[1])
                 .map(([type, count]) => `
                     <div class="legend-item">
-                        <div class="legend-color" style="background: ${nodeColors[type] || '#999'}"></div>
+                        <div class="legend-dot" style="background:${nodeColors[type] || '#999'}"></div>
                         <span>${type} (${count})</span>
-                    </div>
-                `).join('');
+                    </div>`)
+                .join('');
 
-            document.getElementById('legendItems').innerHTML = legendItems;
-            document.getElementById('legend').style.display = 'block';
+            const gSection = document.getElementById('legendGSection');
+            const gNodes = data.g_nodes || [];
+            if (gNodes.length > 0) {
+                const gTypes = {};
+                gNodes.forEach(node => {
+                    const key = node.type + (node.properties?.sub_type ? '/' + node.properties.sub_type : '');
+                    if (!gTypes[key]) gTypes[key] = { count: 0, node };
+                    gTypes[key].count++;
+                });
+
+                document.getElementById('legendGItems').innerHTML = Object.entries(gTypes)
+                    .sort((a, b) => b[1].count - a[1].count)
+                    .map(([key, { count, node }]) => `
+                        <div class="legend-item">
+                            <div class="legend-diamond" style="background:${getGNodeColor(node)}"></div>
+                            <span>${key} (${count})</span>
+                        </div>`)
+                    .join('');
+                gSection.style.display = '';
+            } else {
+                gSection.style.display = 'none';
+            }
+        }
+
+        function syncDirectionControls() {
+            document.getElementById('xDirection').disabled = !document.getElementById('axisX').checked;
+            document.getElementById('yDirection').disabled = !document.getElementById('axisY').checked;
+            document.getElementById('zDirection').disabled = !document.getElementById('axisZ').checked;
         }
 
         function clearGraph() {
-            if (network) {
-                network.destroy();
-                network = null;
-            }
-            document.getElementById('stats').style.display = 'none';
+            if (cy) { cy.destroy(); cy = null; }
+            document.getElementById('bottomPanel').style.display = 'none';
+            document.getElementById('statGCard').style.display = 'none';
             document.getElementById('legend').style.display = 'none';
+            document.getElementById('legendItems').innerHTML = '';
+            document.getElementById('legendGItems').innerHTML = '';
+            document.getElementById('legendGSection').style.display = 'none';
         }
 
         // Auto-run on load
         window.onload = () => {
+            // Register dagre layout
+            cytoscape.use(cytoscapeDagre);
+            syncDirectionControls();
             runTraversal();
         };
     </script>

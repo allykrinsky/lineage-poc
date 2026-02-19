@@ -67,7 +67,7 @@ Applies a model to a dataset to produce predictions or enriched output.
 |-----------|--------------|----------|-------------|----------|
 | Input | Dataset | `null` | Exactly 1 | **Yes** |
 | Input | Model Version | — | Exactly 1 | **Yes** |
-| Output | Dataset | `knowledge_base` | Exactly 1 | **Yes** |
+| Output | Dataset | `null` | Exactly 1 | **Yes** |
 | Association | Dataset | `resultset` | 0 or 1 | No |
 
 **Invalid examples:**

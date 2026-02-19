@@ -26,6 +26,9 @@ class TraversalState:
     y_direction_committed: Optional[str]  # 'up', 'down', or None - prevents sibling traversal
     has_gone_upstream: bool  # Whether we've taken any upstream edge in this path
     has_gone_to_parent: bool  # Whether we've gone "up" to a parent node via Y-axis
+    x_hops: int = 0  # Number of X-axis lineage hops taken in this path
+    y_hops_up: int = 0  # Number of Y-axis hops taken upward in this path
+    y_hops_down: int = 0  # Number of Y-axis hops taken downward in this path
 
 
 @dataclass
@@ -36,6 +39,10 @@ class TraversalResult:
     edges: List[Dict]
     paths: List[Dict]
     metadata: Dict
+    # G-axis (governance overlay): nodes/edges reached via 1-hop governable edges
+    # from any X/Y/Z in-scope node.  Always empty unless include_governance=True.
+    g_nodes: List[Dict] = field(default_factory=list)
+    g_edges: List[Dict] = field(default_factory=list)
 
 
 @dataclass
@@ -44,7 +51,9 @@ class OneHopResult:
     start_node: Dict
     x_axis: Dict[str, List[Dict]]  # {"upstream": [...], "downstream": [...]}
     y_axis: Dict[str, List[Dict]]  # {"up": [...], "down": [...]}
-    z_axis: List[Dict]  # List of Z-axis neighbors
+    z_axis: Dict[str, List[Dict]]  # {"outgoing": [...], "incoming": [...]}
+    # G-axis: governance neighbors (resultsets + guardrails) of the start node
+    g_axis: Dict[str, List[Dict]]  # {"outgoing": [...], "incoming": [...]}
     metadata: Dict
 
 
@@ -87,9 +96,14 @@ class TraversalEngine:
         axes: List[str] = None,
         x_direction: str = "both",
         y_direction: str = "both",
+        z_direction: str = "both",
+        max_x_hops: Optional[int] = None,
+        max_y_hops_up: Optional[int] = None,
+        max_y_hops_down: Optional[int] = None,
         max_z_hops: int = 1,
         max_depth: Optional[int] = None,
-        include_transformers: bool = True
+        include_transformers: bool = True,
+        include_governance: bool = False
     ) -> TraversalResult:
         """
         Traverse the graph starting from a node.
@@ -99,12 +113,23 @@ class TraversalEngine:
             axes: List of axes to traverse ['x', 'y', 'z'] or subset
             x_direction: 'upstream', 'downstream', or 'both'
             y_direction: 'up', 'down', or 'both'
+            z_direction: 'outgoing' (follow edges where node is source),
+                         'incoming' (follow edges where node is target), or 'both'
+            max_x_hops: Maximum number of X-axis lineage hops (None = unlimited)
+            max_y_hops_up: Maximum number of Y-axis hops upward in hierarchy (None = unlimited)
+            max_y_hops_down: Maximum number of Y-axis hops downward in hierarchy (None = unlimited)
             max_z_hops: Maximum Z-axis hops per path (default 1)
             max_depth: Optional global depth limit
             include_transformers: Whether to include transformer nodes in results
+            include_governance: When True, apply the G-axis governance overlay as a
+                                post-processing step.  For every node in the X/Y/Z
+                                result, exactly 1-hop governable edges are followed
+                                and their endpoints (Dataset:resultset, Guardrail)
+                                are added to g_nodes/g_edges.  Never changes X/Y/Z.
 
         Returns:
-            TraversalResult with nodes, edges, and path information
+            TraversalResult with nodes, edges, and path information.
+            If include_governance=True, g_nodes and g_edges are populated.
         """
         if axes is None:
             axes = ['x', 'y', 'z']
@@ -133,15 +158,18 @@ class TraversalEngine:
                 path_edges=[],
                 y_direction_committed=None,  # No Y-direction committed yet at base node
                 has_gone_upstream=False,  # Start node hasn't gone upstream
-                has_gone_to_parent=False  # Start node hasn't gone to parent
+                has_gone_to_parent=False,  # Start node hasn't gone to parent
+                x_hops=0,
+                y_hops_up=0,
+                y_hops_down=0
             )])
 
             visited_nodes[start_node['id']] = start_node
 
             # Track visited states to avoid infinite loops
-            # Key: (node_id, z_hops_taken, last_axis, y_direction_committed, has_gone_upstream, has_gone_to_parent)
+            # Key: (node_id, x_hops, z_hops_taken, y_hops_up, y_hops_down, last_axis, y_direction_committed, has_gone_upstream, has_gone_to_parent)
             visited_states = set()
-            visited_states.add((start_node['id'], 0, None, None, False, False))
+            visited_states.add((start_node['id'], 0, 0, 0, 0, None, None, False, False))
 
             # BFS traversal
             while queue:
@@ -160,6 +188,7 @@ class TraversalEngine:
                     axes,
                     x_direction,
                     y_direction,
+                    z_direction,
                     current_state.z_hops_taken,
                     max_z_hops,
                     current_state.y_direction_committed,
@@ -179,6 +208,30 @@ class TraversalEngine:
                     new_z_hops = current_state.z_hops_taken
                     if edge_axis == Axis.Z:
                         new_z_hops += 1
+
+                    # Calculate new X-hop count (lineage hops)
+                    new_x_hops = current_state.x_hops
+                    if edge_axis == Axis.X:
+                        new_x_hops += 1
+                        # Check if we've exceeded the max X-hops limit
+                        if max_x_hops is not None and new_x_hops > max_x_hops:
+                            continue
+
+                    # Calculate new Y-hop counts (up and down)
+                    new_y_hops_up = current_state.y_hops_up
+                    new_y_hops_down = current_state.y_hops_down
+                    if edge_axis == Axis.Y:
+                        y_dir = neighbor_info.get('y_direction')
+                        if y_dir == 'up':
+                            new_y_hops_up += 1
+                            # Check if we've exceeded the max Y-hops up limit
+                            if max_y_hops_up is not None and new_y_hops_up > max_y_hops_up:
+                                continue
+                        elif y_dir == 'down':
+                            new_y_hops_down += 1
+                            # Check if we've exceeded the max Y-hops down limit
+                            if max_y_hops_down is not None and new_y_hops_down > max_y_hops_down:
+                                continue
 
                     # Determine Y-direction commitment
                     # Once we take a Y-axis step from base node, we commit to that direction
@@ -202,22 +255,22 @@ class TraversalEngine:
                     if edge_axis == Axis.Y and neighbor_info.get('y_direction') == 'up':
                         new_has_gone_to_parent = True
 
-                    # Create state key to avoid revisiting same state
-                    state_key = (neighbor_id, new_z_hops, edge_axis, new_y_direction_committed, new_has_gone_upstream, new_has_gone_to_parent)
-
-                    # Skip if we've already visited this state
-                    if state_key in visited_states:
-                        continue
-
-                    visited_states.add(state_key)
-
-                    # Track node and edge
+                    # Track node and edge BEFORE state check to ensure all edges are collected
                     if neighbor_id not in visited_nodes:
                         visited_nodes[neighbor_id] = neighbor_node
 
                     edge_id = edge.get('id', f"{edge['source']}-{edge['type']}-{edge['target']}")
                     if edge_id not in visited_edges:
                         visited_edges[edge_id] = edge
+
+                    # Create state key to avoid revisiting same state
+                    state_key = (neighbor_id, new_x_hops, new_z_hops, new_y_hops_up, new_y_hops_down, edge_axis, new_y_direction_committed, new_has_gone_upstream, new_has_gone_to_parent)
+
+                    # Skip if we've already visited this state (but edge is already collected above)
+                    if state_key in visited_states:
+                        continue
+
+                    visited_states.add(state_key)
 
                     # Create new path state
                     new_path = current_state.path + [neighbor_id]
@@ -238,7 +291,10 @@ class TraversalEngine:
                         path_edges=new_path_edges,
                         y_direction_committed=new_y_direction_committed,
                         has_gone_upstream=new_has_gone_upstream,
-                        has_gone_to_parent=new_has_gone_to_parent
+                        has_gone_to_parent=new_has_gone_to_parent,
+                        x_hops=new_x_hops,
+                        y_hops_up=new_y_hops_up,
+                        y_hops_down=new_y_hops_down
                     )
 
                     queue.append(new_state)
@@ -252,7 +308,7 @@ class TraversalEngine:
                     })
 
             # Build result
-            return TraversalResult(
+            result = TraversalResult(
                 start_node=start_node,
                 nodes=list(visited_nodes.values()),
                 edges=list(visited_edges.values()),
@@ -265,10 +321,18 @@ class TraversalEngine:
                 }
             )
 
+            # G-axis post-processing overlay (never changes X/Y/Z scope)
+            if include_governance:
+                result = self._apply_governance_layer(session, result)
+
+            return result
+
     def one_hop(
         self,
         start_node_id: str,
-        axes: List[str] = None
+        axes: List[str] = None,
+        z_direction: str = "both",
+        include_governance: bool = True
     ) -> OneHopResult:
         """
         Get immediate neighbors (1-hop) from a node, grouped by axis and direction.
@@ -279,9 +343,15 @@ class TraversalEngine:
         Args:
             start_node_id: ID of the starting node
             axes: List of axes to include ['x', 'y', 'z'] or subset (default: all)
+            z_direction: 'outgoing' (edges where node is source),
+                         'incoming' (edges where node is target), or 'both'
+            include_governance: When True (default), include G-axis governance
+                                neighbors (Dataset:resultset and Guardrail nodes
+                                reachable via 1-hop governable edges).
 
         Returns:
-            OneHopResult with neighbors grouped by axis and direction
+            OneHopResult with neighbors grouped by axis and direction.
+            g_axis always populated (outgoing/incoming governance edges).
         """
         if axes is None:
             axes = ['x', 'y', 'z']
@@ -299,7 +369,10 @@ class TraversalEngine:
             x_downstream = []
             y_up = []
             y_down = []
-            z_neighbors = []
+            z_outgoing = []  # Z-edges where start_node is the source
+            z_incoming = []  # Z-edges where start_node is the target
+            g_outgoing = []  # G-edges where start_node is the source (governable → governance)
+            g_incoming = []  # G-edges where start_node is the target (governance → governed)
 
             # Get all neighbors respecting axis constraints
             # Z-hops = 0 since we're at the base node, so Z-axis is available
@@ -314,6 +387,7 @@ class TraversalEngine:
                 axes,
                 x_direction="both",
                 y_direction="both",
+                z_direction=z_direction,
                 current_z_hops=0,  # At base node, Z is available
                 max_z_hops=1,
                 y_direction_committed=None,  # At base node, no Y-direction committed yet
@@ -371,7 +445,28 @@ class TraversalEngine:
                         y_down.append(neighbor_entry)
 
                 elif edge_axis == Axis.Z:
-                    z_neighbors.append(neighbor_entry)
+                    # Bucket by whether start_node is the source (outgoing) or target (incoming)
+                    is_outgoing = edge['source'] == start_node['id']
+                    if is_outgoing:
+                        z_outgoing.append(neighbor_entry)
+                    else:
+                        z_incoming.append(neighbor_entry)
+
+            # G-axis governance overlay (1-hop, post-processing, never chained)
+            if include_governance:
+                g_neighbors = self._get_governance_neighbors(session, [start_node['id']])
+                for g_info in g_neighbors:
+                    g_entry = {
+                        'node': g_info['node'],
+                        'edge': g_info['edge'],
+                        'edge_type': g_info['edge']['type'],
+                        'axis': 'g',
+                        'source_node_id': g_info['source_node_id']
+                    }
+                    if g_info['edge']['source'] == start_node['id']:
+                        g_outgoing.append(g_entry)
+                    else:
+                        g_incoming.append(g_entry)
 
             return OneHopResult(
                 start_node=start_node,
@@ -383,13 +478,25 @@ class TraversalEngine:
                     "up": y_up,
                     "down": y_down
                 },
-                z_axis=z_neighbors,
+                z_axis={
+                    "outgoing": z_outgoing,
+                    "incoming": z_incoming
+                },
+                g_axis={
+                    "outgoing": g_outgoing,
+                    "incoming": g_incoming
+                },
                 metadata={
                     'total_x_upstream': len(x_upstream),
                     'total_x_downstream': len(x_downstream),
                     'total_y_up': len(y_up),
                     'total_y_down': len(y_down),
-                    'total_z': len(z_neighbors)
+                    'total_z_outgoing': len(z_outgoing),
+                    'total_z_incoming': len(z_incoming),
+                    'total_z': len(z_outgoing) + len(z_incoming),
+                    'total_g_outgoing': len(g_outgoing),
+                    'total_g_incoming': len(g_incoming),
+                    'total_g': len(g_outgoing) + len(g_incoming)
                 }
             )
 
@@ -409,6 +516,143 @@ class TraversalEngine:
         node = dict(record['n'])
         node['type'] = self._normalize_node_type(record['label'])
         return node
+
+    def _get_governance_neighbors(
+        self,
+        session,
+        node_ids: List[str]
+    ) -> List[Dict]:
+        """
+        For a set of in-scope node IDs, return all G-axis (governance) neighbors
+        reachable in exactly 1 hop via governable edges.
+
+        Only edges classified as G-axis in the taxonomy are followed.  The result
+        is a flat list of dicts:
+            {
+                'source_node_id': str,   # which in-scope node the G edge came from
+                'node': Dict,            # the governance endpoint node
+                'edge': Dict,            # the G-axis edge
+                'classification': ...    # EdgeClassification (axis=G)
+            }
+
+        G-of-G is never followed here — this method is called exactly once as a
+        post-processing step and does not recurse.
+        """
+        if not node_ids:
+            return []
+
+        g_edge_names = self.taxonomy.get_g_edge_names()
+        if not g_edge_names:
+            return []
+
+        # Build a filter string for Cypher
+        edge_type_list = "|".join(g_edge_names)
+
+        result = session.run(
+            f"""
+            MATCH (n)-[r:{edge_type_list}]-(m)
+            WHERE n.id IN $node_ids
+            RETURN n, r, m,
+                   labels(n)[0] as n_label,
+                   labels(m)[0] as m_label,
+                   type(r) as edge_type,
+                   startNode(r) = n as is_outgoing
+            """,
+            node_ids=node_ids
+        )
+
+        neighbors = []
+        for record in result:
+            n_label = record['n_label']
+            m_label = record['m_label']
+            edge_type = record['edge_type']
+            is_outgoing = record['is_outgoing']
+
+            source_node = dict(record['n'] if is_outgoing else record['m'])
+            target_node = dict(record['m'] if is_outgoing else record['n'])
+
+            source_type = self._normalize_node_type(n_label if is_outgoing else m_label)
+            target_type = self._normalize_node_type(m_label if is_outgoing else n_label)
+
+            source_node['type'] = source_type
+            target_node['type'] = target_type
+
+            classification = self.taxonomy.classify_edge(
+                edge_type,
+                source_type,
+                target_type,
+                source_node.get('sub_type'),
+                target_node.get('sub_type')
+            )
+
+            # Only include edges that are actually G-axis
+            if classification is None or classification.axis != Axis.G:
+                continue
+
+            # The governance node is always the *other* end from n (the in-scope node)
+            gov_node = dict(record['m'])
+            gov_node['type'] = self._normalize_node_type(record['m_label'])
+
+            in_scope_node_id = dict(record['n'])['id']
+
+            edge_dict = {
+                'source': source_node.get('id', ''),
+                'target': target_node.get('id', ''),
+                'type': edge_type,
+                'axis': 'g',
+                'properties': {}
+            }
+
+            neighbors.append({
+                'source_node_id': in_scope_node_id,
+                'node': gov_node,
+                'edge': edge_dict,
+                'classification': classification
+            })
+
+        return neighbors
+
+    def _apply_governance_layer(
+        self,
+        session,
+        result: TraversalResult
+    ) -> TraversalResult:
+        """
+        Post-processing G-axis overlay.
+
+        For every node already in the X/Y/Z TraversalResult, follow exactly
+        1-hop governable edges to reach Dataset:resultset or Guardrail nodes.
+        Those nodes are added to result.g_nodes and result.g_edges.
+
+        Critically:
+        - G-axis nodes are NOT added to result.nodes (they're separate)
+        - G-axis nodes are NOT used as seeds for further G-axis traversal
+        - X/Y/Z scope is completely unchanged
+        """
+        in_scope_ids = [n['id'] for n in result.nodes]
+        g_neighbors = self._get_governance_neighbors(session, in_scope_ids)
+
+        seen_g_nodes: Dict[str, Dict] = {}
+        seen_g_edges: Dict[str, Dict] = {}
+
+        for g_info in g_neighbors:
+            gov_node = g_info['node']
+            gov_edge = g_info['edge']
+
+            node_id = gov_node.get('id', '')
+            if node_id and node_id not in seen_g_nodes:
+                seen_g_nodes[node_id] = gov_node
+
+            edge_id = f"{gov_edge['source']}-{gov_edge['type']}-{gov_edge['target']}"
+            if edge_id not in seen_g_edges:
+                seen_g_edges[edge_id] = gov_edge
+
+        result.g_nodes = list(seen_g_nodes.values())
+        result.g_edges = list(seen_g_edges.values())
+        result.metadata['total_g_nodes'] = len(result.g_nodes)
+        result.metadata['total_g_edges'] = len(result.g_edges)
+
+        return result
 
     def _normalize_node_type(self, label: str) -> str:
         """Normalize Neo4j label to taxonomy node type (lowercase)"""
@@ -430,7 +674,8 @@ class TraversalEngine:
             'mcptool': 'mcp_tool',
             'workspaceservice': 'workspace_service',
             'usecase': 'use_case',
-            'dataconcept': 'data_concept'
+            'dataconcept': 'data_concept',
+            'guardrail': 'guardrail'
         }
 
         return mappings.get(label_lower, label_lower)
@@ -444,6 +689,7 @@ class TraversalEngine:
         axes: List[Axis],
         x_direction: str,
         y_direction: str,
+        z_direction: str,
         current_z_hops: int,
         max_z_hops: int,
         y_direction_committed: Optional[str] = None,
@@ -526,7 +772,8 @@ class TraversalEngine:
                 classification,
                 is_outgoing,
                 x_direction,
-                y_direction
+                y_direction,
+                z_direction
             )
 
             if not should_traverse:
@@ -599,7 +846,8 @@ class TraversalEngine:
         classification,
         is_outgoing: bool,
         x_direction: str,
-        y_direction: str
+        y_direction: str,
+        z_direction: str = "both"
     ) -> bool:
         """
         Determine if an edge should be traversed based on direction constraints.
@@ -609,6 +857,7 @@ class TraversalEngine:
             is_outgoing: Whether we're traversing in the stored edge direction
             x_direction: 'upstream', 'downstream', or 'both'
             y_direction: 'up', 'down', or 'both'
+            z_direction: 'outgoing' (node is source), 'incoming' (node is target), or 'both'
 
         Returns:
             True if edge should be traversed
@@ -653,7 +902,15 @@ class TraversalEngine:
                 return y_direction == actual_dir
 
         elif classification.axis == Axis.Z:
-            # Z-axis: always traverse (constraint is on hop count)
-            return True
+            # Z-axis: filter by edge direction relative to the current node.
+            # 'outgoing' = current node is source (we follow the stored edge forward)
+            # 'incoming' = current node is target (we follow the stored edge backward)
+            # 'both'     = traverse in either direction (original behavior)
+            if z_direction == "both":
+                return True
+            elif z_direction == "outgoing":
+                return is_outgoing
+            elif z_direction == "incoming":
+                return not is_outgoing
 
         return False

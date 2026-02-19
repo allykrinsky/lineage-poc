@@ -3226,6 +3226,63 @@ assets:
   - id: hr-uc-001
     name: human_resources
     description: Human Resources use case
+  Guardrail:
+  - id: gr-001
+    name: fraud_detection_safety_guardrail
+    sub_type: safety
+    description: Safety guardrail enforcing model output thresholds and alert suppression rules for fraud detection
+  - id: gr-002
+    name: customer_analytics_privacy_guardrail
+    sub_type: privacy
+    description: Privacy guardrail enforcing PII redaction and consent-based data access for customer analytics
+  - id: gr-003
+    name: marketing_optimization_compliance_guardrail
+    sub_type: compliance
+    description: Compliance guardrail ensuring marketing campaigns meet opt-out and consent regulations
+  - id: gr-004
+    name: credit_risk_quality_guardrail
+    sub_type: quality
+    description: Data quality guardrail enforcing completeness and freshness SLAs for credit risk inputs
+  - id: gr-005
+    name: regulatory_compliance_guardrail
+    sub_type: compliance
+    description: Compliance guardrail enforcing audit trail completeness and regulatory reporting requirements
+  - id: gr-006
+    name: product_recommendations_privacy_guardrail
+    sub_type: privacy
+    description: Privacy guardrail limiting personalization to consented attributes for product recommendations
+  - id: gr-007
+    name: payment_processing_security_guardrail
+    sub_type: security
+    description: Security guardrail enforcing encryption standards and PCI-DSS controls for payment processing
+  - id: gr-008
+    name: inventory_management_quality_guardrail
+    sub_type: quality
+    description: Data quality guardrail enforcing stock-level accuracy and reconciliation rules for inventory
+  - id: gr-009
+    name: shipping_logistics_compliance_guardrail
+    sub_type: compliance
+    description: Compliance guardrail enforcing carrier regulation adherence and customs data standards for shipping
+  - id: gr-010
+    name: customer_support_privacy_guardrail
+    sub_type: privacy
+    description: Privacy guardrail restricting agent access to sensitive customer data in support workflows
+  - id: gr-011
+    name: sales_analytics_quality_guardrail
+    sub_type: quality
+    description: Data quality guardrail enforcing attribution accuracy and pipeline completeness for sales analytics
+  - id: gr-012
+    name: operations_compliance_guardrail
+    sub_type: compliance
+    description: Compliance guardrail ensuring operational SLA metrics meet contractual reporting obligations
+  - id: gr-013
+    name: finance_compliance_guardrail
+    sub_type: compliance
+    description: Compliance guardrail enforcing SOX controls and financial data integrity standards
+  - id: gr-014
+    name: hr_privacy_guardrail
+    sub_type: privacy
+    description: Privacy guardrail enforcing GDPR and employment law data retention limits for HR data
   Glossary:
   - id: gloss-001
     name: enterprise_glossary
@@ -4374,9 +4431,9 @@ relationships:
 - type: USES
   from: fraud-agv-001
   to: embed-mv-002
-- type: USES
-  from: fraud-agv-002
-  to: fraud-ds-002
+# - type: USES
+#   from: fraud-agv-002
+#   to: fraud-ds-002
 - type: USES
   from: fraud-agv-002
   to: fraud-mcpt-002
@@ -4550,19 +4607,19 @@ relationships:
   to: fraud-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: df-001
-  to: fraud-app-001
+  to: risk-app-001
 - type: DATA_FLOW_PRODUCED_BY
   from: df-002
   to: cust-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: df-002
-  to: cust-app-001
+  to: mkt-app-001
 - type: DATA_FLOW_PRODUCED_BY
   from: df-003
   to: mkt-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: df-003
-  to: mkt-app-001
+  to: rec-app-001
 - type: PRODUCED_BY
   from: payment-app-001
   to: payment-mcp-001
@@ -4595,7 +4652,7 @@ relationships:
   to: payment-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: payment-df-001
-  to: payment-app-001
+  to: fraud-app-001
 - type: IS_ATTRIBUTE_FOR
   from: payment-attr-001
   to: payment-ds-001
@@ -4817,7 +4874,7 @@ relationships:
   to: inventory-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: inventory-df-001
-  to: inventory-app-001
+  to: shipping-app-001
 - type: IS_ATTRIBUTE_FOR
   from: inventory-attr-001
   to: inventory-ds-001
@@ -5039,7 +5096,7 @@ relationships:
   to: shipping-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: shipping-df-001
-  to: shipping-app-001
+  to: support-app-001
 - type: IS_ATTRIBUTE_FOR
   from: shipping-attr-001
   to: shipping-ds-001
@@ -5261,7 +5318,7 @@ relationships:
   to: support-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: support-df-001
-  to: support-app-001
+  to: sales-app-001
 - type: IS_ATTRIBUTE_FOR
   from: support-attr-001
   to: support-ds-001
@@ -5483,7 +5540,7 @@ relationships:
   to: sales-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: sales-df-001
-  to: sales-app-001
+  to: finance-app-001
 - type: IS_ATTRIBUTE_FOR
   from: sales-attr-001
   to: sales-ds-001
@@ -5705,7 +5762,7 @@ relationships:
   to: operations-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: operations-df-001
-  to: operations-app-001
+  to: finance-app-001
 - type: IS_ATTRIBUTE_FOR
   from: operations-attr-001
   to: operations-ds-001
@@ -5927,7 +5984,7 @@ relationships:
   to: finance-app-001
 - type: DATAFLOW_CONSUMED_BY
   from: finance-df-001
-  to: finance-app-001
+  to: reg-app-001
 - type: IS_ATTRIBUTE_FOR
   from: finance-attr-001
   to: finance-ds-001
@@ -6333,6 +6390,49 @@ relationships:
 - type: ELEMENT_OF
   from: hr-rpt-attr-001
   to: hr-rpt-001
+# G-axis: Guardrail → UseCase (governance controls)
+- type: GUARDRAIL_USE_CASE
+  from: gr-001
+  to: uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-002
+  to: uc-002
+- type: GUARDRAIL_USE_CASE
+  from: gr-003
+  to: uc-003
+- type: GUARDRAIL_USE_CASE
+  from: gr-004
+  to: uc-004
+- type: GUARDRAIL_USE_CASE
+  from: gr-005
+  to: uc-005
+- type: GUARDRAIL_USE_CASE
+  from: gr-006
+  to: uc-006
+- type: GUARDRAIL_USE_CASE
+  from: gr-007
+  to: payment-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-008
+  to: inventory-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-009
+  to: shipping-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-010
+  to: support-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-011
+  to: sales-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-012
+  to: operations-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-013
+  to: finance-uc-001
+- type: GUARDRAIL_USE_CASE
+  from: gr-014
+  to: hr-uc-001
 - type: ELEMENT_OF
   from: hr-rpt-attr-002
   to: hr-rpt-001

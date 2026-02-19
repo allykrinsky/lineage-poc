@@ -1,8 +1,10 @@
 """
 Edge Taxonomy Configuration Loader
 
-Loads and parses edge_taxonomy.yaml to classify edges by axis (X/Y/Z)
+Loads and parses edge_taxonomy.yaml to classify edges by axis (X/Y/Z/G)
 and provide traversal rules for the query engine.
+
+G-axis (Governance) is a post-processing overlay — never part of BFS traversal.
 """
 
 import yaml
@@ -17,6 +19,7 @@ class Axis(str, Enum):
     X = "x"  # Lineage / Derivation
     Y = "y"  # Hierarchy / Containment
     Z = "z"  # Association / Cross-cutting
+    G = "g"  # Governance / Controls (post-processing overlay, always 1 hop)
 
 
 class SemanticDirection(str, Enum):
@@ -98,6 +101,7 @@ class EdgeTaxonomy:
         self.x_edges: Dict[Tuple, EdgeClassification] = {}
         self.y_edges: Dict[Tuple, EdgeClassification] = {}
         self.z_edges: Dict[Tuple, EdgeClassification] = {}
+        self.g_edges: Dict[Tuple, EdgeClassification] = {}
         self._parse_edges()
 
         # Parse hop groups
@@ -210,6 +214,31 @@ class EdgeTaxonomy:
                 description=edge_def.get('description', '')
             )
 
+        # G-axis (governance overlay — 1-hop post-processing only)
+        for edge_def in self.config.get('g_governance', []):
+            key = self._edge_key(
+                edge_def['edge_name'],
+                edge_def['source'],
+                edge_def['destination'],
+                self._normalize_sub_type(edge_def.get('source_sub_type')),
+                self._normalize_sub_type(edge_def.get('destination_sub_type'))
+            )
+            self.g_edges[key] = EdgeClassification(
+                edge_name=edge_def['edge_name'],
+                source_type=edge_def['source'],
+                destination_type=edge_def['destination'],
+                source_sub_type=self._normalize_sub_type(edge_def.get('source_sub_type')),
+                destination_sub_type=self._normalize_sub_type(edge_def.get('destination_sub_type')),
+                axis=Axis.G,
+                semantic_direction=None,
+                semantic_up=None,
+                hop_group=None,
+                hop_role=None,
+                passthrough=False,
+                reverse=False,
+                description=edge_def.get('description', '')
+            )
+
     def _edge_key(
         self,
         edge_name: str,
@@ -273,21 +302,21 @@ class EdgeTaxonomy:
 
         key = self._edge_key(edge_type, source_node_type, dest_node_type, source_sub_list, dest_sub_list)
 
-        # Try all three axes
-        for edge_dict in [self.x_edges, self.y_edges, self.z_edges]:
+        # Try all four axes
+        for edge_dict in [self.x_edges, self.y_edges, self.z_edges, self.g_edges]:
             if key in edge_dict:
                 return edge_dict[key]
 
         # Try without sub_types if not found
         key_no_sub = self._edge_key(edge_type, source_node_type, dest_node_type, None, None)
-        for edge_dict in [self.x_edges, self.y_edges, self.z_edges]:
+        for edge_dict in [self.x_edges, self.y_edges, self.z_edges, self.g_edges]:
             if key_no_sub in edge_dict:
                 return edge_dict[key_no_sub]
 
         # Try matching with sub_type flexibility
         # Check if the provided sub_type is within the allowed list of sub_types
         if source_sub_type or dest_sub_type:
-            for edge_dict in [self.x_edges, self.y_edges, self.z_edges]:
+            for edge_dict in [self.x_edges, self.y_edges, self.z_edges, self.g_edges]:
                 for stored_key, classification in edge_dict.items():
                     stored_edge, stored_src, stored_dst, stored_src_sub, stored_dst_sub = stored_key
                     if (stored_edge == edge_type.upper() and
@@ -331,3 +360,14 @@ class EdgeTaxonomy:
         """Get the role of a node type (resource, transformer, etc.)"""
         node_info = self.node_types.get(node_type)
         return node_info.role if node_info else 'resource'
+
+    def get_g_edge_names(self) -> Set[str]:
+        """
+        Return the set of Neo4j relationship type names (uppercase) that belong
+        to the G-axis governance overlay.  Used to build targeted Cypher queries.
+        """
+        return {key[0] for key in self.g_edges}
+
+    def is_g_edge(self, edge_type: str) -> bool:
+        """Return True if an edge type (uppercase) belongs to the G-axis."""
+        return edge_type.upper() in self.get_g_edge_names()
