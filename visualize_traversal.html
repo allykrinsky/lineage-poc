@@ -2,11 +2,18 @@
 <html lang="en">
 <head>
     <title>Lineage Traversal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/@salt-ds/theme@latest/index.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+
+    <!-- Cytoscape.js -->
+    <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+    <!-- Dagre layout for hierarchical graphs -->
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+
     <style>
-        /* Salt design token overrides + page layout */
         :root {
             --salt-blue-500: #0B6EDB;
             --salt-blue-700: #1352AE;
@@ -42,7 +49,6 @@
             overflow: hidden;
         }
 
-        /* ── App header ── */
         .app-header {
             background: var(--salt-blue-700);
             color: #fff;
@@ -71,7 +77,6 @@
             opacity: 0.75;
         }
 
-        /* ── Controls toolbar ── */
         .toolbar {
             background: #fff;
             border-bottom: 1px solid var(--salt-border);
@@ -103,7 +108,6 @@
             margin-right: var(--salt-space-1);
         }
 
-        /* Salt-style text input */
         .salt-input {
             height: 28px;
             padding: 0 var(--salt-space-2);
@@ -123,7 +127,6 @@
         .salt-input[type="number"] { width: 64px; }
         .salt-input[type="text"]   { width: 120px; }
 
-        /* Salt-style select */
         .salt-select {
             height: 28px;
             padding: 0 var(--salt-space-2);
@@ -140,7 +143,6 @@
         .salt-select:focus { border-color: var(--salt-blue-500); }
         .salt-select:disabled { opacity: 0.45; cursor: default; }
 
-        /* Salt-style checkbox */
         .salt-checkbox-wrap {
             display: flex;
             align-items: center;
@@ -156,7 +158,6 @@
             cursor: pointer;
         }
 
-        /* G-axis checkbox badge */
         .g-checkbox-wrap {
             display: flex;
             align-items: center;
@@ -175,7 +176,6 @@
         }
         .g-checkbox-wrap span { color: var(--salt-g-color); font-weight: 500; }
 
-        /* Salt-style buttons */
         .salt-btn {
             height: 28px;
             padding: 0 var(--salt-space-4);
@@ -200,7 +200,6 @@
         }
         .salt-btn-secondary:hover { background: var(--salt-gray-10); }
 
-        /* ── Main area (graph + legend sidebar) ── */
         .main {
             flex: 1;
             overflow: hidden;
@@ -209,13 +208,13 @@
             background: #fff;
             border-bottom: 1px solid var(--salt-border);
         }
-        #network {
+        #cy {
             flex: 1;
             height: 100%;
             min-width: 0;
+            background: #fafafa;
         }
 
-        /* Legend sidebar */
         .legend-sidebar {
             width: 176px;
             flex-shrink: 0;
@@ -223,7 +222,7 @@
             background: var(--salt-gray-10);
             padding: var(--salt-space-3) var(--salt-space-3);
             overflow-y: auto;
-            display: flex;
+            display: none;
             flex-direction: column;
             gap: var(--salt-space-3);
         }
@@ -264,11 +263,11 @@
             border: 1.5px solid var(--salt-g-color);
         }
 
-        /* ── Bottom panel (stats only) ── */
         .bottom-panel {
             background: #fff;
             border-top: 1px solid var(--salt-border);
             flex-shrink: 0;
+            display: none;
         }
         .stats-row {
             display: flex;
@@ -301,24 +300,18 @@
     </style>
 </head>
 <body>
-
-    <!-- App Header -->
     <header class="app-header">
         <h1 class="app-header-title">Lineage Traversal</h1>
         <div class="app-header-divider"></div>
         <span class="app-header-sub">Multi-axis graph explorer</span>
     </header>
 
-    <!-- Controls Toolbar -->
     <div class="toolbar">
-
-        <!-- Start Node -->
         <div class="toolbar-group">
             <span class="toolbar-label">Start node</span>
             <input class="salt-input" type="text" id="startNode" value="ds-002" placeholder="e.g. ds-002">
         </div>
 
-        <!-- Axes -->
         <div class="toolbar-group">
             <span class="toolbar-label">Axes</span>
             <label class="salt-checkbox-wrap">
@@ -339,7 +332,6 @@
             </label>
         </div>
 
-        <!-- Directions -->
         <div class="toolbar-group">
             <span class="toolbar-label">Direction</span>
             <select class="salt-select" id="xDirection">
@@ -359,25 +351,37 @@
             </select>
         </div>
 
-        <!-- Params -->
+        <div class="toolbar-group">
+            <span class="toolbar-label">Layout</span>
+            <select class="salt-select" id="layoutDirection">
+                <option value="TB">Vertical</option>
+                <option value="LR">Horizontal</option>
+            </select>
+        </div>
+
+        <div class="toolbar-group">
+            <span class="toolbar-label">Y Up</span>
+            <input class="salt-input" type="number" id="maxYUp" value="10" min="0" max="20">
+            <span class="toolbar-label" style="margin-left:8px;">Y Down</span>
+            <input class="salt-input" type="number" id="maxYDown" value="10" min="0" max="20">
+        </div>
+
         <div class="toolbar-group">
             <span class="toolbar-label">Z-Hops</span>
-            <input class="salt-input" type="number" id="maxZHops" value="1" min="1" max="3">
+            <input class="salt-input" type="number" id="maxZHops" value="1" min="0" max="3">
             <span class="toolbar-label" style="margin-left:8px;">Depth</span>
             <input class="salt-input" type="number" id="maxDepth" value="10" min="1" max="20">
         </div>
 
-        <!-- Actions -->
         <div class="toolbar-group" style="margin-left: auto; border-left: 1px solid var(--salt-border); padding-left: 16px;">
             <button class="salt-btn salt-btn-primary" onclick="runTraversal()">Run Traversal</button>
             <button class="salt-btn salt-btn-secondary" onclick="clearGraph()">Clear</button>
         </div>
     </div>
 
-    <!-- Graph + Legend sidebar -->
     <div class="main">
-        <div id="network"></div>
-        <div class="legend-sidebar" id="legend" style="display: none;">
+        <div id="cy"></div>
+        <div class="legend-sidebar" id="legend">
             <div>
                 <div class="legend-title">Node types</div>
                 <div class="legend-items" id="legendItems"></div>
@@ -389,8 +393,7 @@
         </div>
     </div>
 
-    <!-- Bottom panel: stats only -->
-    <div class="bottom-panel" id="bottomPanel" style="display: none;">
+    <div class="bottom-panel" id="bottomPanel">
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-label">Nodes</div>
@@ -416,49 +419,49 @@
     </div>
 
     <script>
-        let network = null;
+        let cy = null;
 
         const nodeColors = {
-            'dataset':                '#4CAF50',
-            'job':                    '#FF9800',
-            'etl_job':                '#FF9800',
-            'model':                  '#2196F3',
-            'model_version':          '#03A9F4',
-            'agent_version':          '#9C27B0',
-            'agentic_system':         '#673AB7',
+            'dataset': '#4CAF50',
+            'job': '#FF9800',
+            'etl_job': '#FF9800',
+            'model': '#2196F3',
+            'model_version': '#03A9F4',
+            'agent_version': '#9C27B0',
+            'agentic_system': '#673AB7',
             'agentic_system_version': '#7E57C2',
-            'workspace':              '#FFC107',
-            'workspace_service':      '#FFB300',
-            'use_case':               '#E91E63',
-            'attribute':              '#8BC34A',
-            'data_dependency':        '#FF5722',
-            'mcp_server':             '#00BCD4',
-            'mcp_tool':               '#00ACC1',
-            'mcp_resource':           '#0097A7',
-            'application':            '#795548',
-            'glossary':               '#607D8B',
-            'data_concept':           '#9E9E9E',
-            'report':                 '#26A69A',
-            'data_flow':              '#42A5F5',
-            'process':                '#AB47BC'
+            'workspace': '#FFC107',
+            'workspace_service': '#FFB300',
+            'use_case': '#E91E63',
+            'attribute': '#8BC34A',
+            'data_dependency': '#FF5722',
+            'mcp_server': '#00BCD4',
+            'mcp_tool': '#00ACC1',
+            'mcp_resource': '#0097A7',
+            'application': '#795548',
+            'glossary': '#607D8B',
+            'data_concept': '#9E9E9E',
+            'report': '#26A69A',
+            'data_flow': '#42A5F5',
+            'process': '#AB47BC'
         };
 
         const gNodeColors = {
-            'guardrail':             '#6929C4',
-            'guardrail_safety':      '#E53935',
-            'guardrail_security':    '#F57C00',
-            'guardrail_quality':     '#388E3C',
-            'guardrail_compliance':  '#1565C0',
-            'guardrail_privacy':     '#AD1457',
-            'dataset_resultset':     '#FFD600'
+            'guardrail': '#6929C4',
+            'guardrail_safety': '#E53935',
+            'guardrail_security': '#F57C00',
+            'guardrail_quality': '#388E3C',
+            'guardrail_compliance': '#1565C0',
+            'guardrail_privacy': '#AD1457',
+            'dataset_resultset': '#FFD600'
         };
 
         function getGNodeColor(node) {
             if (node.type === 'guardrail') {
-                const sub = node.properties && node.properties.sub_type;
+                const sub = node.properties?.sub_type;
                 return gNodeColors['guardrail_' + sub] || gNodeColors['guardrail'];
             }
-            if (node.type === 'dataset' && node.properties && node.properties.sub_type === 'resultset') {
+            if (node.type === 'dataset' && node.properties?.sub_type === 'resultset') {
                 return gNodeColors['dataset_resultset'];
             }
             return '#9d74ff';
@@ -482,12 +485,21 @@
             const xDirection = document.getElementById('xDirection').value;
             const yDirection = document.getElementById('yDirection').value;
             const zDirection = document.getElementById('zDirection').value;
+            const maxYUp = parseInt(document.getElementById('maxYUp').value);
+            const maxYDown = parseInt(document.getElementById('maxYDown').value);
             const maxZHops = parseInt(document.getElementById('maxZHops').value);
             const maxDepth = parseInt(document.getElementById('maxDepth').value);
             const governance = includeGovernance();
 
-            if (!startNode) { alert('Please enter a start node ID'); return; }
-            if (axes.length === 0) { alert('Please select at least one axis'); return; }
+            if (!startNode) {
+                alert('Please enter a start node ID');
+                return;
+            }
+
+            if (axes.length === 0) {
+                alert('Please select at least one axis');
+                return;
+            }
 
             try {
                 const response = await fetch('http://localhost:8000/api/lineage/traverse', {
@@ -499,6 +511,8 @@
                         x_direction: xDirection,
                         y_direction: yDirection,
                         z_direction: zDirection,
+                        max_y_hops_up: maxYUp,
+                        max_y_hops_down: maxYDown,
                         max_z_hops: maxZHops,
                         max_depth: maxDepth,
                         include_transformers: true,
@@ -514,6 +528,7 @@
                 const data = await response.json();
                 visualizeGraph(data);
                 updateStats(data);
+                updateLegend(data);
 
             } catch (error) {
                 alert('Error: ' + error.message);
@@ -523,89 +538,179 @@
 
         function visualizeGraph(data) {
             const startId = data.start_node.id;
+            const layoutDirection = document.getElementById('layoutDirection').value;
 
-            const xyzNodes = data.nodes.map(node => ({
-                id: node.id,
-                label: node.properties.name || node.id,
-                title: `[${node.type}] ${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
-                color: {
-                    background: nodeColors[node.type] || '#999',
-                    border: node.id === startId ? '#000' : '#555',
-                    highlight: { background: nodeColors[node.type] || '#999', border: '#000' }
-                },
-                borderWidth: node.id === startId ? 4 : 2,
-                font: { size: node.id === startId ? 16 : 13, color: '#222', face: 'Open Sans' },
-                shape: node.id === startId ? 'star' : 'dot',
-                size: node.id === startId ? 30 : 20,
-                group: 'xyz'
-            }));
+            // Build nodes
+            const xyzNodes = data.nodes.map(node => {
+                const color = nodeColors[node.type] || '#999';
+                const isStart = node.id === startId;
 
-            const gNodes = (data.g_nodes || []).map(node => {
-                const gColor = getGNodeColor(node);
                 return {
-                    id: node.id,
-                    label: node.properties.name || node.id,
-                    title: `[G: ${node.type}${node.properties.sub_type ? '/' + node.properties.sub_type : ''}] ${node.id}\n${JSON.stringify(node.properties, null, 2)}`,
-                    color: { background: gColor, border: '#9d74ff', highlight: { background: gColor, border: '#fff' } },
-                    borderWidth: 3,
-                    borderDashes: [5, 3],
-                    font: { size: 12, color: '#fff', face: 'Open Sans', bold: true },
-                    shape: 'diamond',
-                    size: 18,
-                    group: 'g'
+                    data: {
+                        id: node.id,
+                        label: node.properties.name || node.id,
+                        type: node.type,
+                        isStart,
+                        isGNode: false,
+                        rawNode: node
+                    },
+                    classes: isStart ? 'start-node' : ''
                 };
             });
 
+            const gNodes = (data.g_nodes || []).map(node => {
+                return {
+                    data: {
+                        id: node.id,
+                        label: node.properties.name || node.id,
+                        type: node.type + (node.properties?.sub_type ? `/${node.properties.sub_type}` : ''),
+                        isStart: false,
+                        isGNode: true,
+                        rawNode: node
+                    },
+                    classes: 'g-node'
+                };
+            });
+
+            // Build edges
             const xyzEdges = data.edges.map((edge, idx) => ({
-                id: 'xyz_' + idx,
-                from: edge.source,
-                to: edge.target,
-                label: edge.type,
-                arrows: 'to',
-                color: { color: '#666', highlight: '#000' },
-                font: { size: 9, align: 'middle', color: '#444', background: 'rgba(255,255,255,0.85)' },
-                width: 2
+                data: {
+                    id: `xyz_${idx}`,
+                    source: edge.source,
+                    target: edge.target,
+                    label: edge.type,
+                    isGEdge: false
+                }
             }));
 
             const gEdges = (data.g_edges || []).map((edge, idx) => ({
-                id: 'g_' + idx,
-                from: edge.source,
-                to: edge.target,
-                label: edge.type,
-                arrows: 'to',
-                dashes: true,
-                color: { color: '#9d74ff', highlight: '#fff', opacity: 0.9 },
-                font: { size: 9, align: 'middle', color: '#9d74ff', background: 'rgba(255,255,255,0.85)' },
-                width: 2
+                data: {
+                    id: `g_${idx}`,
+                    source: edge.source,
+                    target: edge.target,
+                    label: edge.type,
+                    isGEdge: true
+                },
+                classes: 'g-edge'
             }));
 
-            const container = document.getElementById('network');
-            const graphData = {
-                nodes: new vis.DataSet([...xyzNodes, ...gNodes]),
-                edges: new vis.DataSet([...xyzEdges, ...gEdges])
-            };
+            const allNodes = [...xyzNodes, ...gNodes];
+            const allEdges = [...xyzEdges, ...gEdges];
 
-            const options = {
-                physics: {
-                    enabled: true,
-                    barnesHut: {
-                        gravitationalConstant: -8000,
-                        centralGravity: 0.3,
-                        springLength: 150,
-                        springConstant: 0.04,
-                        damping: 0.09
+            // Initialize Cytoscape
+            if (cy) cy.destroy();
+
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: [...allNodes, ...allEdges],
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'background-color': function(ele) {
+                                if (ele.data('isGNode')) {
+                                    return getGNodeColor(ele.data('rawNode'));
+                                }
+                                return nodeColors[ele.data('type')] || '#999';
+                            },
+                            'border-width': function(ele) {
+                                return ele.data('isStart') ? 4 : 2;
+                            },
+                            'border-color': function(ele) {
+                                if (ele.data('isGNode')) {
+                                    return '#9d74ff';
+                                }
+                                if (ele.data('isStart')) {
+                                    return '#0B6EDB';
+                                }
+                                return nodeColors[ele.data('type')] || '#999';
+                            },
+                            'border-style': function(ele) {
+                                return ele.data('isGNode') ? 'dashed' : 'solid';
+                            },
+                            'width': 60,
+                            'height': 60,
+                            'font-size': 10,
+                            'font-weight': 500,
+                            'color': '#1A1A1A',
+                            'text-wrap': 'wrap',
+                            'text-max-width': 80,
+                            'font-family': 'Open Sans, Arial, sans-serif'
+                        }
                     },
-                    stabilization: { iterations: 200 }
+                    {
+                        selector: 'node.start-node',
+                        style: {
+                            'width': 70,
+                            'height': 70,
+                            'font-size': 11,
+                            'font-weight': 700
+                        }
+                    },
+                    {
+                        selector: 'node.g-node',
+                        style: {
+                            'shape': 'diamond'
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': 8,
+                            'text-rotation': 'autorotate',
+                            'text-margin-y': -10,
+                            'color': '#666',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.85,
+                            'text-background-padding': 2
+                        }
+                    },
+                    {
+                        selector: 'edge.g-edge',
+                        style: {
+                            'line-color': '#9d74ff',
+                            'target-arrow-color': '#9d74ff',
+                            'line-style': 'dashed',
+                            'color': '#9d74ff'
+                        }
+                    }
+                ],
+                layout: {
+                    name: 'dagre',
+                    rankDir: layoutDirection,
+                    nodeSep: 80,
+                    rankSep: 120,
+                    animate: false,
+                    fit: true,
+                    padding: 30
                 },
-                layout: { improvedLayout: true, hierarchical: false },
-                interaction: { hover: true, tooltipDelay: 100, zoomView: true },
-                nodes: { borderWidth: 2, shadow: true },
-                edges: { width: 2, smooth: { type: 'continuous' } }
-            };
+                minZoom: 0.1,
+                maxZoom: 3,
+                wheelSensitivity: 0.2
+            });
 
-            if (network) network.destroy();
-            network = new vis.Network(container, graphData, options);
-            updateLegend(data);
+            // Add tooltips on hover
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                const raw = data.rawNode;
+                if (raw) {
+                    node.qtip({
+                        content: `<strong>${raw.type}</strong><br>${raw.id}<br><pre>${JSON.stringify(raw.properties, null, 2)}</pre>`,
+                        position: { my: 'bottom center', at: 'top center' },
+                        style: { classes: 'qtip-light' }
+                    });
+                }
+            });
         }
 
         function updateStats(data) {
@@ -627,10 +732,13 @@
         }
 
         function updateLegend(data) {
-            const nodeTypes = {};
-            data.nodes.forEach(node => { nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1; });
-
             document.getElementById('legend').style.display = 'flex';
+
+            const nodeTypes = {};
+            data.nodes.forEach(node => {
+                nodeTypes[node.type] = (nodeTypes[node.type] || 0) + 1;
+            });
+
             document.getElementById('legendItems').innerHTML = Object.entries(nodeTypes)
                 .sort((a, b) => b[1] - a[1])
                 .map(([type, count]) => `
@@ -645,7 +753,7 @@
             if (gNodes.length > 0) {
                 const gTypes = {};
                 gNodes.forEach(node => {
-                    const key = node.type + (node.properties && node.properties.sub_type ? '/' + node.properties.sub_type : '');
+                    const key = node.type + (node.properties?.sub_type ? '/' + node.properties.sub_type : '');
                     if (!gTypes[key]) gTypes[key] = { count: 0, node };
                     gTypes[key].count++;
                 });
@@ -658,7 +766,7 @@
                             <span>${key} (${count})</span>
                         </div>`)
                     .join('');
-                gSection.style.display = 'flex';
+                gSection.style.display = '';
             } else {
                 gSection.style.display = 'none';
             }
@@ -671,7 +779,7 @@
         }
 
         function clearGraph() {
-            if (network) { network.destroy(); network = null; }
+            if (cy) { cy.destroy(); cy = null; }
             document.getElementById('bottomPanel').style.display = 'none';
             document.getElementById('statGCard').style.display = 'none';
             document.getElementById('legend').style.display = 'none';
@@ -680,7 +788,10 @@
             document.getElementById('legendGSection').style.display = 'none';
         }
 
+        // Auto-run on load
         window.onload = () => {
+            // Register dagre layout
+            cytoscape.use(cytoscapeDagre);
             syncDirectionControls();
             runTraversal();
         };

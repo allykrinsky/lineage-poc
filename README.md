@@ -73,6 +73,39 @@ Open your browser and navigate to:
 - **API Documentation**: `http://localhost:8000/docs`
 - **Neo4j Browser**: `http://localhost:7474`
 
+
+### Example Configurations
+
+Data Only
+- base node: fraud-ds-002 
+- lineage : On, upstream
+- heirarchy : On
+- association:  : Off
+- governance: Off
+
+Agentic System Exploded
+- base node: fraud-asysv-001
+- lineage : On, upstream
+- heirarchy : On
+- association:  : On, outgoing
+- governance: Off
+
+All the things in my Use Case 
+- base node: uc-001
+- lineage : Off
+- heirarchy : On
+- association:  : On, Both
+- governance: Off
+
+TDQ on Data Flows
+- base node: risk-app-001
+- lineage : Off
+- heirarchy : Off
+- association:  : Off
+- governance: On
+
+
+
 ## Configuration
 
 Environment variables (optional):

@@ -438,11 +438,11 @@ y_hierarchy:
     semantic_up: forward
     description: "Model belongs to use case"
 
-  - edge_name: use_case_dataset
-    source: use_case
-    destination: dataset
-    semantic_up: reverse
-    description: "Use case associated with dataset"
+  # - edge_name: use_case_dataset
+  #   source: use_case
+  #   destination: dataset
+  #   semantic_up: reverse
+  #   description: "Use case associated with dataset"
 
 
 # -----------------------------------------------------------------------------
@@ -491,10 +491,10 @@ z_association:
     destination_sub_type: [conceptual, term]
     description: "Data concept linked to attribute (glossary or conceptual)"
 
-  # - edge_name: use_case_dataset
-  #   source: use_case
-  #   destination: dataset
-  #   description: "Use case associated with dataset"
+  - edge_name: use_case_dataset
+    source: use_case
+    destination: dataset
+    description: "Use case associated with dataset"
 
   - edge_name: workspace_use_case
     source: workspace
