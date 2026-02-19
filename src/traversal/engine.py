@@ -26,6 +26,7 @@ class TraversalState:
     y_direction_committed: Optional[str]  # 'up', 'down', or None - prevents sibling traversal
     has_gone_upstream: bool  # Whether we've taken any upstream edge in this path
     has_gone_to_parent: bool  # Whether we've gone "up" to a parent node via Y-axis
+    x_hops: int = 0  # Number of X-axis lineage hops taken in this path
     y_hops_up: int = 0  # Number of Y-axis hops taken upward in this path
     y_hops_down: int = 0  # Number of Y-axis hops taken downward in this path
 
@@ -96,6 +97,7 @@ class TraversalEngine:
         x_direction: str = "both",
         y_direction: str = "both",
         z_direction: str = "both",
+        max_x_hops: Optional[int] = None,
         max_y_hops_up: Optional[int] = None,
         max_y_hops_down: Optional[int] = None,
         max_z_hops: int = 1,
@@ -113,6 +115,7 @@ class TraversalEngine:
             y_direction: 'up', 'down', or 'both'
             z_direction: 'outgoing' (follow edges where node is source),
                          'incoming' (follow edges where node is target), or 'both'
+            max_x_hops: Maximum number of X-axis lineage hops (None = unlimited)
             max_y_hops_up: Maximum number of Y-axis hops upward in hierarchy (None = unlimited)
             max_y_hops_down: Maximum number of Y-axis hops downward in hierarchy (None = unlimited)
             max_z_hops: Maximum Z-axis hops per path (default 1)
@@ -156,6 +159,7 @@ class TraversalEngine:
                 y_direction_committed=None,  # No Y-direction committed yet at base node
                 has_gone_upstream=False,  # Start node hasn't gone upstream
                 has_gone_to_parent=False,  # Start node hasn't gone to parent
+                x_hops=0,
                 y_hops_up=0,
                 y_hops_down=0
             )])
@@ -163,9 +167,9 @@ class TraversalEngine:
             visited_nodes[start_node['id']] = start_node
 
             # Track visited states to avoid infinite loops
-            # Key: (node_id, z_hops_taken, y_hops_up, y_hops_down, last_axis, y_direction_committed, has_gone_upstream, has_gone_to_parent)
+            # Key: (node_id, x_hops, z_hops_taken, y_hops_up, y_hops_down, last_axis, y_direction_committed, has_gone_upstream, has_gone_to_parent)
             visited_states = set()
-            visited_states.add((start_node['id'], 0, 0, 0, None, None, False, False))
+            visited_states.add((start_node['id'], 0, 0, 0, 0, None, None, False, False))
 
             # BFS traversal
             while queue:
@@ -205,6 +209,14 @@ class TraversalEngine:
                     if edge_axis == Axis.Z:
                         new_z_hops += 1
 
+                    # Calculate new X-hop count (lineage hops)
+                    new_x_hops = current_state.x_hops
+                    if edge_axis == Axis.X:
+                        new_x_hops += 1
+                        # Check if we've exceeded the max X-hops limit
+                        if max_x_hops is not None and new_x_hops > max_x_hops:
+                            continue
+
                     # Calculate new Y-hop counts (up and down)
                     new_y_hops_up = current_state.y_hops_up
                     new_y_hops_down = current_state.y_hops_down
@@ -243,22 +255,22 @@ class TraversalEngine:
                     if edge_axis == Axis.Y and neighbor_info.get('y_direction') == 'up':
                         new_has_gone_to_parent = True
 
-                    # Create state key to avoid revisiting same state
-                    state_key = (neighbor_id, new_z_hops, new_y_hops_up, new_y_hops_down, edge_axis, new_y_direction_committed, new_has_gone_upstream, new_has_gone_to_parent)
-
-                    # Skip if we've already visited this state
-                    if state_key in visited_states:
-                        continue
-
-                    visited_states.add(state_key)
-
-                    # Track node and edge
+                    # Track node and edge BEFORE state check to ensure all edges are collected
                     if neighbor_id not in visited_nodes:
                         visited_nodes[neighbor_id] = neighbor_node
 
                     edge_id = edge.get('id', f"{edge['source']}-{edge['type']}-{edge['target']}")
                     if edge_id not in visited_edges:
                         visited_edges[edge_id] = edge
+
+                    # Create state key to avoid revisiting same state
+                    state_key = (neighbor_id, new_x_hops, new_z_hops, new_y_hops_up, new_y_hops_down, edge_axis, new_y_direction_committed, new_has_gone_upstream, new_has_gone_to_parent)
+
+                    # Skip if we've already visited this state (but edge is already collected above)
+                    if state_key in visited_states:
+                        continue
+
+                    visited_states.add(state_key)
 
                     # Create new path state
                     new_path = current_state.path + [neighbor_id]
@@ -280,6 +292,7 @@ class TraversalEngine:
                         y_direction_committed=new_y_direction_committed,
                         has_gone_upstream=new_has_gone_upstream,
                         has_gone_to_parent=new_has_gone_to_parent,
+                        x_hops=new_x_hops,
                         y_hops_up=new_y_hops_up,
                         y_hops_down=new_y_hops_down
                     )

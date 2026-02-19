@@ -309,7 +309,7 @@
     <div class="toolbar">
         <div class="toolbar-group">
             <span class="toolbar-label">Start node</span>
-            <input class="salt-input" type="text" id="startNode" value="ds-002" placeholder="e.g. ds-002">
+            <input class="salt-input" type="text" id="startNode" value="fraud-asys-001" placeholder="e.g. fraud-asys-001">
         </div>
 
         <div class="toolbar-group">
@@ -336,7 +336,7 @@
             <span class="toolbar-label">Direction</span>
             <select class="salt-select" id="xDirection">
                 <option value="both">X: Both</option>
-                <option value="upstream">X: Upstream</option>
+                <option value="upstream" selected>X: Upstream</option>
                 <option value="downstream">X: Downstream</option>
             </select>
             <select class="salt-select" id="yDirection">
@@ -360,10 +360,12 @@
         </div>
 
         <div class="toolbar-group">
-            <span class="toolbar-label">Y Up</span>
-            <input class="salt-input" type="number" id="maxYUp" value="10" min="0" max="20">
+            <span class="toolbar-label">X-Hops</span>
+            <input class="salt-input" type="number" id="maxXHops" value="2" min="0" max="20">
+            <span class="toolbar-label" style="margin-left:8px;">Y Up</span>
+            <input class="salt-input" type="number" id="maxYUp" value="2" min="0" max="20">
             <span class="toolbar-label" style="margin-left:8px;">Y Down</span>
-            <input class="salt-input" type="number" id="maxYDown" value="10" min="0" max="20">
+            <input class="salt-input" type="number" id="maxYDown" value="2" min="0" max="20">
         </div>
 
         <div class="toolbar-group">
@@ -485,6 +487,7 @@
             const xDirection = document.getElementById('xDirection').value;
             const yDirection = document.getElementById('yDirection').value;
             const zDirection = document.getElementById('zDirection').value;
+            const maxXHops = parseInt(document.getElementById('maxXHops').value);
             const maxYUp = parseInt(document.getElementById('maxYUp').value);
             const maxYDown = parseInt(document.getElementById('maxYDown').value);
             const maxZHops = parseInt(document.getElementById('maxZHops').value);
@@ -511,6 +514,7 @@
                         x_direction: xDirection,
                         y_direction: yDirection,
                         z_direction: zDirection,
+                        max_x_hops: maxXHops,
                         max_y_hops_up: maxYUp,
                         max_y_hops_down: maxYDown,
                         max_z_hops: maxZHops,
@@ -573,15 +577,17 @@
             });
 
             // Build edges
-            const xyzEdges = data.edges.map((edge, idx) => ({
-                data: {
-                    id: `xyz_${idx}`,
-                    source: edge.source,
-                    target: edge.target,
-                    label: edge.type,
-                    isGEdge: false
-                }
-            }));
+            const xyzEdges = data.edges.map((edge, idx) => {
+                return {
+                    data: {
+                        id: `xyz_${idx}`,
+                        source: edge.source,
+                        target: edge.target,
+                        label: edge.type,
+                        isGEdge: false
+                    }
+                };
+            });
 
             const gEdges = (data.g_edges || []).map((edge, idx) => ({
                 data: {
@@ -596,6 +602,32 @@
 
             const allNodes = [...xyzNodes, ...gNodes];
             const allEdges = [...xyzEdges, ...gEdges];
+
+            // Debug: log node and edge counts
+            console.log(`Rendering ${allNodes.length} nodes and ${allEdges.length} edges`);
+            console.log('Node IDs:', allNodes.map(n => n.data.id));
+            console.log('Edges:');
+            allEdges.forEach(e => {
+                console.log(`  ${e.data.source} --${e.data.label}--> ${e.data.target}`);
+            });
+
+            // Check for specific path
+            const hasFraudDs002 = allNodes.some(n => n.data.id === 'fraud-ds-002');
+            const hasFraudJob005 = allNodes.some(n => n.data.id === 'fraud-job-005');
+            const hasFraudDs004 = allNodes.some(n => n.data.id === 'fraud-ds-004');
+            const hasDs002ToJob005Edge = allEdges.some(e =>
+                e.data.source === 'fraud-ds-002' && e.data.target === 'fraud-job-005'
+            );
+            const hasJob005ToDs004Edge = allEdges.some(e =>
+                e.data.source === 'fraud-ds-004' && e.data.target === 'fraud-job-005'
+            );
+
+            console.log('Path check:');
+            console.log(`  fraud-ds-002 present: ${hasFraudDs002}`);
+            console.log(`  fraud-job-005 present: ${hasFraudJob005}`);
+            console.log(`  fraud-ds-004 present: ${hasFraudDs004}`);
+            console.log(`  fraud-ds-002 -> fraud-job-005 edge: ${hasDs002ToJob005Edge}`);
+            console.log(`  fraud-ds-004 -> fraud-job-005 edge: ${hasJob005ToDs004Edge}`);
 
             // Initialize Cytoscape
             if (cy) cy.destroy();
@@ -660,8 +692,8 @@
                         selector: 'edge',
                         style: {
                             'width': 2,
-                            'line-color': '#666',
-                            'target-arrow-color': '#666',
+                            'line-color': '#999',
+                            'target-arrow-color': '#999',
                             'target-arrow-shape': 'triangle',
                             'curve-style': 'bezier',
                             'label': 'data(label)',
@@ -687,15 +719,25 @@
                 layout: {
                     name: 'dagre',
                     rankDir: layoutDirection,
-                    nodeSep: 80,
-                    rankSep: 120,
-                    animate: false,
+                    nodeSep: 60,
+                    rankSep: 100,
                     fit: true,
-                    padding: 30
+                    padding: 40,
+                    animate: false
                 },
                 minZoom: 0.1,
                 maxZoom: 3,
                 wheelSensitivity: 0.2
+            });
+
+            // Wait for layout to complete, then ensure graph is visible
+            cy.ready(function() {
+                console.log('Cytoscape ready. Total nodes rendered:', cy.nodes().length);
+
+                // Fit the graph with some padding after layout
+                setTimeout(() => {
+                    cy.fit(null, 80);
+                }, 100);
             });
 
             // Add tooltips on hover
