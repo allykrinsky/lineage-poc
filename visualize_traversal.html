@@ -548,11 +548,13 @@
             const xyzNodes = data.nodes.map(node => {
                 const color = nodeColors[node.type] || '#999';
                 const isStart = node.id === startId;
+                const label = node.properties.name || node.id;
+                const displayLabel = isStart ? `⭐ ${label}` : label;
 
                 return {
                     data: {
                         id: node.id,
-                        label: node.properties.name || node.id,
+                        label: displayLabel,
                         type: node.type,
                         isStart,
                         isGNode: false,
@@ -646,7 +648,12 @@
                                 if (ele.data('isGNode')) {
                                     return getGNodeColor(ele.data('rawNode'));
                                 }
-                                return nodeColors[ele.data('type')] || '#999';
+                                const baseColor = nodeColors[ele.data('type')] || '#999';
+                                // Brighten start node slightly
+                                if (ele.data('isStart')) {
+                                    return baseColor;
+                                }
+                                return baseColor;
                             },
                             'border-width': function(ele) {
                                 return ele.data('isStart') ? 4 : 2;

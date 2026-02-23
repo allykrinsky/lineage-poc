@@ -23,6 +23,10 @@ share/python-wheels/
 *.egg
 *.png
 
+# Images - allow questions-answered, block old
+!images/questions-answered/*.png
+images/old/
+
 # Virtual environments
 .venv/
 venv/

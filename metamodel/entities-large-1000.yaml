@@ -3109,6 +3109,9 @@ assets:
   - id: hr-ws-001
     name: hr_workspace
     description: Human Resources team workspace
+  - id: platform-ws-001
+    name: platform_infrastructure_workspace
+    description: Shared infrastructure platform for organization-wide services
   WorkspaceService:
   - id: fraud-wssvc-001
     name: fraud_model_service
@@ -3143,6 +3146,21 @@ assets:
   - id: hr-wssvc-001
     name: hr_model_service
     description: Human Resources model serving
+  - id: infra-sagemaker-001
+    name: aws_sagemaker
+    description: AWS SageMaker platform for ML training and inference
+  - id: infra-eks-001
+    name: aws_eks
+    description: AWS EKS cluster for containerized workloads
+  - id: infra-databricks-001
+    name: databricks
+    description: Databricks unified analytics platform
+  - id: infra-emr-001
+    name: aws_emr
+    description: AWS EMR cluster for big data processing
+  - id: infra-airflow-001
+    name: airflow_orchestration
+    description: Apache Airflow for workflow orchestration
   Report:
   - id: fraud-rpt-001
     name: weekly_fraud_dashboard
@@ -3230,59 +3248,73 @@ assets:
   - id: gr-001
     name: fraud_detection_safety_guardrail
     sub_type: safety
-    description: Safety guardrail enforcing model output thresholds and alert suppression rules for fraud detection
+    description: Safety guardrail enforcing model output thresholds and alert suppression
+      rules for fraud detection
   - id: gr-002
     name: customer_analytics_privacy_guardrail
     sub_type: privacy
-    description: Privacy guardrail enforcing PII redaction and consent-based data access for customer analytics
+    description: Privacy guardrail enforcing PII redaction and consent-based data
+      access for customer analytics
   - id: gr-003
     name: marketing_optimization_compliance_guardrail
     sub_type: compliance
-    description: Compliance guardrail ensuring marketing campaigns meet opt-out and consent regulations
+    description: Compliance guardrail ensuring marketing campaigns meet opt-out and
+      consent regulations
   - id: gr-004
     name: credit_risk_quality_guardrail
     sub_type: quality
-    description: Data quality guardrail enforcing completeness and freshness SLAs for credit risk inputs
+    description: Data quality guardrail enforcing completeness and freshness SLAs
+      for credit risk inputs
   - id: gr-005
     name: regulatory_compliance_guardrail
     sub_type: compliance
-    description: Compliance guardrail enforcing audit trail completeness and regulatory reporting requirements
+    description: Compliance guardrail enforcing audit trail completeness and regulatory
+      reporting requirements
   - id: gr-006
     name: product_recommendations_privacy_guardrail
     sub_type: privacy
-    description: Privacy guardrail limiting personalization to consented attributes for product recommendations
+    description: Privacy guardrail limiting personalization to consented attributes
+      for product recommendations
   - id: gr-007
     name: payment_processing_security_guardrail
     sub_type: security
-    description: Security guardrail enforcing encryption standards and PCI-DSS controls for payment processing
+    description: Security guardrail enforcing encryption standards and PCI-DSS controls
+      for payment processing
   - id: gr-008
     name: inventory_management_quality_guardrail
     sub_type: quality
-    description: Data quality guardrail enforcing stock-level accuracy and reconciliation rules for inventory
+    description: Data quality guardrail enforcing stock-level accuracy and reconciliation
+      rules for inventory
   - id: gr-009
     name: shipping_logistics_compliance_guardrail
     sub_type: compliance
-    description: Compliance guardrail enforcing carrier regulation adherence and customs data standards for shipping
+    description: Compliance guardrail enforcing carrier regulation adherence and customs
+      data standards for shipping
   - id: gr-010
     name: customer_support_privacy_guardrail
     sub_type: privacy
-    description: Privacy guardrail restricting agent access to sensitive customer data in support workflows
+    description: Privacy guardrail restricting agent access to sensitive customer
+      data in support workflows
   - id: gr-011
     name: sales_analytics_quality_guardrail
     sub_type: quality
-    description: Data quality guardrail enforcing attribution accuracy and pipeline completeness for sales analytics
+    description: Data quality guardrail enforcing attribution accuracy and pipeline
+      completeness for sales analytics
   - id: gr-012
     name: operations_compliance_guardrail
     sub_type: compliance
-    description: Compliance guardrail ensuring operational SLA metrics meet contractual reporting obligations
+    description: Compliance guardrail ensuring operational SLA metrics meet contractual
+      reporting obligations
   - id: gr-013
     name: finance_compliance_guardrail
     sub_type: compliance
-    description: Compliance guardrail enforcing SOX controls and financial data integrity standards
+    description: Compliance guardrail enforcing SOX controls and financial data integrity
+      standards
   - id: gr-014
     name: hr_privacy_guardrail
     sub_type: privacy
-    description: Privacy guardrail enforcing GDPR and employment law data retention limits for HR data
+    description: Privacy guardrail enforcing GDPR and employment law data retention
+      limits for HR data
   Glossary:
   - id: gloss-001
     name: enterprise_glossary
@@ -3433,22 +3465,22 @@ relationships:
   from: fraud-ds-001
   to: fraud-job-001
 - type: DATASET_PRODUCED_BY
-  from: fraud-ds-002
-  to: fraud-job-001
+  from: fraud-job-001
+  to: fraud-ds-002
 - type: IS_CONSUMED_BY
   from: fraud-ds-002
   to: fraud-job-002
 - type: DATASET_PRODUCED_BY
-  from: fraud-ds-003
-  to: fraud-job-002
+  from: fraud-job-002
+  to: fraud-ds-003
 - type: IS_CONSUMED_BY
   from: fraud-ds-003
   to: fraud-job-003
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: fraud-mv-001
-  to: fraud-job-003
+- type: MODEL_PRODUCED_BY
+  from: fraud-job-003
+  to: fraud-mv-001
 - type: IS_CONSUMED_BY
   from: fraud-mv-001
   to: fraud-job-004
@@ -3459,9 +3491,9 @@ relationships:
   to: fraud-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: fraud-mv-002
-  to: fraud-job-004
+- type: MODEL_PRODUCED_BY
+  from: fraud-job-004
+  to: fraud-mv-002
 - type: IS_CONSUMED_BY
   from: fraud-ds-002
   to: fraud-job-005
@@ -3472,83 +3504,69 @@ relationships:
   to: fraud-job-005
   properties:
     context: scoring_model
-# === BLAST RADIUS: fraud-mv-002 used across the organization ===
-# Customer domain uses fraud model for identity verification
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: cust-job-004
   properties:
     context: fraud_check_model
-# Risk domain uses fraud model for credit risk scoring
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: risk-job-004
   properties:
     context: fraud_risk_model
-# Payment domain uses fraud model for transaction validation
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: payment-job-005
   properties:
     context: payment_fraud_model
-# Marketing domain uses fraud model to filter bot/fake accounts
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: mkt-job-004
   properties:
     context: account_validation_model
-# Regulatory domain uses fraud model for AML compliance
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: reg-job-003
   properties:
     context: aml_fraud_model
-# Recommendation engine uses fraud model to filter suspicious activity
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: rec-job-005
   properties:
     context: activity_filter_model
-# Sales domain uses fraud model for lead scoring
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: sales-job-004
   properties:
     context: lead_quality_model
-# Operations domain uses fraud model for anomaly detection
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: operations-job-004
   properties:
     context: process_anomaly_model
-# Support domain uses fraud model for ticket authenticity
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: support-job-004
   properties:
     context: ticket_fraud_model
-# Shipping domain uses fraud model for address validation
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: shipping-job-004
   properties:
     context: shipping_fraud_model
-# Inventory domain uses fraud model for theft detection
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: inventory-job-004
   properties:
     context: inventory_fraud_model
-# Finance domain uses fraud model for transaction monitoring
 - type: IS_CONSUMED_BY
   from: fraud-mv-002
   to: finance-job-004
   properties:
     context: financial_fraud_model
-# === End Blast Radius: fraud-mv-002 ===
 - type: DATASET_PRODUCED_BY
-  from: fraud-ds-004
-  to: fraud-job-005
+  from: fraud-job-005
+  to: fraud-ds-004
 - type: IS_CONSUMED_BY
   from: fraud-ds-002
   to: fraud-job-006
@@ -3560,14 +3578,14 @@ relationships:
   properties:
     context: embedding_model
 - type: DATASET_PRODUCED_BY
-  from: fraud-ds-005
-  to: fraud-job-006
+  from: fraud-job-006
+  to: fraud-ds-005
 - type: IS_CONSUMED_BY
   from: fraud-ds-002
   to: fraud-job-007
 - type: DATASET_PRODUCED_BY
-  from: fraud-ds-007
-  to: fraud-job-007
+  from: fraud-job-007
+  to: fraud-ds-007
 - type: IS_CONSUMED_BY
   from: cust-ds-001
   to: cust-job-001
@@ -3575,22 +3593,22 @@ relationships:
   from: cust-ds-002
   to: cust-job-001
 - type: DATASET_PRODUCED_BY
-  from: cust-ds-003
-  to: cust-job-001
+  from: cust-job-001
+  to: cust-ds-003
 - type: IS_CONSUMED_BY
   from: cust-ds-003
   to: cust-job-002
 - type: DATASET_PRODUCED_BY
-  from: cust-ds-004
-  to: cust-job-002
+  from: cust-job-002
+  to: cust-ds-004
 - type: IS_CONSUMED_BY
   from: cust-ds-004
   to: cust-job-003
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: cust-mv-001
-  to: cust-job-003
+- type: MODEL_PRODUCED_BY
+  from: cust-job-003
+  to: cust-mv-001
 - type: IS_CONSUMED_BY
   from: cust-ds-004
   to: cust-job-004
@@ -3602,16 +3620,16 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: cust-ds-005
-  to: cust-job-004
+  from: cust-job-004
+  to: cust-ds-005
 - type: IS_CONSUMED_BY
   from: cust-ds-004
   to: cust-job-005
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: cust-mv-002
-  to: cust-job-005
+- type: MODEL_PRODUCED_BY
+  from: cust-job-005
+  to: cust-mv-002
 - type: IS_CONSUMED_BY
   from: cust-ds-004
   to: cust-job-006
@@ -3623,14 +3641,14 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: cust-ds-006
-  to: cust-job-006
+  from: cust-job-006
+  to: cust-ds-006
 - type: IS_CONSUMED_BY
   from: cust-ds-004
   to: cust-job-007
 - type: DATASET_PRODUCED_BY
-  from: cust-ds-007
-  to: cust-job-007
+  from: cust-job-007
+  to: cust-ds-007
 - type: IS_CONSUMED_BY
   from: mkt-ds-001
   to: mkt-job-001
@@ -3638,22 +3656,22 @@ relationships:
   from: mkt-ds-002
   to: mkt-job-001
 - type: DATASET_PRODUCED_BY
-  from: mkt-ds-003
-  to: mkt-job-001
+  from: mkt-job-001
+  to: mkt-ds-003
 - type: IS_CONSUMED_BY
   from: mkt-ds-003
   to: mkt-job-002
 - type: DATASET_PRODUCED_BY
-  from: mkt-ds-004
-  to: mkt-job-002
+  from: mkt-job-002
+  to: mkt-ds-004
 - type: IS_CONSUMED_BY
   from: mkt-ds-004
   to: mkt-job-003
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: mkt-mv-001
-  to: mkt-job-003
+- type: MODEL_PRODUCED_BY
+  from: mkt-job-003
+  to: mkt-mv-001
 - type: IS_CONSUMED_BY
   from: mkt-ds-004
   to: mkt-job-004
@@ -3665,16 +3683,16 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: mkt-ds-005
-  to: mkt-job-004
+  from: mkt-job-004
+  to: mkt-ds-005
 - type: IS_CONSUMED_BY
   from: mkt-ds-004
   to: mkt-job-005
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: mkt-mv-002
-  to: mkt-job-005
+- type: MODEL_PRODUCED_BY
+  from: mkt-job-005
+  to: mkt-mv-002
 - type: IS_CONSUMED_BY
   from: mkt-ds-004
   to: mkt-job-006
@@ -3686,8 +3704,8 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: mkt-ds-006
-  to: mkt-job-006
+  from: mkt-job-006
+  to: mkt-ds-006
 - type: IS_CONSUMED_BY
   from: risk-ds-001
   to: risk-job-001
@@ -3695,22 +3713,22 @@ relationships:
   from: risk-ds-002
   to: risk-job-001
 - type: DATASET_PRODUCED_BY
-  from: risk-ds-003
-  to: risk-job-001
+  from: risk-job-001
+  to: risk-ds-003
 - type: IS_CONSUMED_BY
   from: risk-ds-003
   to: risk-job-002
 - type: DATASET_PRODUCED_BY
-  from: risk-ds-004
-  to: risk-job-002
+  from: risk-job-002
+  to: risk-ds-004
 - type: IS_CONSUMED_BY
   from: risk-ds-004
   to: risk-job-003
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: risk-mv-001
-  to: risk-job-003
+- type: MODEL_PRODUCED_BY
+  from: risk-job-003
+  to: risk-mv-001
 - type: IS_CONSUMED_BY
   from: risk-ds-003
   to: risk-job-004
@@ -3722,16 +3740,16 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: risk-ds-005
-  to: risk-job-004
+  from: risk-job-004
+  to: risk-ds-005
 - type: IS_CONSUMED_BY
   from: risk-ds-004
   to: risk-job-005
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: risk-mv-002
-  to: risk-job-005
+- type: MODEL_PRODUCED_BY
+  from: risk-job-005
+  to: risk-mv-002
 - type: IS_CONSUMED_BY
   from: risk-ds-004
   to: risk-job-006
@@ -3743,8 +3761,8 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: risk-ds-006
-  to: risk-job-006
+  from: risk-job-006
+  to: risk-ds-006
 - type: IS_CONSUMED_BY
   from: reg-ds-001
   to: reg-job-001
@@ -3752,14 +3770,14 @@ relationships:
   from: reg-ds-002
   to: reg-job-001
 - type: DATASET_PRODUCED_BY
-  from: reg-ds-003
-  to: reg-job-001
+  from: reg-job-001
+  to: reg-ds-003
 - type: IS_CONSUMED_BY
   from: reg-ds-003
   to: reg-job-002
 - type: DATASET_PRODUCED_BY
-  from: reg-ds-004
-  to: reg-job-002
+  from: reg-job-002
+  to: reg-ds-004
 - type: IS_CONSUMED_BY
   from: reg-ds-003
   to: reg-job-003
@@ -3767,8 +3785,8 @@ relationships:
   from: reg-ds-004
   to: reg-job-003
 - type: DATASET_PRODUCED_BY
-  from: reg-ds-005
-  to: reg-job-003
+  from: reg-job-003
+  to: reg-ds-005
 - type: IS_CONSUMED_BY
   from: rec-ds-002
   to: rec-job-001
@@ -3776,14 +3794,14 @@ relationships:
   from: rec-ds-003
   to: rec-job-001
 - type: DATASET_PRODUCED_BY
-  from: rec-ds-004
-  to: rec-job-001
+  from: rec-job-001
+  to: rec-ds-004
 - type: IS_CONSUMED_BY
   from: rec-ds-001
   to: rec-job-002
 - type: DATASET_PRODUCED_BY
-  from: rec-ds-005
-  to: rec-job-002
+  from: rec-job-002
+  to: rec-ds-005
 - type: IS_CONSUMED_BY
   from: rec-ds-004
   to: rec-job-003
@@ -3791,16 +3809,16 @@ relationships:
   from: rec-ds-005
   to: rec-job-003
 - type: DATASET_PRODUCED_BY
-  from: rec-ds-006
-  to: rec-job-003
+  from: rec-job-003
+  to: rec-ds-006
 - type: IS_CONSUMED_BY
   from: rec-ds-006
   to: rec-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: rec-mv-001
-  to: rec-job-004
+- type: MODEL_PRODUCED_BY
+  from: rec-job-004
+  to: rec-mv-001
 - type: IS_CONSUMED_BY
   from: rec-ds-006
   to: rec-job-005
@@ -3812,8 +3830,8 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: rec-ds-007
-  to: rec-job-005
+  from: rec-job-005
+  to: rec-ds-007
 - type: IS_CONSUMED_BY
   from: rec-ds-004
   to: rec-job-006
@@ -3825,8 +3843,8 @@ relationships:
   properties:
     context: embedding_model
 - type: DATASET_PRODUCED_BY
-  from: rec-ds-008
-  to: rec-job-006
+  from: rec-job-006
+  to: rec-ds-008
 - type: DATA_DEPENDENCY_PRODUCED_BY
   from: fraud-dep-001
   to: fraud-attr-001
@@ -4505,13 +4523,9 @@ relationships:
 - type: USES
   from: fraud-agv-001
   to: embed-mv-002
-# === BLAST RADIUS: Multiple agents use fraud-mv-002 ===
 - type: USES
   from: fraud-agv-001
   to: fraud-mv-002
-# - type: USES
-#   from: fraud-agv-002
-#   to: fraud-ds-002
 - type: USES
   from: fraud-agv-002
   to: fraud-mcpt-002
@@ -4575,73 +4589,57 @@ relationships:
 - type: USES
   from: risk-agv-002
   to: fraud-mv-002
-# Payment agents use fraud model for transaction screening
 - type: USES
   from: payment-agv-001
   to: fraud-mv-002
 - type: USES
   from: payment-agv-002
   to: fraud-mv-002
-# Sales agents use fraud model for lead quality scoring
 - type: USES
   from: sales-agv-001
   to: fraud-mv-002
 - type: USES
   from: sales-agv-002
   to: fraud-mv-002
-# Operations agents use fraud model for process integrity
 - type: USES
   from: operations-agv-001
   to: fraud-mv-002
-# Support agents use fraud model for ticket authenticity
 - type: USES
   from: support-agv-001
   to: fraud-mv-002
-# === End additional blast radius USES edges ===
 - type: IS_MAPPED_TO
   from: fraud-attr-002
   to: term-001
 - type: IS_MAPPED_TO
   from: cust-attr-001
   to: term-002
-# === BLAST RADIUS: term-002 (Customer Identifier) mapped across domains ===
-# Fraud domain - customer_id in fraud detection datasets
 - type: IS_MAPPED_TO
   from: fraud-attr-001
   to: term-002
-# Marketing domain - customer_id in campaign datasets
 - type: IS_MAPPED_TO
   from: mkt-attr-001
   to: term-002
-# Risk domain - customer_id in credit risk datasets
 - type: IS_MAPPED_TO
   from: risk-attr-001
   to: term-002
-# Payment domain - customer_id in payment transaction datasets
 - type: IS_MAPPED_TO
   from: payment-attr-001
   to: term-002
-# Sales domain - customer_id in sales datasets
 - type: IS_MAPPED_TO
   from: sales-attr-001
   to: term-002
-# Recommendation domain - customer_id in recommendation datasets
 - type: IS_MAPPED_TO
   from: rec-attr-001
   to: term-002
-# Regulatory domain - customer_id in compliance datasets
 - type: IS_MAPPED_TO
   from: reg-attr-001
   to: term-002
-# Operations domain - customer_id in operational datasets
 - type: IS_MAPPED_TO
   from: operations-attr-001
   to: term-002
-# Support domain - customer_id in support ticket datasets
 - type: IS_MAPPED_TO
   from: support-attr-001
   to: term-002
-# === End blast radius: term-002 ===
 - type: IS_MAPPED_TO
   from: fraud-attr-004
   to: term-003
@@ -4753,15 +4751,15 @@ relationships:
 - type: WORKSPACE_DATASET
   from: mkt-ws-001
   to: mkt-ds-003
-- type: IMPLEMENTS
-  from: fraud-wssvc-001
-  to: fraud-mv-002
-- type: IMPLEMENTS
-  from: cust-wssvc-001
-  to: cust-mv-001
-- type: IMPLEMENTS
-  from: mkt-wssvc-001
-  to: mkt-mv-001
+- type: DEPLOYED_ON
+  from: fraud-mv-002
+  to: fraud-wssvc-001
+- type: DEPLOYED_ON
+  from: cust-mv-001
+  to: cust-wssvc-001
+- type: DEPLOYED_ON
+  from: mkt-mv-001
+  to: mkt-wssvc-001
 - type: DATA_FLOW_PRODUCED_BY
   from: df-001
   to: fraud-app-001
@@ -4844,8 +4842,8 @@ relationships:
   from: payment-ds-001
   to: payment-job-001
 - type: DATASET_PRODUCED_BY
-  from: payment-ds-002
-  to: payment-job-001
+  from: payment-job-001
+  to: payment-ds-002
 - type: WORKSPACE_DATASET
   from: payment-ws-001
   to: payment-ds-002
@@ -4886,8 +4884,8 @@ relationships:
   from: payment-ds-004
   to: payment-job-002
 - type: DATASET_PRODUCED_BY
-  from: payment-ds-005
-  to: payment-job-002
+  from: payment-job-002
+  to: payment-ds-005
 - type: WORKSPACE_DATASET
   from: payment-ws-001
   to: payment-ds-005
@@ -4904,8 +4902,8 @@ relationships:
   from: payment-ds-005
   to: payment-job-003
 - type: DATASET_PRODUCED_BY
-  from: payment-ds-006
-  to: payment-job-003
+  from: payment-job-003
+  to: payment-ds-006
 - type: MODEL_USE_CASE
   from: payment-model-001
   to: payment-uc-001
@@ -4917,9 +4915,9 @@ relationships:
   to: payment-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: payment-mv-001
-  to: payment-job-004
+- type: MODEL_PRODUCED_BY
+  from: payment-job-004
+  to: payment-mv-001
 - type: IS_CONSUMED_BY
   from: payment-ds-005
   to: payment-job-005
@@ -4931,17 +4929,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: payment-ds-007
-  to: payment-job-005
+  from: payment-job-005
+  to: payment-ds-007
 - type: USE_CASE_DATASET
   from: payment-uc-001
   to: payment-ds-006
 - type: INSTALLED
   from: payment-wssvc-001
   to: payment-ws-001
-- type: IMPLEMENTS
-  from: payment-wssvc-001
-  to: payment-mv-001
+- type: DEPLOYED_ON
+  from: payment-mv-001
+  to: payment-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: payment-attr-022
   to: payment-ds-008
@@ -4973,8 +4971,8 @@ relationships:
   from: payment-ds-008
   to: payment-job-006
 - type: DATASET_PRODUCED_BY
-  from: payment-ds-009
-  to: payment-job-006
+  from: payment-job-006
+  to: payment-ds-009
 - type: WORKSPACE_DATASET
   from: payment-ws-001
   to: payment-ds-009
@@ -5066,8 +5064,8 @@ relationships:
   from: inventory-ds-001
   to: inventory-job-001
 - type: DATASET_PRODUCED_BY
-  from: inventory-ds-002
-  to: inventory-job-001
+  from: inventory-job-001
+  to: inventory-ds-002
 - type: WORKSPACE_DATASET
   from: inventory-ws-001
   to: inventory-ds-002
@@ -5108,8 +5106,8 @@ relationships:
   from: inventory-ds-004
   to: inventory-job-002
 - type: DATASET_PRODUCED_BY
-  from: inventory-ds-005
-  to: inventory-job-002
+  from: inventory-job-002
+  to: inventory-ds-005
 - type: WORKSPACE_DATASET
   from: inventory-ws-001
   to: inventory-ds-005
@@ -5126,8 +5124,8 @@ relationships:
   from: inventory-ds-005
   to: inventory-job-003
 - type: DATASET_PRODUCED_BY
-  from: inventory-ds-006
-  to: inventory-job-003
+  from: inventory-job-003
+  to: inventory-ds-006
 - type: MODEL_USE_CASE
   from: inventory-model-001
   to: inventory-uc-001
@@ -5139,9 +5137,9 @@ relationships:
   to: inventory-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: inventory-mv-001
-  to: inventory-job-004
+- type: MODEL_PRODUCED_BY
+  from: inventory-job-004
+  to: inventory-mv-001
 - type: IS_CONSUMED_BY
   from: inventory-ds-005
   to: inventory-job-005
@@ -5153,17 +5151,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: inventory-ds-007
-  to: inventory-job-005
+  from: inventory-job-005
+  to: inventory-ds-007
 - type: USE_CASE_DATASET
   from: inventory-uc-001
   to: inventory-ds-006
 - type: INSTALLED
   from: inventory-wssvc-001
   to: inventory-ws-001
-- type: IMPLEMENTS
-  from: inventory-wssvc-001
-  to: inventory-mv-001
+- type: DEPLOYED_ON
+  from: inventory-mv-001
+  to: inventory-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: inventory-attr-022
   to: inventory-ds-008
@@ -5195,8 +5193,8 @@ relationships:
   from: inventory-ds-008
   to: inventory-job-006
 - type: DATASET_PRODUCED_BY
-  from: inventory-ds-009
-  to: inventory-job-006
+  from: inventory-job-006
+  to: inventory-ds-009
 - type: WORKSPACE_DATASET
   from: inventory-ws-001
   to: inventory-ds-009
@@ -5288,8 +5286,8 @@ relationships:
   from: shipping-ds-001
   to: shipping-job-001
 - type: DATASET_PRODUCED_BY
-  from: shipping-ds-002
-  to: shipping-job-001
+  from: shipping-job-001
+  to: shipping-ds-002
 - type: WORKSPACE_DATASET
   from: shipping-ws-001
   to: shipping-ds-002
@@ -5330,8 +5328,8 @@ relationships:
   from: shipping-ds-004
   to: shipping-job-002
 - type: DATASET_PRODUCED_BY
-  from: shipping-ds-005
-  to: shipping-job-002
+  from: shipping-job-002
+  to: shipping-ds-005
 - type: WORKSPACE_DATASET
   from: shipping-ws-001
   to: shipping-ds-005
@@ -5348,8 +5346,8 @@ relationships:
   from: shipping-ds-005
   to: shipping-job-003
 - type: DATASET_PRODUCED_BY
-  from: shipping-ds-006
-  to: shipping-job-003
+  from: shipping-job-003
+  to: shipping-ds-006
 - type: MODEL_USE_CASE
   from: shipping-model-001
   to: shipping-uc-001
@@ -5361,9 +5359,9 @@ relationships:
   to: shipping-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: shipping-mv-001
-  to: shipping-job-004
+- type: MODEL_PRODUCED_BY
+  from: shipping-job-004
+  to: shipping-mv-001
 - type: IS_CONSUMED_BY
   from: shipping-ds-005
   to: shipping-job-005
@@ -5375,17 +5373,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: shipping-ds-007
-  to: shipping-job-005
+  from: shipping-job-005
+  to: shipping-ds-007
 - type: USE_CASE_DATASET
   from: shipping-uc-001
   to: shipping-ds-006
 - type: INSTALLED
   from: shipping-wssvc-001
   to: shipping-ws-001
-- type: IMPLEMENTS
-  from: shipping-wssvc-001
-  to: shipping-mv-001
+- type: DEPLOYED_ON
+  from: shipping-mv-001
+  to: shipping-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: shipping-attr-022
   to: shipping-ds-008
@@ -5417,8 +5415,8 @@ relationships:
   from: shipping-ds-008
   to: shipping-job-006
 - type: DATASET_PRODUCED_BY
-  from: shipping-ds-009
-  to: shipping-job-006
+  from: shipping-job-006
+  to: shipping-ds-009
 - type: WORKSPACE_DATASET
   from: shipping-ws-001
   to: shipping-ds-009
@@ -5510,8 +5508,8 @@ relationships:
   from: support-ds-001
   to: support-job-001
 - type: DATASET_PRODUCED_BY
-  from: support-ds-002
-  to: support-job-001
+  from: support-job-001
+  to: support-ds-002
 - type: WORKSPACE_DATASET
   from: support-ws-001
   to: support-ds-002
@@ -5552,8 +5550,8 @@ relationships:
   from: support-ds-004
   to: support-job-002
 - type: DATASET_PRODUCED_BY
-  from: support-ds-005
-  to: support-job-002
+  from: support-job-002
+  to: support-ds-005
 - type: WORKSPACE_DATASET
   from: support-ws-001
   to: support-ds-005
@@ -5570,8 +5568,8 @@ relationships:
   from: support-ds-005
   to: support-job-003
 - type: DATASET_PRODUCED_BY
-  from: support-ds-006
-  to: support-job-003
+  from: support-job-003
+  to: support-ds-006
 - type: MODEL_USE_CASE
   from: support-model-001
   to: support-uc-001
@@ -5583,9 +5581,9 @@ relationships:
   to: support-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: support-mv-001
-  to: support-job-004
+- type: MODEL_PRODUCED_BY
+  from: support-job-004
+  to: support-mv-001
 - type: IS_CONSUMED_BY
   from: support-ds-005
   to: support-job-005
@@ -5597,17 +5595,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: support-ds-007
-  to: support-job-005
+  from: support-job-005
+  to: support-ds-007
 - type: USE_CASE_DATASET
   from: support-uc-001
   to: support-ds-006
 - type: INSTALLED
   from: support-wssvc-001
   to: support-ws-001
-- type: IMPLEMENTS
-  from: support-wssvc-001
-  to: support-mv-001
+- type: DEPLOYED_ON
+  from: support-mv-001
+  to: support-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: support-attr-022
   to: support-ds-008
@@ -5639,8 +5637,8 @@ relationships:
   from: support-ds-008
   to: support-job-006
 - type: DATASET_PRODUCED_BY
-  from: support-ds-009
-  to: support-job-006
+  from: support-job-006
+  to: support-ds-009
 - type: WORKSPACE_DATASET
   from: support-ws-001
   to: support-ds-009
@@ -5732,8 +5730,8 @@ relationships:
   from: sales-ds-001
   to: sales-job-001
 - type: DATASET_PRODUCED_BY
-  from: sales-ds-002
-  to: sales-job-001
+  from: sales-job-001
+  to: sales-ds-002
 - type: WORKSPACE_DATASET
   from: sales-ws-001
   to: sales-ds-002
@@ -5774,8 +5772,8 @@ relationships:
   from: sales-ds-004
   to: sales-job-002
 - type: DATASET_PRODUCED_BY
-  from: sales-ds-005
-  to: sales-job-002
+  from: sales-job-002
+  to: sales-ds-005
 - type: WORKSPACE_DATASET
   from: sales-ws-001
   to: sales-ds-005
@@ -5792,8 +5790,8 @@ relationships:
   from: sales-ds-005
   to: sales-job-003
 - type: DATASET_PRODUCED_BY
-  from: sales-ds-006
-  to: sales-job-003
+  from: sales-job-003
+  to: sales-ds-006
 - type: MODEL_USE_CASE
   from: sales-model-001
   to: sales-uc-001
@@ -5805,9 +5803,9 @@ relationships:
   to: sales-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: sales-mv-001
-  to: sales-job-004
+- type: MODEL_PRODUCED_BY
+  from: sales-job-004
+  to: sales-mv-001
 - type: IS_CONSUMED_BY
   from: sales-ds-005
   to: sales-job-005
@@ -5819,17 +5817,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: sales-ds-007
-  to: sales-job-005
+  from: sales-job-005
+  to: sales-ds-007
 - type: USE_CASE_DATASET
   from: sales-uc-001
   to: sales-ds-006
 - type: INSTALLED
   from: sales-wssvc-001
   to: sales-ws-001
-- type: IMPLEMENTS
-  from: sales-wssvc-001
-  to: sales-mv-001
+- type: DEPLOYED_ON
+  from: sales-mv-001
+  to: sales-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: sales-attr-022
   to: sales-ds-008
@@ -5861,8 +5859,8 @@ relationships:
   from: sales-ds-008
   to: sales-job-006
 - type: DATASET_PRODUCED_BY
-  from: sales-ds-009
-  to: sales-job-006
+  from: sales-job-006
+  to: sales-ds-009
 - type: WORKSPACE_DATASET
   from: sales-ws-001
   to: sales-ds-009
@@ -5954,8 +5952,8 @@ relationships:
   from: operations-ds-001
   to: operations-job-001
 - type: DATASET_PRODUCED_BY
-  from: operations-ds-002
-  to: operations-job-001
+  from: operations-job-001
+  to: operations-ds-002
 - type: WORKSPACE_DATASET
   from: operations-ws-001
   to: operations-ds-002
@@ -5996,8 +5994,8 @@ relationships:
   from: operations-ds-004
   to: operations-job-002
 - type: DATASET_PRODUCED_BY
-  from: operations-ds-005
-  to: operations-job-002
+  from: operations-job-002
+  to: operations-ds-005
 - type: WORKSPACE_DATASET
   from: operations-ws-001
   to: operations-ds-005
@@ -6014,8 +6012,8 @@ relationships:
   from: operations-ds-005
   to: operations-job-003
 - type: DATASET_PRODUCED_BY
-  from: operations-ds-006
-  to: operations-job-003
+  from: operations-job-003
+  to: operations-ds-006
 - type: MODEL_USE_CASE
   from: operations-model-001
   to: operations-uc-001
@@ -6027,9 +6025,9 @@ relationships:
   to: operations-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: operations-mv-001
-  to: operations-job-004
+- type: MODEL_PRODUCED_BY
+  from: operations-job-004
+  to: operations-mv-001
 - type: IS_CONSUMED_BY
   from: operations-ds-005
   to: operations-job-005
@@ -6041,17 +6039,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: operations-ds-007
-  to: operations-job-005
+  from: operations-job-005
+  to: operations-ds-007
 - type: USE_CASE_DATASET
   from: operations-uc-001
   to: operations-ds-006
 - type: INSTALLED
   from: operations-wssvc-001
   to: operations-ws-001
-- type: IMPLEMENTS
-  from: operations-wssvc-001
-  to: operations-mv-001
+- type: DEPLOYED_ON
+  from: operations-mv-001
+  to: operations-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: operations-attr-022
   to: operations-ds-008
@@ -6083,8 +6081,8 @@ relationships:
   from: operations-ds-008
   to: operations-job-006
 - type: DATASET_PRODUCED_BY
-  from: operations-ds-009
-  to: operations-job-006
+  from: operations-job-006
+  to: operations-ds-009
 - type: WORKSPACE_DATASET
   from: operations-ws-001
   to: operations-ds-009
@@ -6176,8 +6174,8 @@ relationships:
   from: finance-ds-001
   to: finance-job-001
 - type: DATASET_PRODUCED_BY
-  from: finance-ds-002
-  to: finance-job-001
+  from: finance-job-001
+  to: finance-ds-002
 - type: WORKSPACE_DATASET
   from: finance-ws-001
   to: finance-ds-002
@@ -6218,8 +6216,8 @@ relationships:
   from: finance-ds-004
   to: finance-job-002
 - type: DATASET_PRODUCED_BY
-  from: finance-ds-005
-  to: finance-job-002
+  from: finance-job-002
+  to: finance-ds-005
 - type: WORKSPACE_DATASET
   from: finance-ws-001
   to: finance-ds-005
@@ -6236,8 +6234,8 @@ relationships:
   from: finance-ds-005
   to: finance-job-003
 - type: DATASET_PRODUCED_BY
-  from: finance-ds-006
-  to: finance-job-003
+  from: finance-job-003
+  to: finance-ds-006
 - type: MODEL_USE_CASE
   from: finance-model-001
   to: finance-uc-001
@@ -6249,9 +6247,9 @@ relationships:
   to: finance-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: finance-mv-001
-  to: finance-job-004
+- type: MODEL_PRODUCED_BY
+  from: finance-job-004
+  to: finance-mv-001
 - type: IS_CONSUMED_BY
   from: finance-ds-005
   to: finance-job-005
@@ -6263,17 +6261,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: finance-ds-007
-  to: finance-job-005
+  from: finance-job-005
+  to: finance-ds-007
 - type: USE_CASE_DATASET
   from: finance-uc-001
   to: finance-ds-006
 - type: INSTALLED
   from: finance-wssvc-001
   to: finance-ws-001
-- type: IMPLEMENTS
-  from: finance-wssvc-001
-  to: finance-mv-001
+- type: DEPLOYED_ON
+  from: finance-mv-001
+  to: finance-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: finance-attr-022
   to: finance-ds-008
@@ -6305,8 +6303,8 @@ relationships:
   from: finance-ds-008
   to: finance-job-006
 - type: DATASET_PRODUCED_BY
-  from: finance-ds-009
-  to: finance-job-006
+  from: finance-job-006
+  to: finance-ds-009
 - type: WORKSPACE_DATASET
   from: finance-ws-001
   to: finance-ds-009
@@ -6398,8 +6396,8 @@ relationships:
   from: hr-ds-001
   to: hr-job-001
 - type: DATASET_PRODUCED_BY
-  from: hr-ds-002
-  to: hr-job-001
+  from: hr-job-001
+  to: hr-ds-002
 - type: WORKSPACE_DATASET
   from: hr-ws-001
   to: hr-ds-002
@@ -6440,8 +6438,8 @@ relationships:
   from: hr-ds-004
   to: hr-job-002
 - type: DATASET_PRODUCED_BY
-  from: hr-ds-005
-  to: hr-job-002
+  from: hr-job-002
+  to: hr-ds-005
 - type: WORKSPACE_DATASET
   from: hr-ws-001
   to: hr-ds-005
@@ -6458,8 +6456,8 @@ relationships:
   from: hr-ds-005
   to: hr-job-003
 - type: DATASET_PRODUCED_BY
-  from: hr-ds-006
-  to: hr-job-003
+  from: hr-job-003
+  to: hr-ds-006
 - type: MODEL_USE_CASE
   from: hr-model-001
   to: hr-uc-001
@@ -6471,9 +6469,9 @@ relationships:
   to: hr-job-004
   properties:
     context: training_data
-- type: DATASET_PRODUCED_BY
-  from: hr-mv-001
-  to: hr-job-004
+- type: MODEL_PRODUCED_BY
+  from: hr-job-004
+  to: hr-mv-001
 - type: IS_CONSUMED_BY
   from: hr-ds-005
   to: hr-job-005
@@ -6485,17 +6483,17 @@ relationships:
   properties:
     context: scoring_model
 - type: DATASET_PRODUCED_BY
-  from: hr-ds-007
-  to: hr-job-005
+  from: hr-job-005
+  to: hr-ds-007
 - type: USE_CASE_DATASET
   from: hr-uc-001
   to: hr-ds-006
 - type: INSTALLED
   from: hr-wssvc-001
   to: hr-ws-001
-- type: IMPLEMENTS
-  from: hr-wssvc-001
-  to: hr-mv-001
+- type: DEPLOYED_ON
+  from: hr-mv-001
+  to: hr-wssvc-001
 - type: IS_ATTRIBUTE_FOR
   from: hr-attr-022
   to: hr-ds-008
@@ -6527,8 +6525,8 @@ relationships:
   from: hr-ds-008
   to: hr-job-006
 - type: DATASET_PRODUCED_BY
-  from: hr-ds-009
-  to: hr-job-006
+  from: hr-job-006
+  to: hr-ds-009
 - type: WORKSPACE_DATASET
   from: hr-ws-001
   to: hr-ds-009
@@ -6550,7 +6548,6 @@ relationships:
 - type: ELEMENT_OF
   from: hr-rpt-attr-001
   to: hr-rpt-001
-# G-axis: Guardrail → UseCase (governance controls)
 - type: GUARDRAIL_USE_CASE
   from: gr-001
   to: uc-001
@@ -6599,3 +6596,267 @@ relationships:
 - type: ELEMENT_OF
   from: hr-rpt-attr-003
   to: hr-rpt-001
+- type: RUNS_ON
+  from: fraud-job-001
+  to: infra-emr-001
+- type: RUNS_ON
+  from: fraud-job-002
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: fraud-job-003
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: fraud-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: fraud-job-005
+  to: infra-eks-001
+- type: RUNS_ON
+  from: fraud-job-006
+  to: infra-eks-001
+- type: RUNS_ON
+  from: fraud-job-007
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: cust-job-001
+  to: infra-emr-001
+- type: RUNS_ON
+  from: cust-job-002
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: cust-job-003
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: cust-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: cust-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: cust-job-006
+  to: infra-eks-001
+- type: RUNS_ON
+  from: cust-job-007
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: mkt-job-001
+  to: infra-emr-001
+- type: RUNS_ON
+  from: mkt-job-002
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: mkt-job-003
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: mkt-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: mkt-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: mkt-job-006
+  to: infra-eks-001
+- type: RUNS_ON
+  from: risk-job-001
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: risk-job-002
+  to: infra-emr-001
+- type: RUNS_ON
+  from: risk-job-003
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: risk-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: risk-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: risk-job-006
+  to: infra-eks-001
+- type: RUNS_ON
+  from: reg-job-001
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: reg-job-002
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: reg-job-003
+  to: infra-emr-001
+- type: RUNS_ON
+  from: rec-job-001
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: rec-job-002
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: rec-job-003
+  to: infra-emr-001
+- type: RUNS_ON
+  from: rec-job-004
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: rec-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: rec-job-006
+  to: infra-eks-001
+- type: RUNS_ON
+  from: payment-job-001
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: payment-job-002
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: payment-job-003
+  to: infra-emr-001
+- type: RUNS_ON
+  from: payment-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: payment-job-005
+  to: infra-eks-001
+- type: RUNS_ON
+  from: payment-job-006
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: inventory-job-001
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: inventory-job-002
+  to: infra-emr-001
+- type: RUNS_ON
+  from: inventory-job-003
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: inventory-job-004
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: inventory-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: inventory-job-006
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: shipping-job-001
+  to: infra-emr-001
+- type: RUNS_ON
+  from: shipping-job-002
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: shipping-job-003
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: shipping-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: shipping-job-005
+  to: infra-eks-001
+- type: RUNS_ON
+  from: shipping-job-006
+  to: infra-emr-001
+- type: RUNS_ON
+  from: support-job-001
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: support-job-002
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: support-job-003
+  to: infra-emr-001
+- type: RUNS_ON
+  from: support-job-004
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: support-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: support-job-006
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: sales-job-001
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: sales-job-002
+  to: infra-emr-001
+- type: RUNS_ON
+  from: sales-job-003
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: sales-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: sales-job-005
+  to: infra-eks-001
+- type: RUNS_ON
+  from: sales-job-006
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: operations-job-001
+  to: infra-emr-001
+- type: RUNS_ON
+  from: operations-job-002
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: operations-job-003
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: operations-job-004
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: operations-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: operations-job-006
+  to: infra-emr-001
+- type: RUNS_ON
+  from: finance-job-001
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: finance-job-002
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: finance-job-003
+  to: infra-emr-001
+- type: RUNS_ON
+  from: finance-job-004
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: finance-job-005
+  to: infra-eks-001
+- type: RUNS_ON
+  from: finance-job-006
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: hr-job-001
+  to: infra-airflow-001
+- type: RUNS_ON
+  from: hr-job-002
+  to: infra-emr-001
+- type: RUNS_ON
+  from: hr-job-003
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: hr-job-004
+  to: infra-databricks-001
+- type: RUNS_ON
+  from: hr-job-005
+  to: infra-sagemaker-001
+- type: RUNS_ON
+  from: hr-job-006
+  to: infra-airflow-001
+- type: INSTALLED
+  from: infra-sagemaker-001
+  to: platform-ws-001
+- type: INSTALLED
+  from: infra-eks-001
+  to: platform-ws-001
+- type: INSTALLED
+  from: infra-databricks-001
+  to: platform-ws-001
+- type: INSTALLED
+  from: infra-emr-001
+  to: platform-ws-001
+- type: INSTALLED
+  from: infra-airflow-001
+  to: platform-ws-001
