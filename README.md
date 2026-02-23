@@ -161,7 +161,7 @@ Explore common lineage queries using the multi-axis traversal engine.
 ---
 
 #### 5. 📊 **Downstream, Data-Only Lineage**
-> *How many downstream consumer systems do I have, how critical are they? *
+> How many downstream consumer systems do I have, how critical are they? *
 
 <details>
 <summary><b>📋 View Parameters</b></summary>
