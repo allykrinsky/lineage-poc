@@ -77,7 +77,7 @@ Open your browser and navigate to:
 ### Example Configurations
 
 Data Only
-- base node: fraud-ds-002 
+- base node: fraud-ds-002
 - lineage : On, upstream
 - heirarchy : On
 - association:  : Off
@@ -99,11 +99,10 @@ All the things in my Use Case
 
 TDQ on Data Flows
 - base node: risk-app-001
-- lineage : Off
+- lineage : On
 - heirarchy : Off
 - association:  : Off
 - governance: On
-
 
 
 ## Configuration
