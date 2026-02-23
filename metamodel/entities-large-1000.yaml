@@ -3153,7 +3153,7 @@ assets:
     name: aws_eks
     description: AWS EKS cluster for containerized workloads
   - id: infra-databricks-001
-    name: databricks_workspace
+    name: databricks
     description: Databricks unified analytics platform
   - id: infra-emr-001
     name: aws_emr
