@@ -367,14 +367,14 @@ relationships:
         required: false
 
   - type: DATASET_PRODUCED_BY
-    from: Dataset
-    to: Job
-    description: "Dataset is produced/output by a job"
+    from: Job
+    to: Dataset
+    description: "Job produces/outputs a dataset"
 
-  - type: DATASET_PRODUCED_BY
-    from: ModelVersion
-    to: Job
-    description: "Model version is produced by a training or finetuning job"
+  - type: MODEL_PRODUCED_BY
+    from: Job
+    to: ModelVersion
+    description: "Job produces a model version through training or finetuning"
 
   - type: DATA_DEPENDENCY_PRODUCED_BY
     from: DataDependency
@@ -515,6 +515,11 @@ relationships:
     to: Attribute
     description: "Data concept groups an attribute"
 
+  - type: RUNS_ON
+    from: Job
+    to: WorkspaceService
+    description: "Job runs on workspace service (infrastructure platform)"
+
   # ── G-Axis (Governance / Controls) ─────────────────────────────────────
 
   - type: RESULTSETS_DATASET
@@ -559,10 +564,10 @@ relationships:
     to: Dataset
     description: "Workspace is associated with a dataset"
 
-  - type: IMPLEMENTS
-    from: WorkspaceService
-    to: ModelVersion
-    description: "Workspace service implements a model version"
+  - type: DEPLOYED_ON
+    from: ModelVersion
+    to: WorkspaceService
+    description: "Model version is deployed on a workspace service"
 
 
 # =============================================================================

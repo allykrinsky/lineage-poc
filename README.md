@@ -74,36 +74,149 @@ Open your browser and navigate to:
 - **Neo4j Browser**: `http://localhost:7474`
 
 
-### Example Configurations
+### Use Cases
 
-Data Only
-- base node: fraud-ds-002
-- lineage : On, upstream
-- heirarchy : On
-- association:  : Off
-- governance: Off
+Explore common lineage queries using the multi-axis traversal engine.
 
-Agentic System Exploded
-- base node: fraud-asysv-001
-- lineage : On, upstream
-- heirarchy : On
-- association:  : On, outgoing
-- governance: Off
+---
 
-All the things in my Use Case 
-- base node: uc-001
-- lineage : Off
-- heirarchy : On
-- association:  : On, Both
-- governance: Off
+#### 1. 🤖 **Agentic System Lineage**
+> *What are the complete upstream data sources for this agentic system?*
 
-TDQ on Data Flows
-- base node: risk-app-001
-- lineage : On
-- heirarchy : Off
-- association:  : Off
-- governance: On
+<details>
+<summary><b>📋 View Parameters</b></summary>
 
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `fraud-asysv-001` |
+| **Lineage (X-axis)** | ✅ On, Upstream |
+| **Hierarchy (Y-axis)** | ✅ On |
+| **Association (Z-axis)** | ✅ On, Outgoing |
+| **Governance (G-axis)** | ❌ Off |
+
+</details>
+
+![Agentic System Lineage Snapshot](images/questions-answered/agent-systems.png)
+
+---
+
+#### 2. 🏗️ **Model Infrastructure Lineage**
+> *Where was this model developed and using what components?*
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `fraud-mv-001` |
+| **Lineage (X-axis)** | ✅ On, Upstream |
+| **Hierarchy (Y-axis)** | ✅ On |
+| **Association (Z-axis)** | ✅ On, Outgoing |
+| **Governance (G-axis)** | ❌ Off |
+
+</details>
+
+![Infra Lineage Snapshot](images/questions-answered/infra-lineage.png)
+
+---
+
+#### 3. 💥 **Model Deprecation Impact Analysis**
+> *If this Model Version was deprecated, what Use Cases are impacted?*
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `fraud-mv-002` |
+| **Lineage (X-axis)** | ❌ Off |
+| **Hierarchy (Y-axis)** | ✅ On (6+ hops) |
+| **Association (Z-axis)** | ✅ On, Incoming |
+| **Governance (G-axis)** | ❌ Off |
+
+</details>
+
+![Model Version Blast Radius](images/questions-answered/model-deprecation.png)
+
+---
+
+#### 4. 📚 **Glossary Term Impact Analysis**
+> *If this Business Element Term is edited, what Attributes are impacted?*
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `term-002` |
+| **Lineage (X-axis)** | ❌ Off |
+| **Hierarchy (Y-axis)** | ✅ On |
+| **Association (Z-axis)** | ✅ On |
+| **Governance (G-axis)** | ❌ Off |
+
+</details>
+
+![Term Blast Radius](images/questions-answered/glossary-edit.png)
+
+---
+
+#### 5. 📊 **Downstream, Data-Only Lineage**
+> *How many downstream consumer systems do I have, how critical are they? *
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `fraud-ds-002` |
+| **Lineage (X-axis)** | ✅ On, Downstream |
+| **Hierarchy (Y-axis)** | ❌ Off |
+| **Association (Z-axis)** | ❌ Off |
+| **Governance (G-axis)** | ❌ Off |
+
+</details>
+
+![Downstream Resources](images/questions-answered/downstream.png)
+
+---
+
+#### 6. 🎯 **Use Case Exploration**
+> *All the things in my Use Case*
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `uc-001` |
+| **Lineage (X-axis)** | ❌ Off |
+| **Hierarchy (Y-axis)** | ✅ On |
+| **Association (Z-axis)** | ✅ On, Both |
+| **Governance (G-axis)** | ❌ Off |
+
+</details>
+
+![Use Case](images/questions-answered/use-case.png)
+
+---
+
+#### 7. ✅ **Data Quality Monitoring**
+> *TDQ on Data Flows*
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `risk-app-001` |
+| **Lineage (X-axis)** | ✅ On |
+| **Hierarchy (Y-axis)** | ❌ Off |
+| **Association (Z-axis)** | ❌ Off |
+| **Governance (G-axis)** | ✅ On |
+
+</details>
+
+![TDQ](images/questions-answered/tqd.png)
 
 ## Configuration
 

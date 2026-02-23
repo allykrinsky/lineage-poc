@@ -173,12 +173,20 @@ x_lineage:
 
   # --- Dataset-level lineage (via ETL Job) ---
   - edge_name: dataset_produced_by
-    source: dataset
-    destination: job
-    semantic_direction: upstream
-    description: "Which job produced this dataset?"
+    source: job
+    destination: dataset
+    semantic_direction: downstream
+    description: "Job produces this dataset"
     hop_group: dataset_etl
-    hop_role: resource_to_transformer
+    hop_role: transformer_to_resource
+
+  - edge_name: model_produced_by
+    source: job
+    destination: model_version
+    semantic_direction: downstream
+    description: "Job produces this model version (training/finetuning)"
+    hop_group: model_training
+    hop_role: transformer_to_resource
 
   - edge_name: is_consumed_by
     source: dataset
@@ -265,6 +273,13 @@ hop_groups:
     resource_types: [dataset]
     transformer_type: job
     upstream_edge: dataset_produced_by
+    downstream_edge: is_consumed_by
+
+  model_training:
+    description: "Model Version ↔ Job (training/finetuning)"
+    resource_types: [model_version]
+    transformer_type: job
+    upstream_edge: model_produced_by
     downstream_edge: is_consumed_by
 
   attribute_dependency:
@@ -506,10 +521,15 @@ z_association:
     destination: dataset
     description: "Workspace associated with dataset"
 
-  - edge_name: implements
-    source: workspace_service
-    destination: model_version
-    description: "Workspace service implements a model version"
+  - edge_name: deployed_on
+    source: model_version
+    destination: workspace_service
+    description: "Model version deployed on workspace service"
+
+  - edge_name: runs_on
+    source: job
+    destination: workspace_service
+    description: "Job runs on workspace service (infrastructure platform)"
 
 
 # -----------------------------------------------------------------------------

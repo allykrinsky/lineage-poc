@@ -751,6 +751,7 @@ class TraversalEngine:
             # This means:
             # 1. Once we've made ANY Z-hop in the path, no more Z-hops are allowed
             # 2. Once we've gone upstream (X-axis) from the input node, no Z-hops are allowed
+            #    EXCEPT for transformer nodes (job, data_dependency) where infrastructure context is relevant
             # 3. Once we've gone "up" (Y-axis) to a parent node, no Z-hops are allowed
             # This ensures Z-hops only occur from the starting node or its descendants
             if classification.axis == Axis.Z:
@@ -760,12 +761,18 @@ class TraversalEngine:
                     continue
                 if has_gone_upstream:
                     # We've traversed upstream - Z-axis no longer available
-                    # Parent node Z-axis relationships may not be relevant to chosen node
-                    continue
+                    # EXCEPT for transformer nodes where infrastructure associations are relevant
+                    is_transformer = node_type in ['job', 'etl_job', 'data_dependency']
+                    if not is_transformer:
+                        # Parent node Z-axis relationships may not be relevant to chosen node
+                        continue
                 if has_gone_to_parent:
                     # We've traversed "up" to a parent node - Z-axis no longer available
-                    # Parent node Z-axis relationships may not be relevant to chosen node
-                    continue
+                    # EXCEPT for transformer nodes where infrastructure associations are relevant
+                    is_transformer = node_type in ['job', 'etl_job', 'data_dependency']
+                    if not is_transformer:
+                        # Parent node Z-axis relationships may not be relevant to chosen node
+                        continue
 
             # Check direction constraints
             should_traverse = self._should_traverse_edge(
