@@ -401,21 +401,27 @@ class GraphLoader:
         rel_types = mm.relationship_types()
 
         with self.driver.session() as session:
-            # Drop if exists (ignore errors)
-            session.run(
-                "CALL gds.graph.drop($name, false) YIELD graphName RETURN graphName",
-                {"name": projection_name},
-            )
+            try:
+                # Drop if exists (ignore errors)
+                session.run(
+                    "CALL gds.graph.drop($name, false) YIELD graphName RETURN graphName",
+                    {"name": projection_name},
+                )
 
-            rel_map = {rtype: {"orientation": "UNDIRECTED"} for rtype in rel_types}
+                rel_map = {rtype: {"orientation": "UNDIRECTED"} for rtype in rel_types}
 
-            session.run(
-                """
-                CALL gds.graph.project($name, $labels, $rels)
-                """,
-                {"name": projection_name, "labels": labels, "rels": rel_map},
-            )
-            print(f"✅ GDS projection '{projection_name}' built with labels={labels} rels={rel_types}")
+                session.run(
+                    """
+                    CALL gds.graph.project($name, $labels, $rels)
+                    """,
+                    {"name": projection_name, "labels": labels, "rels": rel_map},
+                )
+                print(f"✅ GDS projection '{projection_name}' built with labels={labels} rels={rel_types}")
+            except Exception as e:
+                if "ProcedureNotFound" in str(e) or "gds" in str(e).lower():
+                    print(f"⚠️  GDS plugin not installed - skipping graph projection (optional feature)")
+                else:
+                    raise
 
     def load_all(
         self,

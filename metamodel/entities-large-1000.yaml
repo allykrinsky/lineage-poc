@@ -3472,6 +3472,80 @@ relationships:
   to: fraud-job-005
   properties:
     context: scoring_model
+# === BLAST RADIUS: fraud-mv-002 used across the organization ===
+# Customer domain uses fraud model for identity verification
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: cust-job-004
+  properties:
+    context: fraud_check_model
+# Risk domain uses fraud model for credit risk scoring
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: risk-job-004
+  properties:
+    context: fraud_risk_model
+# Payment domain uses fraud model for transaction validation
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: payment-job-005
+  properties:
+    context: payment_fraud_model
+# Marketing domain uses fraud model to filter bot/fake accounts
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: mkt-job-004
+  properties:
+    context: account_validation_model
+# Regulatory domain uses fraud model for AML compliance
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: reg-job-003
+  properties:
+    context: aml_fraud_model
+# Recommendation engine uses fraud model to filter suspicious activity
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: rec-job-005
+  properties:
+    context: activity_filter_model
+# Sales domain uses fraud model for lead scoring
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: sales-job-004
+  properties:
+    context: lead_quality_model
+# Operations domain uses fraud model for anomaly detection
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: operations-job-004
+  properties:
+    context: process_anomaly_model
+# Support domain uses fraud model for ticket authenticity
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: support-job-004
+  properties:
+    context: ticket_fraud_model
+# Shipping domain uses fraud model for address validation
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: shipping-job-004
+  properties:
+    context: shipping_fraud_model
+# Inventory domain uses fraud model for theft detection
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: inventory-job-004
+  properties:
+    context: inventory_fraud_model
+# Finance domain uses fraud model for transaction monitoring
+- type: IS_CONSUMED_BY
+  from: fraud-mv-002
+  to: finance-job-004
+  properties:
+    context: financial_fraud_model
+# === End Blast Radius: fraud-mv-002 ===
 - type: DATASET_PRODUCED_BY
   from: fraud-ds-004
   to: fraud-job-005
@@ -4431,12 +4505,19 @@ relationships:
 - type: USES
   from: fraud-agv-001
   to: embed-mv-002
+# === BLAST RADIUS: Multiple agents use fraud-mv-002 ===
+- type: USES
+  from: fraud-agv-001
+  to: fraud-mv-002
 # - type: USES
 #   from: fraud-agv-002
 #   to: fraud-ds-002
 - type: USES
   from: fraud-agv-002
   to: fraud-mcpt-002
+- type: USES
+  from: fraud-agv-002
+  to: fraud-mv-002
 - type: USES
   from: cust-agv-001
   to: cust-ds-004
@@ -4447,8 +4528,14 @@ relationships:
   from: cust-agv-001
   to: embed-mv-002
 - type: USES
+  from: cust-agv-001
+  to: fraud-mv-002
+- type: USES
   from: cust-agv-002
   to: cust-ds-006
+- type: USES
+  from: cust-agv-002
+  to: fraud-mv-002
 - type: USES
   from: cust-agv-002
   to: cust-mcpt-002
@@ -4465,8 +4552,17 @@ relationships:
   from: mkt-agv-002
   to: embed-mv-002
 - type: USES
+  from: mkt-agv-001
+  to: fraud-mv-002
+- type: USES
+  from: mkt-agv-002
+  to: fraud-mv-002
+- type: USES
   from: risk-agv-001
   to: risk-ds-005
+- type: USES
+  from: risk-agv-001
+  to: fraud-mv-002
 - type: USES
   from: risk-agv-001
   to: risk-mcpt-001
@@ -4476,12 +4572,76 @@ relationships:
 - type: USES
   from: risk-agv-002
   to: risk-ds-003
+- type: USES
+  from: risk-agv-002
+  to: fraud-mv-002
+# Payment agents use fraud model for transaction screening
+- type: USES
+  from: payment-agv-001
+  to: fraud-mv-002
+- type: USES
+  from: payment-agv-002
+  to: fraud-mv-002
+# Sales agents use fraud model for lead quality scoring
+- type: USES
+  from: sales-agv-001
+  to: fraud-mv-002
+- type: USES
+  from: sales-agv-002
+  to: fraud-mv-002
+# Operations agents use fraud model for process integrity
+- type: USES
+  from: operations-agv-001
+  to: fraud-mv-002
+# Support agents use fraud model for ticket authenticity
+- type: USES
+  from: support-agv-001
+  to: fraud-mv-002
+# === End additional blast radius USES edges ===
 - type: IS_MAPPED_TO
   from: fraud-attr-002
   to: term-001
 - type: IS_MAPPED_TO
   from: cust-attr-001
   to: term-002
+# === BLAST RADIUS: term-002 (Customer Identifier) mapped across domains ===
+# Fraud domain - customer_id in fraud detection datasets
+- type: IS_MAPPED_TO
+  from: fraud-attr-001
+  to: term-002
+# Marketing domain - customer_id in campaign datasets
+- type: IS_MAPPED_TO
+  from: mkt-attr-001
+  to: term-002
+# Risk domain - customer_id in credit risk datasets
+- type: IS_MAPPED_TO
+  from: risk-attr-001
+  to: term-002
+# Payment domain - customer_id in payment transaction datasets
+- type: IS_MAPPED_TO
+  from: payment-attr-001
+  to: term-002
+# Sales domain - customer_id in sales datasets
+- type: IS_MAPPED_TO
+  from: sales-attr-001
+  to: term-002
+# Recommendation domain - customer_id in recommendation datasets
+- type: IS_MAPPED_TO
+  from: rec-attr-001
+  to: term-002
+# Regulatory domain - customer_id in compliance datasets
+- type: IS_MAPPED_TO
+  from: reg-attr-001
+  to: term-002
+# Operations domain - customer_id in operational datasets
+- type: IS_MAPPED_TO
+  from: operations-attr-001
+  to: term-002
+# Support domain - customer_id in support ticket datasets
+- type: IS_MAPPED_TO
+  from: support-attr-001
+  to: term-002
+# === End blast radius: term-002 ===
 - type: IS_MAPPED_TO
   from: fraud-attr-004
   to: term-003

@@ -57,9 +57,15 @@ class GraphEmbeddingManager:
         RETURN gds.util.asNode(nodeId).id AS id, embedding
         """
         embeddings = {}
-        with self.driver.session() as session:
-            for row in session.run(query):
-                embeddings[row["id"]] = row["embedding"]
+        try:
+            with self.driver.session() as session:
+                for row in session.run(query):
+                    embeddings[row["id"]] = row["embedding"]
+        except Exception as e:
+            if "ProcedureNotFound" in str(e) or "gds" in str(e).lower():
+                print(f"⚠️  GDS plugin not installed - cannot generate embeddings (optional feature)")
+            else:
+                raise
         return embeddings
 
     def load_nodes(self) -> list:
