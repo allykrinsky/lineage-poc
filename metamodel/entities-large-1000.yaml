@@ -4511,9 +4511,9 @@ relationships:
 - type: SUB_PROCESS_OF
   from: proc-002
   to: proc-001
-- type: USES
-  from: fraud-agv-001
-  to: fraud-ds-004
+# - type: USES
+#   from: fraud-agv-001
+#   to: fraud-ds-004
 - type: USES
   from: fraud-agv-001
   to: fraud-ds-005
@@ -4523,9 +4523,9 @@ relationships:
 - type: USES
   from: fraud-agv-001
   to: embed-mv-002
-- type: USES
-  from: fraud-agv-001
-  to: fraud-mv-002
+# - type: USES
+#   from: fraud-agv-001
+#   to: fraud-mv-002
 - type: USES
   from: fraud-agv-002
   to: fraud-mcpt-002
