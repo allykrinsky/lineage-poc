@@ -161,7 +161,7 @@ Explore common lineage queries using the multi-axis traversal engine.
 ---
 
 #### 5. 📊 **Downstream, Data-Only Lineage**
-> How many downstream consumer systems do I have, how critical are they? *
+> *How many downstream consumer systems do I have, how critical are they?*
 
 <details>
 <summary><b>📋 View Parameters</b></summary>
@@ -180,7 +180,25 @@ Explore common lineage queries using the multi-axis traversal engine.
 
 ---
 
-#### 6. 🎯 **Use Case Exploration**
+#### 6. ✅ **Data Quality Monitoring**
+> *Is the data I'm receiving complete & accurate?*
+
+<details>
+<summary><b>📋 View Parameters</b></summary>
+
+| Parameter | Value |
+|-----------|-------|
+| **Base Node** | `risk-app-001` |
+| **Lineage (X-axis)** | ✅ On |
+| **Hierarchy (Y-axis)** | ❌ Off |
+| **Association (Z-axis)** | ❌ Off |
+| **Governance (G-axis)** | ✅ On |
+
+</details>
+
+![TDQ](images/questions-answered/tdq.png)
+
+#### 7. 🎯 **Use Case Exploration**
 > *All the things in my Use Case*
 
 <details>
@@ -200,23 +218,6 @@ Explore common lineage queries using the multi-axis traversal engine.
 
 ---
 
-#### 7. ✅ **Data Quality Monitoring**
-> *TDQ on Data Flows*
-
-<details>
-<summary><b>📋 View Parameters</b></summary>
-
-| Parameter | Value |
-|-----------|-------|
-| **Base Node** | `risk-app-001` |
-| **Lineage (X-axis)** | ✅ On |
-| **Hierarchy (Y-axis)** | ❌ Off |
-| **Association (Z-axis)** | ❌ Off |
-| **Governance (G-axis)** | ✅ On |
-
-</details>
-
-![TDQ](images/questions-answered/tqd.png)
 
 ## Configuration
 
