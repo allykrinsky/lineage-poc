@@ -44,7 +44,6 @@ env11/
 
 # misc
 frontend/
-backend/
 lineage-explorer/
 docs
 src/adapters
