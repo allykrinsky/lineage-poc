@@ -82,9 +82,8 @@ python scripts/setup_graph.py --schema-version v2 --entities-version large-1000
 ```
 
 This will:
-- Load entities from `metamodel/entities.yaml`
+- Load entities from `metamodel/entities-large-1000.yaml`
 - Create nodes and relationships in Neo4j
-- Generate Node2Vec embeddings using Graph Data Science (GDS)
 
 ### 2. Explore with the Visual Interface
 
