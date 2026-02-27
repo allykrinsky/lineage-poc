@@ -36,7 +36,9 @@ lineage-poc/
 
 ## Quick Start
 
-Start all services (Neo4j, Backend API) with a single command:
+### Connect to Neo4j:
+
+Option 1 - Spin up locally Neo4j instance:
 
 ```bash
 docker-compose up -d
@@ -45,6 +47,26 @@ This will start:
 - **Neo4j** at `http://localhost:7474` (Browser UI) and `bolt://localhost:7687` (Database)
   - Username: `neo4j`
   - Password: `password`
+
+Option 2 - Connect to sandbox instance in JPMC
+
+Create a .env file in the project root with these 3 variables
+```bash
+# .env file
+NEO4J_URI=bolt://wh-18c5a7721d.svr.us.jpmchase:7687/
+NEO4J_USER=your_sid
+NEO4J_PASSWORD=password #the one you set for the sandbox
+```
+
+### Run FastAPI Traversal Engine
+
+```bash
+pip install -r requirements.txt
+
+cd backend
+uvicorn api:app --reload 
+```
+This will start: 
 - **Backend API** at `http://localhost:8000` (API docs at `/docs`)
 
 
@@ -52,14 +74,11 @@ This will start:
 
 ### 1. Load Data into Neo4j
 
-Load your metamodel data into Neo4j:
+Note: If using in JPMC data may already be loaded.
 
 ```bash
-# Install dependencies first
-pip install -r requirements.txt
-
 # Load the graph
-python scripts/setup_graph.py
+python scripts/setup_graph.py --schema-version v2 --entities-version large-1000
 ```
 
 This will:
@@ -71,7 +90,7 @@ This will:
 
 Open your browser and navigate to:
 - **API Documentation**: `http://localhost:8000/docs`
-- **Neo4j Browser**: `http://localhost:7474`
+- **Neo4j Browser**: `http://localhost:7474` or http://wh-18c5a7721d.svr.us.jpmchase:7474/ (JPMC)
 
 
 ### Use Cases
